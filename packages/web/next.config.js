@@ -12,4 +12,7 @@ module.exports = withPrismaPlugin({
     }
     return config
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 })
