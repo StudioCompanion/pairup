@@ -49,7 +49,7 @@ jobs:
         run: yarn install --frozen-lockfile --silent
 
       - name: Copy example env
-        run: cp .env.example .env
+        run: cp ./packages/web/.env.example ./packages/web/.env
 
       - name: Generate
         run: yarn generate
