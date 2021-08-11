@@ -1,0 +1,44 @@
+{
+  "name": "pairup-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "predev": "yarn run generate",
+    "dev": "next dev",
+    "prebuild": "yarn run generate",
+    "build": "next build",
+    "start": "next start",
+    "start:ci": "INSECURE_AUTH=true yarn run start",
+    "generate": "yarn run generate:prisma && yarn run generate:nexus && yarn run generate:graphql-codegen",
+    "generate:prisma": "prisma generate",
+    "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json src/server/graphql/schema.ts",
+    "generate:graphql-codegen": "graphql-codegen",
+    "prisma:migrate": "yarn prisma migrate dev --preview-feature",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.29.0",
+    "@urql/exchange-graphcache": "^4.1.1",
+    "apollo-server-micro": "^2.24.1",
+    "cookie-session": "^1.4.0",
+    "dotenv": "^10.0.0",
+    "execa": "^5.0.0",
+    "graphql": "^15.5.0",
+    "next": "^11.0.1",
+    "next-connect": "^0.10.0",
+    "nexus": "^1.1.0",
+    "nexus-plugin-prisma": "^0.35.0",
+    "passport": "^0.4.1",
+    "passport-magic-login": "1.0.7",
+    "postmark": "^2.7.4",
+    "raw-body": "^2.4.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-hot-toast": "^1.0.2",
+    "slug": "^5.0.1",
+    "urql": "^2.0.3"
+  },
+  "prisma": {
+    "schema": "src/server/db/schema.prisma"
+  }
+}

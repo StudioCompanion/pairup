@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,15 +12,16 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "./packages/web",
+    "paths": {
+      "components/*": ["./src/client/components/*"],
+      "db/*": ["./src/server/db/*"],
+      "graphql/*": ["./src/client/graphql/*"],
+      "server/*": ["./src/server/*"],
+      "test/*": ["./test/*"]
+    }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "cypress"
-  ]
+  "include": ["**/*.config.js", "packages/**/*", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "**/cypress/**/*"]
 }

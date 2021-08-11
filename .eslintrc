@@ -1,0 +1,10 @@
+{
+  "parserOptions": {
+    "project": ["./tsconfig.json", "./packages/web/cypress/tsconfig.json"]
+  },
+  "extends": ["@studiocompanion/eslint-config"],
+  "ignorePatterns": "packages/cms/dist",
+  "rules": {
+    "react/react-in-jsx-scope": "off"
+  }
+}

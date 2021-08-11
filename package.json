@@ -1,54 +1,44 @@
 {
-  "name": "bedrock",
-  "version": "1.0.0",
+  "name": "pairup--root",
+  "version": "0.0.0",
   "private": true,
+  "description": "Monorepo for PairUp",
+  "author": "Companion Studio ltd",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
-    "predev": "yarn run generate",
-    "dev": "next dev",
-    "prebuild": "yarn run generate",
-    "build": "next build",
-    "start": "next start",
-    "start:ci": "INSECURE_AUTH=true yarn run start",
+    "cms:start": "yarn workspace cellulargoods-ecommercesite-cms start",
+    "cms:build": "yarn workspace cellulargoods-ecommercesite-cms build",
+    "cms:deploy": "yarn workspace cellulargoods-ecommercesite-cms deploy",
+    "cms:deploy-graphql": "yarn workspace cellulargoods-ecommercesite-cms deploy:graphql",
+    "cms:full-deploy": "yarn cms:deploy && yarn cms:deploy-graphql && yarn web:generate",
     "eslint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache --fix",
     "lint": "yarn run eslint . --ext .js,.jsx,.ts,.tsx",
-    "generate": "yarn run generate:prisma && yarn run generate:nexus && yarn run generate:graphql-codegen",
-    "generate:prisma": "prisma generate",
-    "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json src/server/graphql/schema.ts",
-    "generate:graphql-codegen": "graphql-codegen",
-    "prisma:migrate": "yarn prisma migrate dev --preview-feature",
-    "prisma:studio": "prisma studio",
-    "test": "jest",
+    "postinstall": "patch-package",
+    "prettier:write": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "test": "yarn test:e2e && yarn test:unit",
+    "test:e2e": "cypress open",
+    "test:unit": "jest",
     "typecheck": "concurrently --raw yarn:typecheck:*",
-    "typecheck:app": "tsc --noEmit",
-    "typecheck:cypress": "tsc --noEmit -p cypress/tsconfig.json",
-    "cypress:open": "cypress open"
-  },
-  "dependencies": {
-    "@prisma/client": "~2.19.0",
-    "@urql/exchange-graphcache": "^4.1.1",
-    "apollo-server-micro": "^2.24.1",
-    "cookie-session": "^1.4.0",
-    "dotenv": "^10.0.0",
-    "execa": "^5.0.0",
-    "graphql": "^15.5.0",
-    "next": "10.2.3",
-    "next-connect": "^0.10.0",
-    "nexus": "^1.0.0",
-    "nexus-plugin-prisma": "~0.33.0",
-    "passport": "^0.4.1",
-    "passport-magic-login": "1.0.7",
-    "postmark": "^2.7.4",
-    "raw-body": "^2.4.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-hot-toast": "^1.0.2",
-    "slug": "^5.0.1",
-    "stripe": "^8.149.0",
-    "urql": "^2.0.3"
+    "typecheck:app": "tsc --noEmit -p ./tsconfig.json",
+    "typecheck:cypress": "tsc --noEmit -p ./packages/web/cypress/tsconfig.json",
+    "web:dev": "yarn workspace pairup-web dev",
+    "web:build": "yarn workspace pairup-web build",
+    "web:generate": "yarn workspace pairup-web generate",
+    "web:prisma:migrate": "yarn workspace pairup-web prisma:migrate",
+    "web:prisma:studio": "yarn workspace pairup-web prisma:studio",
+    "web:start": "yarn workspace pairup-web start",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-typescript": "^7.13.0",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@graphql-codegen/cli": "1.21.4",
     "@graphql-codegen/near-operation-file-preset": "^1.18.0",
     "@graphql-codegen/plugin-helpers": "^1.18.4",
@@ -56,7 +46,7 @@
     "@graphql-codegen/typescript": "^1.22.0",
     "@graphql-codegen/typescript-operations": "1.17.16",
     "@graphql-codegen/typescript-urql": "^2.0.5",
-    "@stripe/stripe-js": "^1.15.0",
+    "@studiocompanion/scripts": "^1.1.0",
     "@types/common-tags": "^1.8.0",
     "@types/cookie-session": "^2.0.42",
     "@types/jest": "^26.0.23",
@@ -64,47 +54,28 @@
     "@types/passport": "^1.0.6",
     "@types/react": "^17.0.6",
     "@types/slug": "^5.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
     "common-tags": "1.8.0",
     "concurrently": "^6.2.0",
     "cross-env": "^7.0.3",
     "cypress": "^7.4.0",
-    "eslint": "^7.27.0",
-    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.11.3",
-    "eslint-plugin-import": "^2.23.3",
-    "husky": ">=4",
+    "husky": "^7.0.1",
     "jest": "^27.0.1",
     "lint-staged": ">=10",
-    "next-prisma-plugin": "~0.1.1",
-    "prettier": "^2.3.0",
-    "prisma": "~2.19.0",
+    "next-prisma-plugin": "^0.1.1",
+    "patch-package": "^6.4.7",
+    "prisma": "^2.29.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "jest": {
-    "setupFiles": [
-      "dotenv/config"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ],
-    "setupFilesAfterEnv": [
-      "./src/test/jest-setup.ts"
-    ],
-    "transform": {
-      "\\.tsx?$": [
-        "babel-jest",
-        {
-          "configFile": "./.babelrc.jest.js"
-        }
+    "rules": {
+      "body-max-line-length": [
+        0
       ]
     }
-  },
-  "prisma": {
-    "schema": "src/server/db/schema.prisma"
   }
 }
