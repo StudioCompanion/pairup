@@ -17,9 +17,12 @@
     "paths": {
       "components/*": ["./src/client/components/*"],
       "db/*": ["./src/server/db/*"],
+      "helpers/*": ["./src/client/helpers/*"],
+      "hooks/*": ["./src/client/hooks/*"],
       "graphql/*": ["./src/client/graphql/*"],
       "references/*": ["./src/client/references/*"],
       "server/*": ["./src/server/*"],
+      "store/*": ["./src/client/store/*"],
       "test/*": ["./test/*"]
     }
   },
