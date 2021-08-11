@@ -8,7 +8,6 @@
     "prebuild": "yarn run generate",
     "build": "next build",
     "start": "next start",
-    "start:ci": "INSECURE_AUTH=true yarn run start",
     "generate": "yarn run generate:prisma && yarn run generate:nexus && yarn run generate:graphql-codegen",
     "generate:prisma": "prisma generate",
     "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json src/server/graphql/schema.ts",

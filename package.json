@@ -20,6 +20,7 @@
     "postinstall": "patch-package",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
+    "start:ci": "INSECURE_AUTH=true yarn run web:start",
     "test": "yarn test:e2e && yarn test:unit",
     "test:e2e": "cypress open",
     "test:unit": "jest",

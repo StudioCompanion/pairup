@@ -64,12 +64,12 @@ jobs:
         run: yarn typecheck
 
       - name: Tests (Jest)
-        run: yarn test
+        run: yarn test:unit
 
       - name: End-to-end tests (Cypress)
         uses: cypress-io/github-action@v2
         with:
           install-command: yarn --frozen-lockfile --silent
-          build: yarn build
+          build: yarn web:build
           start: yarn start:ci
           wait-on: http://localhost:3000
