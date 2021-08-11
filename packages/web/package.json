@@ -34,6 +34,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hot-toast": "^1.0.2",
+    "react-intl": "^5.20.7",
     "slug": "^5.0.1",
     "urql": "^2.0.3"
   },

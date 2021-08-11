@@ -18,6 +18,7 @@
       "components/*": ["./src/client/components/*"],
       "db/*": ["./src/server/db/*"],
       "graphql/*": ["./src/client/graphql/*"],
+      "references/*": ["./src/client/references/*"],
       "server/*": ["./src/server/*"],
       "test/*": ["./test/*"]
     }
