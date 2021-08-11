@@ -1,6 +1,6 @@
 {
   "parserOptions": {
-    "project": ["./tsconfig.json", "./packages/web/cypress/tsconfig.json"]
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
   },
   "extends": ["@studiocompanion/eslint-config"],
   "ignorePatterns": "packages/cms/dist",
