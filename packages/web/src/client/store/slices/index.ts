@@ -3,7 +3,7 @@
  */
 
 import { combineReducers } from 'redux'
-import signupReducer from './signup'
+import signupReducer from './signup/slice'
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers

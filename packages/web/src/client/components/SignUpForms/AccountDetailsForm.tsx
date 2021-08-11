@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent } from 'react'
 
-import { ACCOUNT_DETAIL_FIELD_NAMES, signupActions } from 'store/slices/signup'
+import { SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES } from 'store/slices/signup/constants'
+import { signupActions } from 'store/slices/signup/slice'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useAppDispatch } from 'hooks/useAppDispatch'
@@ -19,7 +20,7 @@ const AccountDetailsForm = () => {
   }
 
   const handleOnChange =
-    (fieldName: ACCOUNT_DETAIL_FIELD_NAMES) =>
+    (fieldName: SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES) =>
     (e: ChangeEvent<HTMLInputElement>) => {
       dispatch(
         signupActions.setAccountDetails({
@@ -38,7 +39,7 @@ const AccountDetailsForm = () => {
         <input
           type="text"
           value={firstName}
-          onChange={handleOnChange(ACCOUNT_DETAIL_FIELD_NAMES.firstName)}
+          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.firstName)}
         />
       </label>
       <label>
@@ -46,7 +47,7 @@ const AccountDetailsForm = () => {
         <input
           type="text"
           value={lastName}
-          onChange={handleOnChange(ACCOUNT_DETAIL_FIELD_NAMES.lastName)}
+          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.lastName)}
         />
       </label>
       <label>
@@ -54,7 +55,7 @@ const AccountDetailsForm = () => {
         <input
           type="email"
           value={email}
-          onChange={handleOnChange(ACCOUNT_DETAIL_FIELD_NAMES.email)}
+          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.email)}
         />
       </label>
       <label>
@@ -62,7 +63,7 @@ const AccountDetailsForm = () => {
         <input
           type="password"
           value={password}
-          onChange={handleOnChange(ACCOUNT_DETAIL_FIELD_NAMES.password)}
+          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.password)}
         />
       </label>
       <button type="submit">Continue to Personal Details</button>

@@ -1,15 +1,43 @@
 import Link from 'next/link'
 import { FormattedMessage } from 'react-intl'
-import { SLUG_SIGNUP_ACCOUNT_DETAILS } from 'references/slugs'
+
+import { useTypedSelector } from 'hooks/useTypedSelector'
+import { useAppDispatch } from 'hooks/useAppDispatch'
+
+import { SIGNUP_STAGE } from 'store/slices/signup/constants'
+import { signupActions } from 'store/slices/signup/slice'
+
+import { AccountDetailsForm } from 'components/SignUpForms/AccountDetailsForm'
 
 const SignUp = () => {
-  return (
-    <Link href={SLUG_SIGNUP_ACCOUNT_DETAILS}>
-      <a>
+  const signupStage = useTypedSelector((state) => state.signup.stage)
+
+  const dispatch = useAppDispatch()
+
+  const handleStartClick = () => {
+    dispatch(
+      signupActions.setSignupStage({ newStage: SIGNUP_STAGE.ACCOUNT_DETAILS })
+    )
+  }
+
+  // START
+  if (signupStage === SIGNUP_STAGE.START) {
+    return (
+      <button onClick={handleStartClick}>
         <FormattedMessage id="signup-cta" />
-      </a>
-    </Link>
-  )
+      </button>
+    )
+  }
+  // ACCOUNT DETAILS
+  if (signupStage === SIGNUP_STAGE.ACCOUNT_DETAILS) {
+    return <AccountDetailsForm />
+  }
+
+  // PERSONAL DETAILS
+
+  // AVAILABILITY
+
+  return null
 }
 
 export default SignUp

@@ -6,11 +6,13 @@ const store = configureStore({
   reducer: rootReducer,
 })
 
+const isProd = process.env.NODE_ENV === 'production'
+
 export const initStore = (preloadedState = {}) => {
   const store = configureStore({
     preloadedState,
     reducer: rootReducer,
-    devTools: true,
+    devTools: !isProd,
   })
   return store
 }
