@@ -52,10 +52,10 @@ jobs:
         run: cp ./packages/web/.env.example ./packages/web/.env
 
       - name: Generate
-        run: yarn generate
+        run: yarn web:generate
 
       - name: Migrate the CI database
-        run: yarn prisma:migrate
+        run: yarn web:prisma:migrate
 
       - name: Lint
         run: yarn lint
