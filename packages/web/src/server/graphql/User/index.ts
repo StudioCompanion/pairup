@@ -5,7 +5,7 @@ const User = objectType({
   name: 'User',
   definition(t) {
     t.model.id()
-    t.model.name()
+    t.model.firstName()
     t.model.email()
   },
 })
@@ -35,14 +35,14 @@ const mutations = extendType({
       type: 'User',
       args: {
         userId: nonNull(stringArg()),
-        name: stringArg(),
+        firstName: stringArg(),
       },
-      resolve: async (_, { userId, name }, ctx) => {
+      resolve: async (_, { userId, firstName }, ctx) => {
         if (!ctx.user?.id || userId !== ctx.user.id) return null
 
         return await prisma.user.update({
           where: { id: userId },
-          data: { name },
+          data: { firstName: firstName || '' },
         })
       },
     })
