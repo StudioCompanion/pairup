@@ -1405,13 +1405,13 @@
     intl-messageformat "9.8.2"
     tslib "^2.1.0"
 
-"@graphql-codegen/add@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-2.0.2.tgz#4acbb95be9ebb859a3cebfe7132fdf49ffe06dd8"
-  integrity sha512-0X1ofeSvAjCNcLar2ZR1EOmm5dvyKJMFbgM+ySf1PaHyoi3yf/xRI2Du81ONzQ733Lhmn3KTX1VKybm/OB1Qtg==
+"@graphql-codegen/add@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-3.0.0.tgz#8a4ac54809de22140c2e6e49f3ec83ea8020ff44"
+  integrity sha512-JUUnFXVG2ciQuUi0dWfEsZOl5lCfXivl2CiOCgAbAeeU7Yt4WUiP65XhXX3CeANjDN/5N0NPjgmxfVTBi8Obeg==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.18.2"
-    tslib "~2.0.1"
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    tslib "~2.3.0"
 
 "@graphql-codegen/cli@1.21.4":
   version "1.21.4"
@@ -1469,14 +1469,14 @@
     "@graphql-tools/utils" "^6"
     tslib "~2.0.1"
 
-"@graphql-codegen/near-operation-file-preset@^1.18.0":
-  version "1.18.6"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/near-operation-file-preset/-/near-operation-file-preset-1.18.6.tgz#2378ac75feaeaa1cfd2146bd84bf839b1fe20d9d"
-  integrity sha512-MnNS0tWJlENvbqqoKc56Kv5yz9hsSDDKD3skXtBXiuAq4VzMoCC6nfpDdJXiYgbpLiVuuVQhbFFalVo9zqTEuA==
+"@graphql-codegen/near-operation-file-preset@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/near-operation-file-preset/-/near-operation-file-preset-2.0.0.tgz#58b754edab1da6ce1174023b149b1eac8d005337"
+  integrity sha512-zLB0uFzoIWH5URojsM1c3/pxrdsWTY66WInIhdgmFKdNuQFHCaGt5p4/0J1OvNYhJIgMqpvBvrX514c0yBTGNA==
   dependencies:
-    "@graphql-codegen/add" "^2.0.2"
-    "@graphql-codegen/plugin-helpers" "^1.18.8"
-    "@graphql-codegen/visitor-plugin-common" "1.22.0"
+    "@graphql-codegen/add" "^3.0.0"
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-codegen/visitor-plugin-common" "2.0.0"
     parse-filepath "^1.0.2"
     tslib "~2.3.0"
 
@@ -1486,6 +1486,17 @@
   integrity sha512-mb4I9j9lMGqvGggYuZ0CV+Hme08nar68xkpPbAVotg/ZBmlhZIok/HqW2BcMQi7Rj+Il5HQMeQ1wQ1M7sv/TlQ==
   dependencies:
     "@graphql-tools/utils" "^7.9.1"
+    common-tags "1.8.0"
+    import-from "4.0.0"
+    lodash "~4.17.0"
+    tslib "~2.3.0"
+
+"@graphql-codegen/plugin-helpers@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-2.0.0.tgz#8c66be320f63a69760112c46fc7c23c2de53382b"
+  integrity sha512-SkJeDIpSZbQA+t86t7y5yHn7uN6W/lDxiOi/JWxZRPW5Y5pZY+SP1GMOQgKUkwcS9jF3+ISSxBcE+KDVqluqCg==
+  dependencies:
+    "@graphql-tools/utils" "^8.0.1"
     common-tags "1.8.0"
     import-from "4.0.0"
     lodash "~4.17.0"
@@ -1542,6 +1553,22 @@
     "@graphql-codegen/plugin-helpers" "^1.18.8"
     "@graphql-tools/optimize" "^1.0.1"
     "@graphql-tools/relay-operation-optimizer" "^6.3.0"
+    array.prototype.flatmap "^1.2.4"
+    auto-bind "~4.0.0"
+    change-case-all "1.0.14"
+    dependency-graph "^0.11.0"
+    graphql-tag "^2.11.0"
+    parse-filepath "^1.0.2"
+    tslib "~2.3.0"
+
+"@graphql-codegen/visitor-plugin-common@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.0.0.tgz#4101a016f67dbf7eedc507b27518e9c84464f2c9"
+  integrity sha512-JUmOgUwc/hNiUDyihuzDQH/YZtAQseGo67buRDYLe5QW7XW9c9twEC0DlqzEKO8poJDDeemDAr8TPgBlLykXgg==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-tools/optimize" "^1.0.1"
+    "@graphql-tools/relay-operation-optimizer" "^6.3.3"
     array.prototype.flatmap "^1.2.4"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
@@ -1743,7 +1770,7 @@
     tslib "~2.3.0"
     yaml-ast-parser "^0.0.43"
 
-"@graphql-tools/relay-operation-optimizer@^6.3.0":
+"@graphql-tools/relay-operation-optimizer@^6.3.0", "@graphql-tools/relay-operation-optimizer@^6.3.3":
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/relay-operation-optimizer/-/relay-operation-optimizer-6.3.4.tgz#8c50ffd23b790cae462ec93b08f07a97cea9594f"
   integrity sha512-/KLAHGFh8Q8hVpoVBEtqLddrOI0ro2clHR1BsCLOaO6jkYZ7+O8JUGK/y/44Zj2gsxuFiQbgXAuG9tnLbtFLmw==
@@ -1823,7 +1850,7 @@
     value-or-promise "1.0.10"
     ws "8.0.0"
 
-"@graphql-tools/utils@8.0.2", "@graphql-tools/utils@^8.0.0":
+"@graphql-tools/utils@8.0.2", "@graphql-tools/utils@^8.0.0", "@graphql-tools/utils@^8.0.1":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.0.2.tgz#795a8383cdfdc89855707d62491c576f439f3c51"
   integrity sha512-gzkavMOgbhnwkHJYg32Adv6f+LxjbQmmbdD5Hty0+CWxvaiuJq+nU6tzb/7VSU4cwhbNLx/lGu2jbCPEW1McZQ==
