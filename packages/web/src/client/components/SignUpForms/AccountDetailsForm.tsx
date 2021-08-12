@@ -1,23 +1,24 @@
-import { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent } from 'react'
 
-import { SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES } from 'store/slices/signup/constants'
+import {
+  SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
+  SIGNUP_STAGE,
+} from 'store/slices/signup/constants'
 import { signupActions } from 'store/slices/signup/slice'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useAppDispatch } from 'hooks/useAppDispatch'
 
-const AccountDetailsForm = () => {
+type AccountDetailsProps = {
+  visible: boolean
+}
+
+const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
   const accountDetails = useTypedSelector(
     (state) => state.signup.accountDetails
   )
 
   const dispatch = useAppDispatch()
-
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    // eslint-disable-next-line no-console
-    console.log(accountDetails)
-  }
 
   const handleOnChange =
     (fieldName: SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES) =>
@@ -30,10 +31,22 @@ const AccountDetailsForm = () => {
       )
     }
 
+  const handleContinueClick = () => {
+    dispatch(
+      signupActions.setSignupStage({
+        newStage: SIGNUP_STAGE.PERSONAL_DETAILS,
+      })
+    )
+  }
+
   const { firstName, lastName, password, email } = accountDetails
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <fieldset
+      disabled={!visible}
+      style={{ display: visible ? 'block' : 'none' }}
+    >
+      <legend>account details</legend>
       <label>
         First Name
         <input
@@ -66,8 +79,10 @@ const AccountDetailsForm = () => {
           onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.password)}
         />
       </label>
-      <button type="submit">Continue to Personal Details</button>
-    </form>
+      <button type="button" onClick={handleContinueClick}>
+        Continue to Personal Details
+      </button>
+    </fieldset>
   )
 }
 
