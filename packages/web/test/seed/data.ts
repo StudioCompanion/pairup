@@ -4,16 +4,11 @@ export const testData: SeedData = {
   users: [
     {
       id: 'test',
-      name: 'Tester',
+      firstName: 'Tester',
       email: 'test@test.com',
-    },
-  ],
-  projects: [
-    {
-      id: 'test',
-      name: 'Test Project',
-      slug: 'test',
-      users: ['test'],
+      hashedPassword: 'test',
+      salt: '1',
+      userId: '1',
     },
   ],
 }

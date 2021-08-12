@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useGetCurrentUserQuery } from '../client/graphql/getCurrentUser.generated'
+import { useGetCurrentUserQuery } from 'graphql/getCurrentUser.generated'
 
 function Homepage() {
   const [{ data }] = useGetCurrentUserQuery()

@@ -9,9 +9,46 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @default(now())
-  email      String   @unique
-  name       String?
+  // Default entry stuff
+  id             String         @id @default(cuid())
+  createdAt      DateTime       @default(now())
+  modifiedAt     DateTime       @default(now())
+  // Account details
+  firstName      String?
+  lastName       String?
+  email          String         @unique
+  hashedPassword String         @unique
+  salt           String         @unique
+  // what's their role? Probably a pairer
+  role           Role           @default(PAIRER)
+  // Unique user ID
+  userId         String         @unique
+  pairerDetails  PairerDetails?
+}
+
+model PairerDetails {
+  // Default entry stuff
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @default(now())
+  // Personal Details
+  jobTitle     String?
+  companyUrl   String?
+  portfolioUrl String?
+  bio          String?
+  disciplines  String[]
+  twitter      String?
+  instagram    String?
+  linkedIn     String?
+  github       String?
+  // Availability
+
+  // User
+  user   User   @relation(fields: [userId], references: [userId])
+  userId String
+}
+
+enum Role {
+  PAIRER
+  PAIREE
 }

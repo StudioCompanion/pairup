@@ -5,14 +5,11 @@ import { testData } from './data'
 export interface SeedData {
   users: Array<{
     id: string
+    firstName?: string
     email: string
-    name?: string
-  }>
-  projects?: Array<{
-    id: string
-    name: string
-    slug: string
-    users?: Array<string>
+    hashedPassword: string
+    salt: string
+    userId: string
   }>
 }
 

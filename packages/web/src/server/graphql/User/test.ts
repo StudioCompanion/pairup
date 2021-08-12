@@ -29,7 +29,7 @@ describe(`currentUser`, () => {
           {
             currentUser {
               id
-              name
+              firstName
             }
           }
         `,
@@ -40,15 +40,15 @@ describe(`currentUser`, () => {
         }
       )
     ).toMatchInlineSnapshot(`
-          Object {
-            "data": Object {
-              "currentUser": Object {
-                "id": "test",
-                "name": "Tester",
-              },
-            },
-          }
-      `)
+      Object {
+        "data": Object {
+          "currentUser": Object {
+            "firstName": "Tester",
+            "id": "test",
+          },
+        },
+      }
+    `)
   })
 })
 
@@ -61,7 +61,7 @@ describe(`updateUser`, () => {
           {
             currentUser {
               id
-              name
+              firstName
             }
           }
         `,
@@ -75,8 +75,8 @@ describe(`updateUser`, () => {
       Object {
         "data": Object {
           "currentUser": Object {
+            "firstName": "Tester",
             "id": "test",
-            "name": "Tester",
           },
         },
       }
@@ -87,9 +87,9 @@ describe(`updateUser`, () => {
       await request(
         graphql`
           mutation updateUser($userId: String!) {
-            updateUser(userId: $userId, name: "New name") {
+            updateUser(userId: $userId, firstName: "New name") {
               id
-              name
+              firstName
             }
           }
         `,
@@ -97,6 +97,7 @@ describe(`updateUser`, () => {
           context: {
             user: testData.users[0],
           },
+
           variables: {
             userId: testData.users[0].id,
           },
@@ -106,8 +107,8 @@ describe(`updateUser`, () => {
       Object {
         "data": Object {
           "updateUser": Object {
+            "firstName": "New name",
             "id": "test",
-            "name": "New name",
           },
         },
       }
@@ -120,7 +121,7 @@ describe(`updateUser`, () => {
           {
             currentUser {
               id
-              name
+              firstName
             }
           }
         `,
@@ -134,8 +135,8 @@ describe(`updateUser`, () => {
       Object {
         "data": Object {
           "currentUser": Object {
+            "firstName": "New name",
             "id": "test",
-            "name": "New name",
           },
         },
       }
