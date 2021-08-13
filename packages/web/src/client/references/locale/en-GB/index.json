@@ -1,3 +1,20 @@
 {
-  "signup-cta": "That’s me! Sign up"
+  "signup-cta": "That’s me! Sign up",
+  "signup-accountdetails-title": "Account Details",
+  "signup-accountdetails-firstname": "First Name",
+  "signup-accountdetails-lastname": "Last Name",
+  "signup-accountdetails-email": "Email",
+  "signup-accountdetails-password": "Password",
+  "signup-accountdetails-continue": "Continue to Personal Details",
+  "signup-personaldetails-title": "Personal Details",
+  "signup-personaldetails-jobtitle": "Job title",
+  "signup-personaldetails-companyurl": "Company Url",
+  "signup-personaldetails-portfoliourl": "Portfolio Url",
+  "signup-personaldetails-bio": "Bio",
+  "signup-personaldetails-disciplines": "Disciplines",
+  "signup-personaldetails-twitter": "Twitter",
+  "signup-personaldetails-instagram": "Instagram",
+  "signup-personaldetails-linkedin": "LinkedIn",
+  "signup-personaldetails-github": "GitHub",
+  "signup-personaldetails-continue": "Continue to Availability"
 }

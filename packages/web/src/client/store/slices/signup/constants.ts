@@ -11,3 +11,15 @@ export enum SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES {
   email = 'email',
   password = 'password',
 }
+
+export enum SIGNUP_PERSONAL_DETAIL_FIELD_NAMES {
+  jobTitle = 'jobTitle',
+  companyUrl = 'companyUrl',
+  portfolioUrl = 'portfolioUrl',
+  bio = 'bio',
+  disciplines = 'disciplines',
+  twitter = 'twitter',
+  instagram = 'instagram',
+  linkedin = 'linkedin',
+  github = 'github',
+}

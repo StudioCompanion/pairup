@@ -8,13 +8,14 @@ import { signupActions } from 'store/slices/signup/slice'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useAppDispatch } from 'hooks/useAppDispatch'
+import { FormattedMessage } from 'react-intl'
 
 type AccountDetailsProps = {
   visible: boolean
 }
 
 const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
-  const accountDetails = useTypedSelector(
+  const { firstName, lastName, password, email } = useTypedSelector(
     (state) => state.signup.accountDetails
   )
 
@@ -39,16 +40,16 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
     )
   }
 
-  const { firstName, lastName, password, email } = accountDetails
-
   return (
     <fieldset
       disabled={!visible}
       style={{ display: visible ? 'block' : 'none' }}
     >
-      <legend>account details</legend>
+      <legend>
+        <FormattedMessage id="signup-accountdetails-title" />
+      </legend>
       <label>
-        First Name
+        <FormattedMessage id="signup-accountdetails-firstname" />
         <input
           type="text"
           value={firstName}
@@ -56,7 +57,7 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         />
       </label>
       <label>
-        Last Name
+        <FormattedMessage id="signup-accountdetails-lastname" />
         <input
           type="text"
           value={lastName}
@@ -64,7 +65,7 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         />
       </label>
       <label>
-        Email
+        <FormattedMessage id="signup-accountdetails-email" />
         <input
           type="email"
           value={email}
@@ -72,7 +73,7 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         />
       </label>
       <label>
-        Password
+        <FormattedMessage id="signup-accountdetails-password" />
         <input
           type="password"
           value={password}
@@ -80,7 +81,7 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         />
       </label>
       <button type="button" onClick={handleContinueClick}>
-        Continue to Personal Details
+        <FormattedMessage id="signup-accountdetails-continue" />
       </button>
     </fieldset>
   )
