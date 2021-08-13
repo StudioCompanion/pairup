@@ -146,6 +146,7 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
           value={twitter}
           name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.twitter}
           onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -155,6 +156,7 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
           value={instagram}
           name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.instagram}
           onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -164,6 +166,7 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
           value={linkedin}
           name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.linkedin}
           onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -173,6 +176,7 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
           value={github}
           name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.github}
           onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <div>
