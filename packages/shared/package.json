@@ -1,0 +1,5 @@
+{
+  "name": "@pairup/shared",
+  "version": "1.0.0",
+  "description": "Shared workspace that allows shared functions and variables across all packages"
+}

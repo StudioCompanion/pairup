@@ -1,23 +1,25 @@
-import { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent } from 'react'
 
-import { SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES } from 'store/slices/signup/constants'
+import {
+  SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
+  SIGNUP_STAGE,
+} from 'store/slices/signup/constants'
 import { signupActions } from 'store/slices/signup/slice'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useAppDispatch } from 'hooks/useAppDispatch'
+import { FormattedMessage } from 'react-intl'
 
-const AccountDetailsForm = () => {
-  const accountDetails = useTypedSelector(
+type AccountDetailsProps = {
+  visible: boolean
+}
+
+const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
+  const { firstName, lastName, password, email } = useTypedSelector(
     (state) => state.signup.accountDetails
   )
 
   const dispatch = useAppDispatch()
-
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    // eslint-disable-next-line no-console
-    console.log(accountDetails)
-  }
 
   const handleOnChange =
     (fieldName: SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES) =>
@@ -30,12 +32,24 @@ const AccountDetailsForm = () => {
       )
     }
 
-  const { firstName, lastName, password, email } = accountDetails
+  const handleContinueClick = () => {
+    dispatch(
+      signupActions.setSignupStage({
+        newStage: SIGNUP_STAGE.PERSONAL_DETAILS,
+      })
+    )
+  }
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <fieldset
+      disabled={!visible}
+      style={{ display: visible ? 'block' : 'none' }}
+    >
+      <legend>
+        <FormattedMessage id="signup-accountdetails-title" />
+      </legend>
       <label>
-        First Name
+        <FormattedMessage id="signup-accountdetails-firstname" />
         <input
           type="text"
           value={firstName}
@@ -43,7 +57,7 @@ const AccountDetailsForm = () => {
         />
       </label>
       <label>
-        Last Name
+        <FormattedMessage id="signup-accountdetails-lastname" />
         <input
           type="text"
           value={lastName}
@@ -51,7 +65,7 @@ const AccountDetailsForm = () => {
         />
       </label>
       <label>
-        Email
+        <FormattedMessage id="signup-accountdetails-email" />
         <input
           type="email"
           value={email}
@@ -59,15 +73,17 @@ const AccountDetailsForm = () => {
         />
       </label>
       <label>
-        Password
+        <FormattedMessage id="signup-accountdetails-password" />
         <input
           type="password"
           value={password}
           onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.password)}
         />
       </label>
-      <button type="submit">Continue to Personal Details</button>
-    </form>
+      <button type="button" onClick={handleContinueClick}>
+        <FormattedMessage id="signup-accountdetails-continue" />
+      </button>
+    </fieldset>
   )
 }
 

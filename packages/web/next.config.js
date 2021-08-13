@@ -15,4 +15,7 @@ module.exports = withPrismaPlugin({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    externalDir: true,
+  },
 })
