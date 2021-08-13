@@ -23,3 +23,9 @@ export enum SIGNUP_PERSONAL_DETAIL_FIELD_NAMES {
   linkedin = 'linkedin',
   github = 'github',
 }
+
+export enum SIGNUP_AVAILABILITY_FIELD_NAMES {
+  timezone = 'timezone',
+  startTime = 'startTime',
+  endTime = 'endTime',
+}
