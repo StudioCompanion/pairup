@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import {
   SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
@@ -8,7 +9,10 @@ import { signupActions } from 'store/slices/signup/slice'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useAppDispatch } from 'hooks/useAppDispatch'
-import { FormattedMessage } from 'react-intl'
+
+import { API_METHODS, fetchApi } from 'data/api'
+
+import { POST_API_SLUGS } from 'references/slugs'
 
 type AccountDetailsProps = {
   visible: boolean
@@ -31,12 +35,29 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
     )
   }
 
-  const handleContinueClick = () => {
-    dispatch(
-      signupActions.setSignupStage({
-        newStage: SIGNUP_STAGE.PERSONAL_DETAILS,
-      })
+  const handleContinueClick = async () => {
+    const res = await fetchApi(
+      API_METHODS.POST,
+      POST_API_SLUGS.EMAILS_CHECK_UNIQUE,
+      {
+        email,
+      }
     )
+
+    if (res && res.status === 200) {
+      dispatch(
+        signupActions.setSignupStage({
+          newStage: SIGNUP_STAGE.PERSONAL_DETAILS,
+        })
+      )
+    } else if (res) {
+      const { error } = await res.json()
+
+      /**
+       * Feedback because the email can't be used
+       */
+      console.error(error)
+    }
   }
 
   return (

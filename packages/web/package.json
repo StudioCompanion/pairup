@@ -30,7 +30,7 @@
     "nexus": "^1.1.0",
     "nexus-plugin-prisma": "^0.35.0",
     "passport": "^0.4.1",
-    "passport-magic-login": "1.0.7",
+    "passport-local": "^1.0.0",
     "postmark": "^2.7.4",
     "raw-body": "^2.4.1",
     "react": "17.0.2",
@@ -38,8 +38,10 @@
     "react-hot-toast": "^1.0.2",
     "react-intl": "^5.20.7",
     "react-redux": "^7.2.4",
+    "sanitize": "^2.1.0",
     "slug": "^5.0.1",
-    "urql": "^2.0.3"
+    "urql": "^2.0.3",
+    "validator": "^13.6.0"
   },
   "prisma": {
     "schema": "src/server/db/schema.prisma"
