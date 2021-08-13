@@ -21,16 +21,15 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
 
   const dispatch = useAppDispatch()
 
-  const handleOnChange =
-    (fieldName: SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES) =>
-    (e: ChangeEvent<HTMLInputElement>) => {
-      dispatch(
-        signupActions.setAccountDetails({
-          fieldName,
-          [fieldName]: e.currentTarget.value,
-        })
-      )
-    }
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const fieldName = e.currentTarget.name as SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES
+    dispatch(
+      signupActions.setAccountDetails({
+        fieldName,
+        [fieldName]: e.currentTarget.value,
+      })
+    )
+  }
 
   const handleContinueClick = () => {
     dispatch(
@@ -41,19 +40,18 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
   }
 
   return (
-    <fieldset
-      disabled={!visible}
-      style={{ display: visible ? 'block' : 'none' }}
-    >
-      <legend>
+    <section style={{ display: visible ? 'block' : 'none' }}>
+      <h2>
         <FormattedMessage id="signup-accountdetails-title" />
-      </legend>
+      </h2>
       <label>
         <FormattedMessage id="signup-accountdetails-firstname" />
         <input
           type="text"
           value={firstName}
-          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.firstName)}
+          name={SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.firstName}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -61,7 +59,9 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         <input
           type="text"
           value={lastName}
-          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.lastName)}
+          name={SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.lastName}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -69,7 +69,9 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         <input
           type="email"
           value={email}
-          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.email)}
+          name={SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.email}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -77,13 +79,17 @@ const AccountDetailsForm = ({ visible }: AccountDetailsProps) => {
         <input
           type="password"
           value={password}
-          onChange={handleOnChange(SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.password)}
+          name={SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.password}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
-      <button type="button" onClick={handleContinueClick}>
-        <FormattedMessage id="signup-accountdetails-continue" />
-      </button>
-    </fieldset>
+      <div>
+        <button type="button" onClick={handleContinueClick} disabled={!visible}>
+          <FormattedMessage id="signup-accountdetails-continue" />
+        </button>
+      </div>
+    </section>
   )
 }
 
