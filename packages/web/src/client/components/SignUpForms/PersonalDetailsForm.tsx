@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import { DISCIPLINES } from '@pairup/shared/constants'
+import { DISCIPLINES } from '@pairup/shared'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useAppDispatch } from 'hooks/useAppDispatch'
@@ -30,42 +30,40 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
 
   const dispatch = useAppDispatch()
 
-  const handleOnChange =
-    (fieldName: SIGNUP_PERSONAL_DETAIL_FIELD_NAMES) =>
-    (e: ChangeEvent<HTMLInputElement>) => {
-      /**
-       * If it's a checkbox we're using an array
-       * to manage it all so need to perform special
-       * logic on this
-       */
-      if (fieldName === SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.disciplines) {
-        const { value } = e.currentTarget
-        // If the value exists, remove it
-        if (disciplines.includes(value)) {
-          dispatch(
-            signupActions.setPersonalDetails({
-              fieldName,
-              [fieldName]: disciplines.filter((x) => x !== value),
-            })
-          )
-        } else {
-          // If it doesn't exist, add it
-          dispatch(
-            signupActions.setPersonalDetails({
-              fieldName,
-              [fieldName]: [...disciplines, value],
-            })
-          )
-        }
-      } else {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name: fieldName, value } = e.currentTarget
+    /**
+     * If it's a checkbox we're using an array
+     * to manage it all so need to perform special
+     * logic on this
+     */
+    if (fieldName === SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.disciplines) {
+      // If the value exists, remove it
+      if (disciplines.includes(value)) {
         dispatch(
           signupActions.setPersonalDetails({
             fieldName,
-            [fieldName]: e.currentTarget.value,
+            [fieldName]: disciplines.filter((x) => x !== value),
+          })
+        )
+      } else {
+        // If it doesn't exist, add it
+        dispatch(
+          signupActions.setPersonalDetails({
+            fieldName,
+            [fieldName]: [...disciplines, value],
           })
         )
       }
+    } else {
+      dispatch(
+        signupActions.setPersonalDetails({
+          fieldName: fieldName as SIGNUP_PERSONAL_DETAIL_FIELD_NAMES,
+          [fieldName]: e.currentTarget.value,
+        })
+      )
     }
+  }
 
   const handleContinueClick = () => {
     dispatch(
@@ -76,19 +74,18 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
   }
 
   return (
-    <fieldset
-      disabled={!visible}
-      style={{ display: visible ? 'block' : 'none' }}
-    >
-      <legend>
+    <section style={{ display: visible ? 'block' : 'none' }}>
+      <h2>
         <FormattedMessage id="signup-personaldetails-title" />
-      </legend>
+      </h2>
       <label>
         <FormattedMessage id="signup-personaldetails-jobtitle" />
         <input
           type="text"
           value={jobTitle}
-          onChange={handleOnChange(SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.jobTitle)}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.jobTitle}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -96,9 +93,9 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         <input
           type="url"
           value={companyUrl}
-          onChange={handleOnChange(
-            SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.companyUrl
-          )}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.companyUrl}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -106,9 +103,9 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         <input
           type="url"
           value={portfolioUrl}
-          onChange={handleOnChange(
-            SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.portfolioUrl
-          )}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.portfolioUrl}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -116,33 +113,40 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         <input
           type="text"
           value={bio}
-          onChange={handleOnChange(SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.bio)}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.bio}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
-      <fieldset>
+      <fieldset disabled={!visible}>
         <legend>
           <FormattedMessage id="signup-personaldetails-disciplines" />
         </legend>
-        {Object.values(DISCIPLINES).map((x) => (
-          <label key={x}>
-            <input
-              type="checkbox"
-              value={x}
-              checked={disciplines.includes(x)}
-              onChange={handleOnChange(
-                SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.disciplines
-              )}
-            />
-            {x}
-          </label>
-        ))}
+        <ul>
+          {Object.values(DISCIPLINES).map((discipline) => (
+            <li key={discipline}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={discipline}
+                  checked={disciplines.includes(discipline)}
+                  name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.disciplines}
+                  onChange={handleOnChange}
+                />
+                {discipline}
+              </label>
+            </li>
+          ))}
+        </ul>
       </fieldset>
       <label>
         <FormattedMessage id="signup-personaldetails-twitter" />
         <input
           type="url"
           value={twitter}
-          onChange={handleOnChange(SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.twitter)}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.twitter}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -150,9 +154,9 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         <input
           type="url"
           value={instagram}
-          onChange={handleOnChange(
-            SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.instagram
-          )}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.instagram}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -160,7 +164,9 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         <input
           type="url"
           value={linkedin}
-          onChange={handleOnChange(SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.linkedin)}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.linkedin}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
       <label>
@@ -168,12 +174,16 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         <input
           type="url"
           value={github}
-          onChange={handleOnChange(SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.github)}
+          name={SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.github}
+          onChange={handleOnChange}
+          disabled={!visible}
         />
       </label>
-      <button type="button" onClick={handleContinueClick}>
-        <FormattedMessage id="signup-personaldetails-continue" />
-      </button>
-    </fieldset>
+      <div>
+        <button type="button" onClick={handleContinueClick} disabled={!visible}>
+          <FormattedMessage id="signup-personaldetails-continue" />
+        </button>
+      </div>
+    </section>
   )
 }

@@ -1,9 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { DAYS_OF_THE_WEEK, TIMEZONES } from '@pairup/shared'
 
 import {
   SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
   SIGNUP_STAGE,
   SIGNUP_PERSONAL_DETAIL_FIELD_NAMES,
+  SIGNUP_AVAILABILITY_FIELD_NAMES,
 } from './constants'
 
 export type SignUpAccountDetails = {
@@ -25,10 +27,36 @@ export type SignUpPersonalDetails = {
   github: string
 }
 
+type AvailableTime = {
+  startTime: string
+  endTime: string
+}
+
+const BASE_AVAILABLE_TIME: AvailableTime = {
+  startTime: '00:00',
+  endTime: '00:00',
+}
+
+type AvailabilityTimes = {
+  [DAYS_OF_THE_WEEK.MONDAY]: AvailableTime[]
+  [DAYS_OF_THE_WEEK.TUESDAY]: AvailableTime[]
+  [DAYS_OF_THE_WEEK.WEDNESDAY]: AvailableTime[]
+  [DAYS_OF_THE_WEEK.THURSDAY]: AvailableTime[]
+  [DAYS_OF_THE_WEEK.FRIDAY]: AvailableTime[]
+  [DAYS_OF_THE_WEEK.SATURDAY]: AvailableTime[]
+  [DAYS_OF_THE_WEEK.SUNDAY]: AvailableTime[]
+}
+
+export type SignUpAvailability = {
+  timezone: TIMEZONES
+  availabilityTimes: AvailabilityTimes
+}
+
 export type SignUpInitialState = {
   stage: SIGNUP_STAGE
   accountDetails: SignUpAccountDetails
   personalDetails: SignUpPersonalDetails
+  availability: SignUpAvailability
 }
 
 export const initialState: SignUpInitialState = {
@@ -49,6 +77,18 @@ export const initialState: SignUpInitialState = {
     instagram: '',
     linkedin: '',
     github: '',
+  },
+  availability: {
+    timezone: TIMEZONES.GMT,
+    availabilityTimes: {
+      [DAYS_OF_THE_WEEK.MONDAY]: [BASE_AVAILABLE_TIME],
+      [DAYS_OF_THE_WEEK.TUESDAY]: [BASE_AVAILABLE_TIME],
+      [DAYS_OF_THE_WEEK.WEDNESDAY]: [BASE_AVAILABLE_TIME],
+      [DAYS_OF_THE_WEEK.THURSDAY]: [BASE_AVAILABLE_TIME],
+      [DAYS_OF_THE_WEEK.FRIDAY]: [BASE_AVAILABLE_TIME],
+      [DAYS_OF_THE_WEEK.SATURDAY]: [BASE_AVAILABLE_TIME],
+      [DAYS_OF_THE_WEEK.SUNDAY]: [BASE_AVAILABLE_TIME],
+    },
   },
 }
 
@@ -94,6 +134,35 @@ const signupReducer = createSlice({
       } else {
         state.personalDetails[payload.fieldName] =
           payload[payload.fieldName] || ''
+      }
+    },
+    setAvailability: (
+      state,
+      action: PayloadAction<
+        Partial<Pick<SignUpAvailability, 'timezone'>> &
+          Partial<AvailableTime> & {
+            day?: DAYS_OF_THE_WEEK
+            fieldName: SIGNUP_AVAILABILITY_FIELD_NAMES
+          }
+      >
+    ) => {
+      const { payload } = action
+      const { fieldName, day } = payload
+
+      if (
+        (fieldName === SIGNUP_AVAILABILITY_FIELD_NAMES.startTime ||
+          fieldName === SIGNUP_AVAILABILITY_FIELD_NAMES.endTime) &&
+        day
+      ) {
+        const [time] = state.availability.availabilityTimes[day]
+        state.availability.availabilityTimes[day] = [
+          {
+            ...time,
+            [fieldName]: payload[fieldName],
+          },
+        ]
+      } else if (fieldName === SIGNUP_AVAILABILITY_FIELD_NAMES.timezone) {
+        state.availability[fieldName] = payload[fieldName] || TIMEZONES.GMT
       }
     },
   },

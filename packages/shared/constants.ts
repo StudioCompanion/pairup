@@ -28,3 +28,19 @@ export enum DISCIPLINES {
   SUSTAINABILITY = 'Sustainability',
   WRITING = 'Writing',
 }
+
+export enum DAYS_OF_THE_WEEK {
+  MONDAY = 'monday',
+  TUESDAY = 'tuesday',
+  WEDNESDAY = 'wednesday',
+  THURSDAY = 'thursday',
+  FRIDAY = 'friday',
+  SATURDAY = 'saturday',
+  SUNDAY = 'sunday',
+}
+
+export enum TIMEZONES {
+  GMT_MINUS_1 = 'GMT -1',
+  GMT = 'GMT',
+  GMT_PLUS_1 = 'GMT +1',
+}

@@ -16,5 +16,21 @@
   "signup-personaldetails-instagram": "Instagram",
   "signup-personaldetails-linkedin": "LinkedIn",
   "signup-personaldetails-github": "GitHub",
-  "signup-personaldetails-continue": "Continue to Availability"
+  "signup-personaldetails-continue": "Continue to Availability",
+  "signup-availability-title": "Availability",
+  "signup-availability-timezone": "Timezone",
+  "signup-availability-availability": "Availability",
+  "signup-availability-monday": "Mon",
+  "signup-availability-tuesday": "Tue",
+  "signup-availability-wednesday": "Wed",
+  "signup-availability-thursday": "Thu",
+  "signup-availability-friday": "Fri",
+  "signup-availability-saturday": "Sat",
+  "signup-availability-sunday": "Sun",
+  "signup-availability-empty": "No sessions",
+  "signup-availability-timestart": "Time start",
+  "signup-availability-timeend": "Time end",
+  "signup-availability-addnew": "Add new",
+  "signup-availability-remove": "Remove",
+  "signup-availability-submit": "Complete account setup"
 }
