@@ -1,5 +1,5 @@
 {
-  "name": "pairup-web",
+  "name": "@pairup/web",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@pairup/shared": "1.0.0",
     "@prisma/client": "^2.29.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@urql/exchange-graphcache": "^4.1.1",

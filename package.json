@@ -10,10 +10,10 @@
     ]
   },
   "scripts": {
-    "cms:start": "yarn workspace cellulargoods-ecommercesite-cms start",
-    "cms:build": "yarn workspace cellulargoods-ecommercesite-cms build",
-    "cms:deploy": "yarn workspace cellulargoods-ecommercesite-cms deploy",
-    "cms:deploy-graphql": "yarn workspace cellulargoods-ecommercesite-cms deploy:graphql",
+    "cms:start": "yarn workspace @pairup/cms start",
+    "cms:build": "yarn workspace @pairup/cms build",
+    "cms:deploy": "yarn workspace @pairup/cms deploy",
+    "cms:deploy-graphql": "yarn workspace @pairup/cms deploy:graphql",
     "cms:full-deploy": "yarn cms:deploy && yarn cms:deploy-graphql && yarn web:generate",
     "eslint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache --fix",
     "lint": "yarn run eslint . --ext .js,.jsx,.ts,.tsx",
@@ -27,12 +27,12 @@
     "typecheck": "concurrently --raw yarn:typecheck:*",
     "typecheck:app": "tsc --noEmit -p ./tsconfig.json",
     "typecheck:cypress": "tsc --noEmit -p ./cypress/tsconfig.json",
-    "web:dev": "yarn workspace pairup-web dev",
-    "web:build": "yarn workspace pairup-web build",
-    "web:generate": "yarn workspace pairup-web generate",
-    "web:prisma:migrate": "yarn workspace pairup-web prisma:migrate",
-    "web:prisma:studio": "yarn workspace pairup-web prisma:studio",
-    "web:start": "yarn workspace pairup-web start",
+    "web:dev": "yarn workspace @pairup/web dev",
+    "web:build": "yarn workspace @pairup/web build",
+    "web:generate": "yarn workspace @pairup/web generate",
+    "web:prisma:migrate": "yarn workspace @pairup/web prisma:migrate",
+    "web:prisma:studio": "yarn workspace @pairup/web prisma:studio",
+    "web:start": "yarn workspace @pairup/web start",
     "prepare": "husky install"
   },
   "devDependencies": {
