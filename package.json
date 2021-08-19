@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
-    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/cli": "2.1.0",
     "@graphql-codegen/near-operation-file-preset": "^1.18.0",
     "@graphql-codegen/plugin-helpers": "^1.18.4",
     "@graphql-codegen/typed-document-node": "^1.18.5",
