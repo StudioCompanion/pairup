@@ -8,7 +8,10 @@ export interface SeedData {
   users: Array<
     Omit<User, 'id' | 'createdAt' | 'modifiedAt'> & {
       pairerDetails: {
-        create: Omit<PairerDetails, 'id' | 'createdAt' | 'modifiedAt'> & {
+        create: Omit<
+          PairerDetails,
+          'id' | 'createdAt' | 'modifiedAt' | 'userId'
+        > & {
           availability: {
             create: Omit<Availability, 'id' | 'createdAt' | 'modifiedAt'>
           }

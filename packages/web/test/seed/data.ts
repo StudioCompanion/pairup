@@ -21,12 +21,8 @@ export const testData: SeedData = {
           instagram: '',
           linkedin: '',
           github: 'joshuaellis',
-          userId: 'f981adbe-991f-4c60-a807-ab574912f223',
           availability: {
             create: {
-              // id: '1',
-              // createdAt: '2021-08-22T17:46:27.720Z' as unknown as Date,
-              // modifiedAt: '2021-08-22T17:46:27.720Z' as unknown as Date,
               timezone: 'GMT',
               monday: [
                 {

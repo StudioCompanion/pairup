@@ -10,7 +10,7 @@ describe('sign-up', () => {
     // fill in account details
     cy.findByLabelText('First Name').type('Josh')
     cy.findByLabelText('Last Name').type('Ellis')
-    cy.findByLabelText('Email').type('josh@companion.studio')
+    cy.findByLabelText('Email').type('joshua@companion.studio')
     cy.findByLabelText('Password').type('apples')
 
     // go to personal details
@@ -36,5 +36,19 @@ describe('sign-up', () => {
 
     // submit
     cy.findByText('Complete account setup').click()
+  })
+
+  it('should not let you create an account if you have already used that email', () => {
+    // go to account details
+    cy.findByText('That’s me! Sign up').click()
+
+    // fill in account details
+    cy.findByLabelText('First Name').type('Josh')
+    cy.findByLabelText('Last Name').type('Ellis')
+    cy.findByLabelText('Email').type('josh@companion.studio')
+    cy.findByLabelText('Password').type('apples')
+
+    // TO DO – validate
+    // cy.findByText('Continue to Personal Details').should('be.disabled')
   })
 })
