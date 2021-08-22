@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { DAYS_OF_THE_WEEK, TIMEZONES } from '@pairup/shared'
+import { DAYS_OF_THE_WEEK, DISCIPLINES, TIMEZONES } from '@pairup/shared'
 
 import {
   SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
@@ -20,7 +20,7 @@ export type SignUpPersonalDetails = {
   companyUrl: string
   portfolioUrl: string
   bio: string
-  disciplines: string[]
+  disciplines: DISCIPLINES[]
   twitter: string
   instagram: string
   linkedin: string
@@ -37,7 +37,7 @@ const BASE_AVAILABLE_TIME: AvailableTime = {
   endTime: '00:00',
 }
 
-type AvailabilityTimes = {
+export type AvailabilityTimes = {
   [DAYS_OF_THE_WEEK.MONDAY]: AvailableTime[]
   [DAYS_OF_THE_WEEK.TUESDAY]: AvailableTime[]
   [DAYS_OF_THE_WEEK.WEDNESDAY]: AvailableTime[]

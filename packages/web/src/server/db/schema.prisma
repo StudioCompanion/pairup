@@ -14,8 +14,8 @@ model User {
   createdAt      DateTime       @default(now())
   modifiedAt     DateTime       @default(now())
   // Account details
-  firstName      String?
-  lastName       String?
+  firstName      String
+  lastName       String
   email          String         @unique
   hashedPassword String         @unique
   salt           String         @unique
@@ -28,24 +28,45 @@ model User {
 
 model PairerDetails {
   // Default entry stuff
-  id           String   @id @default(cuid())
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @default(now())
+  id           String       @id @default(cuid())
+  createdAt    DateTime     @default(now())
+  modifiedAt   DateTime     @default(now())
   // Personal Details
-  jobTitle     String?
-  companyUrl   String?
-  portfolioUrl String?
-  bio          String?
+  jobTitle     String
+  companyUrl   String
+  portfolioUrl String
+  bio          String
   disciplines  String[]
-  twitter      String?
-  instagram    String?
-  linkedIn     String?
-  github       String?
-  // Availability
-
+  twitter      String
+  instagram    String
+  linkedin     String
+  github       String
   // User
-  user   User   @relation(fields: [userId], references: [userId])
-  userId String
+  user         User         @relation(fields: [userId], references: [userId])
+  userId       String       @unique
+  // Availability
+  availability Availability @relation(fields: [userId], references: [userId])
+}
+
+model Availability {
+  // Default entry stuff
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  modifiedAt    DateTime       @default(now())
+  // Timezone
+  timezone      String
+  // Days of the week
+  monday        Json[]
+  tuesday       Json[]
+  wednesday     Json[]
+  thursday      Json[]
+  friday        Json[]
+  saturday      Json[]
+  sunday        Json[]
+  // User
+  userId        String         @unique
+  // Pairer details
+  pairerDetails PairerDetails?
 }
 
 enum Role {

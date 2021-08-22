@@ -99,7 +99,7 @@ describe(`updateUser`, () => {
           },
 
           variables: {
-            userId: testData.users[0].id,
+            userId: testData.users[0].userId,
           },
         }
       )
