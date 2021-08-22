@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { FormEvent, useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
@@ -10,25 +10,9 @@ import { signupActions } from 'store/slices/signup/slice'
 import { AccountDetailsForm } from 'components/SignUpForms/AccountDetailsForm'
 import { PersonalDetailsForm } from 'components/SignUpForms/PersonalDetailsForm'
 import { AvailabilityForm } from 'components/SignUpForms/AvailabilityForm'
-import { omit } from 'helpers/objects'
-
-import { POST_API_SLUGS } from 'references/slugs'
-import { API_METHODS, fetchApi } from 'data/api'
 
 const SignUp = () => {
   const signupStage = useTypedSelector((state) => state.signup.stage)
-
-  const signupData = useTypedSelector(
-    ({ signup }) => ({
-      ...signup.accountDetails,
-      ...signup.personalDetails,
-      ...signup.availability,
-      stage: signup.stage,
-    }),
-    (left) => {
-      return left.stage !== SIGNUP_STAGE.AVAILABILITY
-    }
-  )
 
   const dispatch = useAppDispatch()
 
@@ -38,15 +22,10 @@ const SignUp = () => {
     )
   }
 
-  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const formData = omit(signupData, 'stage')
-
-    const res = await fetchApi(
-      API_METHODS.POST,
-      POST_API_SLUGS.ACCOUNTS_SIGN_UP,
-      formData
-    )
+    // eslint-disable-next-line no-console
+    console.log('SUBMIT THE FORM')
   }
 
   // START
