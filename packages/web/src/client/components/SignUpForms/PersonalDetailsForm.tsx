@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { DISCIPLINES } from '@pairup/shared'
 
 import { useTypedSelector } from 'hooks/useTypedSelector'
@@ -9,7 +10,6 @@ import {
   SIGNUP_STAGE,
 } from 'store/slices/signup/constants'
 import { signupActions } from 'store/slices/signup/slice'
-import { FormattedMessage } from 'react-intl'
 
 type PersonalDetailsProps = {
   visible: boolean
@@ -39,11 +39,12 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
      */
     if (fieldName === SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.disciplines) {
       // If the value exists, remove it
-      if (disciplines.includes(value)) {
+      const val = value as DISCIPLINES
+      if (disciplines.includes(val)) {
         dispatch(
           signupActions.setPersonalDetails({
             fieldName,
-            [fieldName]: disciplines.filter((x) => x !== value),
+            [fieldName]: disciplines.filter((x) => x !== val),
           })
         )
       } else {
@@ -51,7 +52,7 @@ export const PersonalDetailsForm = ({ visible }: PersonalDetailsProps) => {
         dispatch(
           signupActions.setPersonalDetails({
             fieldName,
-            [fieldName]: [...disciplines, value],
+            [fieldName]: [...disciplines, val],
           })
         )
       }

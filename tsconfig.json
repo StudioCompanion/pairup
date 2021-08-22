@@ -16,6 +16,7 @@
     "baseUrl": "./packages/web",
     "paths": {
       "components/*": ["./src/client/components/*"],
+      "data/*": ["./src/client/data/*"],
       "db/*": ["./src/server/db/*"],
       "helpers/*": ["./src/client/helpers/*"],
       "hooks/*": ["./src/client/hooks/*"],
@@ -26,6 +27,12 @@
       "test/*": ["./test/*"]
     }
   },
-  "include": ["**/*.config.js", "packages/**/*", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "**/*.config.js",
+    "packages/**/*",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.d.ts"
+  ],
   "exclude": ["node_modules", "./cypress/**/*"]
 }

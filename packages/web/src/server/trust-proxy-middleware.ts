@@ -1,5 +1,6 @@
 import { NextApiResponse } from 'next'
 import { Middleware } from 'next-connect'
+
 import { Request } from './api-route'
 
 /**

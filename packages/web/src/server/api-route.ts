@@ -1,6 +1,8 @@
 import cookieSession from 'cookie-session'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nc from 'next-connect'
+
+import sanitize from 'sanitize'
 import { error } from 'next/dist/build/output/log'
 
 import passport from './passport'
@@ -52,6 +54,7 @@ function handler() {
             !process.env.INSECURE_AUTH,
         })
       )
+      .use(sanitize.middleware)
       .use(passport.initialize())
       .use(passport.session())
   )

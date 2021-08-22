@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { SLUG_SIGNUP } from 'references/slugs'
 
 import { useGetCurrentUserQuery } from '../../client/graphql/getCurrentUser.generated'
 
@@ -14,10 +15,10 @@ export default function Dashboard() {
   if (error) return <p>{error.message}</p>
 
   if (!data?.currentUser) {
-    if (process.browser) router.push('/login')
+    if (process.browser) router.push(SLUG_SIGNUP)
     return (
       <p>
-        Redirecting to <Link href="/login">/login</Link>
+        Redirecting to <Link href={SLUG_SIGNUP}>{SLUG_SIGNUP}</Link>
         ...
       </p>
     )

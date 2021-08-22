@@ -1,9 +1,6 @@
 import passport from 'passport'
-import magicLink from './magicLink'
 import prisma from '../db/prisma'
 import { randomUUID } from 'crypto'
-
-passport.use(magicLink)
 
 // This types passport.(de)serializeUser!
 declare global {

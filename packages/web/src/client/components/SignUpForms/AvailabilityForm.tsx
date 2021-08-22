@@ -69,31 +69,39 @@ export const AvailabilityForm = ({ visible }: AvailabilityProps) => {
         <ul>
           {Object.values(DAYS_OF_THE_WEEK).map((day) => (
             <li key={day}>
-              <label>
+              <h3>
                 <FormattedMessage id={`signup-availability-${day}`} />
-                <ul>
-                  <li>
-                    <label>
-                      <FormattedMessage id="signup-availability-timestart" />
-                      <input
-                        type="time"
-                        name={SIGNUP_AVAILABILITY_FIELD_NAMES.startTime}
-                        value={availabilityTimes[day][0].startTime}
-                        onChange={handleTimeChange(day)}
-                      />
-                    </label>
-                    <label>
-                      <FormattedMessage id="signup-availability-timeend" />
-                      <input
-                        type="time"
-                        name={SIGNUP_AVAILABILITY_FIELD_NAMES.endTime}
-                        value={availabilityTimes[day][0].endTime}
-                        onChange={handleTimeChange(day)}
-                      />
-                    </label>
-                  </li>
-                </ul>
-              </label>
+              </h3>
+              <ul>
+                <li>
+                  <ul>
+                    <li>
+                      <label>
+                        {`${day} `}
+                        <FormattedMessage id="signup-availability-timestart" />
+                        <input
+                          type="time"
+                          name={SIGNUP_AVAILABILITY_FIELD_NAMES.startTime}
+                          value={availabilityTimes[day][0].startTime}
+                          onChange={handleTimeChange(day)}
+                        />
+                      </label>
+                    </li>
+                    <li>
+                      <label>
+                        {`${day} `}
+                        <FormattedMessage id="signup-availability-timeend" />
+                        <input
+                          type="time"
+                          name={SIGNUP_AVAILABILITY_FIELD_NAMES.endTime}
+                          value={availabilityTimes[day][0].endTime}
+                          onChange={handleTimeChange(day)}
+                        />
+                      </label>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
             </li>
           ))}
         </ul>
