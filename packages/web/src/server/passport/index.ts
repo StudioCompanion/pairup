@@ -1,8 +1,8 @@
 import passport from 'passport'
 
-import { local } from './local'
+import { CreatedUser } from 'server/accounts/sign-up'
 
-import prisma from '../db/prisma'
+import { local } from './local'
 
 passport.use(local)
 
@@ -10,39 +10,18 @@ passport.use(local)
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
-    interface User {
-      id: string
-      email: string
-      provider: string
-      redirect?: string
-    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface User extends CreatedUser {}
   }
 }
 
-passport.serializeUser(async (u: Express.User, done) => {
-  // console.log('USER', u)
-  const email = u.email.toLowerCase()
-  const hashedPassword = ''
+passport.serializeUser((user: Express.User, done) => {
+  const { userId, email } = user
 
-  // pbkdf2(u.pas)
-
-  // const user = await prisma.user.upsert({
-  //   create: {
-  //     userId: randomUUID(),
-  //     salt,
-  //     hashedPassword,
-  //     email,
-  //   },
-  //   update: {},
-  //   where: {
-  //     email,
-  //   },
-  // })
-
-  // done(null, {
-  //   ...u,
-  //   id: user.id,
-  // })
+  done(null, {
+    userId,
+    email,
+  })
 })
 
 passport.deserializeUser((user: Express.User, done) => {

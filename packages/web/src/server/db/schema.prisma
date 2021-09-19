@@ -24,6 +24,8 @@ model User {
   // Unique user ID
   userId         String         @unique
   pairerDetails  PairerDetails?
+  // Verification
+  verified       Boolean        @default(false)
 }
 
 model PairerDetails {

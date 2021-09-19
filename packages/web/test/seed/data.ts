@@ -3,6 +3,7 @@ import { SeedData } from './index'
 export const testData: SeedData = {
   users: [
     {
+      verified: false,
       firstName: 'Josh',
       lastName: 'Ellis',
       email: 'josh@companion.studio',

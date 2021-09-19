@@ -16,11 +16,11 @@ const queries = extendType({
     t.field('currentUser', {
       type: 'User',
       resolve: (_, __, ctx) => {
-        if (!ctx.user?.id) return null
+        if (!ctx.user?.userId) return null
 
         return prisma.user.findUnique({
           where: {
-            id: ctx.user.id,
+            userId: ctx.user.userId,
           },
         })
       },
@@ -38,7 +38,7 @@ const mutations = extendType({
         firstName: stringArg(),
       },
       resolve: async (_, { userId, firstName }, ctx) => {
-        if (!ctx.user?.id || userId !== ctx.user.id) return null
+        if (!ctx.user?.userId || userId !== ctx.user.userId) return null
 
         return await prisma.user.update({
           where: { id: userId },

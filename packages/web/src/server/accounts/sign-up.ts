@@ -4,6 +4,7 @@ import { DISCIPLINES, TIMEZONES } from '@pairup/shared'
 import { randomUUID, randomBytes, pbkdf2 } from 'crypto'
 
 import prisma from 'server/db/prisma'
+import { sendVerificationEmail } from 'server/emails/sendVerificationEmail'
 
 import {
   SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
@@ -14,10 +15,9 @@ import {
   SignUpAccountDetails,
   SignUpPersonalDetails,
   SignUpAvailability,
-  AvailabilityTimes,
 } from 'store/slices/signup/slice'
 
-import { omit } from 'helpers/objects'
+import { SLUG_ACCOUNT } from 'references/slugs'
 
 type UserBody = SignUpAccountDetails &
   SignUpPersonalDetails &
@@ -32,14 +32,9 @@ type AllSignUpValues = SignUpAccountDetails &
   SignUpPersonalDetails &
   SignUpAvailability
 
-export type CreatedUser = Pick<
-  SignUpAccountDetails,
-  'firstName' | 'lastName' | 'email'
-> &
-  SignUpPersonalDetails &
-  SignUpAvailability & {
-    userId: string
-  }
+export type CreatedUser = Pick<SignUpAccountDetails, 'email'> & {
+  userId: string
+}
 
 const disciplines = Object.values(DISCIPLINES)
 const timezones = Object.values(TIMEZONES)
@@ -66,13 +61,16 @@ const validateBodyKey = <T extends AllSignUpValues[keyof AllSignUpValues]>(
   }
 }
 
-export const signup = (
+export const signup = async (
   req: NextApiRequest & {
     login: (user: CreatedUser, done: (err: unknown) => void) => void
   },
   res: NextApiResponse
 ) => {
   try {
+    /**
+     * Validate our fields Server Side
+     */
     const validation = Object.entries(req.body).map(([key, value]) =>
       validateBodyKey(
         key as AllSignUpFieldNames,
@@ -80,8 +78,20 @@ export const signup = (
       )
     )
 
+    /**
+     * Check the DB for a user that has the email
+     * If they do, throw because it'll crash the application
+     */
+    const users = await prisma.user.findFirst({
+      where: {
+        email: req.body.email,
+      },
+    })
+
     if (validation.includes(false)) {
       throw new Error('Data is not expected form')
+    } else if (users) {
+      throw new Error('Email address already exists with a user')
     } else {
       const {
         firstName,
@@ -100,7 +110,9 @@ export const signup = (
         timezone,
         availabilityTimes,
       } = req.body as UserBody
+      // Salt
       const salt = randomBytes(16)
+      // Create password
       pbkdf2(
         password,
         salt,
@@ -112,8 +124,10 @@ export const signup = (
             throw err
           }
 
+          // create the uuid we'll use across the app
           const userId = randomUUID()
 
+          // create our user
           const createdUser = await prisma.user.create({
             data: {
               firstName,
@@ -152,37 +166,35 @@ export const signup = (
             },
           })
 
+          /**
+           * Send the verification email
+           */
+          await sendVerificationEmail(email, {
+            firstName,
+          })
+
+          /**
+           * return the CreateUser to the req.login
+           * function injected by passport
+           */
           const user: CreatedUser = {
             userId: createdUser.userId,
-            firstName: createdUser.firstName,
-            lastName: createdUser.lastName,
             email: createdUser.email,
-            timezone: createdUser.pairerDetails?.availability
-              .timezone as TIMEZONES,
-            availabilityTimes: createdUser.pairerDetails
-              ?.availability as unknown as AvailabilityTimes,
-            ...omit(
-              createdUser.pairerDetails!,
-              'availability',
-              'userId',
-              'disciplines'
-            ),
-            disciplines: createdUser.pairerDetails
-              ?.disciplines as DISCIPLINES[],
           }
 
           req.login(user, function (err) {
             if (err) {
               throw err
             }
-            res.redirect('/')
+            res.redirect(SLUG_ACCOUNT)
           })
         }
       )
     }
-  } catch (e) {
+  } catch (e: unknown) {
+    console.error(e)
     res.status(500).json({
-      errror: e.message,
+      errror: (e as Error).message,
     })
   }
 }
