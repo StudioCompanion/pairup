@@ -1,3 +1,7 @@
 **/*.generated.*
 **/*.graphql.d.ts
 **/*.graphqls.d.ts
+
+packages/cms/dist
+packages/web/.next
+packages/web/storybook-static

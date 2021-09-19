@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { info } from 'next/dist/build/output/log'
+import { POST_API_SLUGS } from 'references/slugs'
 
 import { client, API_TOKEN } from 'server/services/postmark/client'
 
@@ -24,15 +25,18 @@ const FROM_EMAIL = process.env.POSTMARK_FROM_EMAIL
  */
 export const sendVerificationEmail = (
   email: string,
+  verificationCode: string,
   { firstName }: EmailUserData
 ) => {
+  const verificationEmail = `https://www.pairup.com${POST_API_SLUGS.ACCOUNTS_VERIFY_EMAIL}?code=${verificationCode}`
+
   if (process.env.NODE_ENV === `development`) {
     info(`not sending email in development:`)
     console.log()
     console.log(`To: ${firstName} – ${email}`)
-    console.log(`TemplateId – ${0}`)
+    console.log(`TemplateId – ${TEMPLATE_ID}`)
     console.log()
-    console.log('some info')
+    console.log(`This link will verify the user ${verificationEmail}`)
     console.log()
     return
   }
@@ -52,7 +56,7 @@ export const sendVerificationEmail = (
       product_url: 'pairup.com',
       product_name: 'Pair Up',
       name: firstName,
-      action_url: 'https://www.pairup.com/api/verify-account?account',
+      action_url: verificationEmail,
       login_url: 'https://www.pairup.com/login',
       username: email,
       sender_name: 'Josh',

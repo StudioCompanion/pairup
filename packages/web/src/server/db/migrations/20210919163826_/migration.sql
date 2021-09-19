@@ -10,6 +10,8 @@ CREATE TABLE "User" (
     "role" "Role" NOT NULL DEFAULT E'PAIRER',
     "userId" TEXT NOT NULL,
     "verified" BOOLEAN NOT NULL DEFAULT false,
+    "verificationCode" TEXT NOT NULL,
+    "verificationTimeout" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -25,3 +27,6 @@ CREATE UNIQUE INDEX "User.salt_unique" ON "User"("salt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User.userId_unique" ON "User"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User.verificationCode_unique" ON "User"("verificationCode");

@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import moment from 'moment'
 import validator from 'validator'
 import {
   DAYS_OF_THE_WEEK,
@@ -6,7 +7,7 @@ import {
   PAIRER_PROFILE_STATUS,
   TIMEZONES,
 } from '@pairup/shared'
-import { randomUUID, randomBytes, pbkdf2 } from 'crypto'
+import { randomUUID, randomBytes, pbkdf2, randomInt, createHash } from 'crypto'
 
 import prisma from 'db/prisma'
 import { sendVerificationEmail } from 'services/emails/sendVerificationEmail'
@@ -135,6 +136,15 @@ export const signup = async (
           // create the uuid we'll use across the app
           const userId = randomUUID()
 
+          const now = moment()
+
+          /**
+           * This will timeout in 1 day.
+           */
+          const verificationCode = createHash('md5')
+            .update(randomInt(1000).toFixed(0))
+            .digest('hex')
+
           // create our user
           const createdUser = await prisma.user.create({
             data: {
@@ -142,6 +152,8 @@ export const signup = async (
               salt: salt.toString(),
               hashedPassword: hashedPassword.toString(),
               userId,
+              verificationCode,
+              verificationTimeout: now.add(1, 'days').format(),
             },
           })
 
@@ -171,8 +183,8 @@ export const signup = async (
             _type: 'pairerProfile',
             _id: userId,
             title: `${firstName} ${lastName}`,
-            createdAt: new Date().toUTCString(),
-            lastModifiedAt: new Date().toUTCString(),
+            createdAt: now.format(),
+            lastModifiedAt: now.format(),
             status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
             hasVerifiedAccount: false,
             firstName,
@@ -197,7 +209,7 @@ export const signup = async (
           /**
            * Send the verification email
            */
-          await sendVerificationEmail(email, {
+          await sendVerificationEmail(email, verificationCode, {
             firstName,
           })
 
