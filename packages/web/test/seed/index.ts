@@ -5,7 +5,7 @@ import prisma from 'db/prisma'
 import { testData } from './data'
 
 export interface SeedData {
-  users: Array<Omit<User, 'id' | 'createdAt' | 'modifiedAt'>>
+  users: Array<Omit<User, 'id'>>
 }
 
 // Inspired by prisma/docs#451

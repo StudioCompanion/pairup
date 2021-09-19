@@ -14,7 +14,7 @@ export default function Dashboard() {
 
   // Once we load the current user, default the name input to their name
   useEffect(() => {
-    if (currentUser?.email) setName(currentUser.email)
+    if (currentUser?.userId) setName(currentUser.userId)
   }, [currentUser])
 
   if (fetching) return <p>Loading...</p>
@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1>{currentUser.email} Settings</h1>
+      <h1>{currentUser.userId} Settings</h1>
       <input
         value={name}
         placeholder="Arnold Schwarzenegger"
@@ -45,7 +45,7 @@ export default function Dashboard() {
           if (!name) return
           toast.promise(
             updateUser({
-              userId: currentUser.id,
+              userId: currentUser.userId,
             }),
             {
               loading: `Updating settings...`,

@@ -28,7 +28,7 @@
     "start:ci": "INSECURE_AUTH=true yarn run web:start",
     "test": "yarn test:e2e && yarn test:unit",
     "test:ts": "tsc --noEmit",
-    "test:e2e": "cypress open",
+    "test:e2e": "cypress run",
     "test:unit": "jest",
     "typecheck": "concurrently --raw yarn:typecheck:*",
     "typecheck:app": "tsc --noEmit -p ./tsconfig.json",

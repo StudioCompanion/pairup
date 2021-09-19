@@ -8,7 +8,7 @@ describe(`currentUser`, () => {
         graphql`
           {
             currentUser {
-              id
+              userId
             }
           }
         `
@@ -28,8 +28,7 @@ describe(`currentUser`, () => {
         graphql`
           {
             currentUser {
-              id
-              firstName
+              userId
             }
           }
         `,
@@ -43,8 +42,7 @@ describe(`currentUser`, () => {
       Object {
         "data": Object {
           "currentUser": Object {
-            "firstName": "Tester",
-            "id": "test",
+            "userId": "f981adbe-991f-4c60-a807-ab574912f223",
           },
         },
       }
@@ -60,8 +58,7 @@ describe(`updateUser`, () => {
         graphql`
           {
             currentUser {
-              id
-              firstName
+              userId
             }
           }
         `,
@@ -75,8 +72,7 @@ describe(`updateUser`, () => {
       Object {
         "data": Object {
           "currentUser": Object {
-            "firstName": "Tester",
-            "id": "test",
+            "userId": "f981adbe-991f-4c60-a807-ab574912f223",
           },
         },
       }
@@ -86,10 +82,19 @@ describe(`updateUser`, () => {
     expect(
       await request(
         graphql`
-          mutation updateUser($userId: String!) {
-            updateUser(userId: $userId, firstName: "New name") {
-              id
-              firstName
+          mutation updateUser(
+            $userId: String!
+            $email: String
+            $hashedPassword: String
+            $salt: String
+          ) {
+            updateUser(
+              userId: $userId
+              email: $email
+              hashedPassword: $hashedPassword
+              salt: $salt
+            ) {
+              userId
             }
           }
         `,
@@ -97,9 +102,11 @@ describe(`updateUser`, () => {
           context: {
             user: testData.users[0],
           },
-
           variables: {
             userId: testData.users[0].userId,
+            email: testData.users[0].email,
+            hashedPassword: testData.users[0].hashedPassword,
+            salt: testData.users[0].salt,
           },
         }
       )
@@ -107,36 +114,7 @@ describe(`updateUser`, () => {
       Object {
         "data": Object {
           "updateUser": Object {
-            "firstName": "New name",
-            "id": "test",
-          },
-        },
-      }
-    `)
-
-    // Updated name
-    expect(
-      await request(
-        graphql`
-          {
-            currentUser {
-              id
-              firstName
-            }
-          }
-        `,
-        {
-          context: {
-            user: testData.users[0],
-          },
-        }
-      )
-    ).toMatchInlineSnapshot(`
-      Object {
-        "data": Object {
-          "currentUser": Object {
-            "firstName": "New name",
-            "id": "test",
+            "userId": "f981adbe-991f-4c60-a807-ab574912f223",
           },
         },
       }
