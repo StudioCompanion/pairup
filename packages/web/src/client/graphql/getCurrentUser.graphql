@@ -1,7 +1,5 @@
 query GetCurrentUser {
   currentUser {
-    id
-    firstName
-    email
+    userId
   }
 }

@@ -1,7 +1,15 @@
-mutation UpdateUser($firstName: String, $userId: String!) {
-  updateUser(firstName: $firstName, userId: $userId) {
-    id
-    firstName
-    email
+mutation UpdateUser(
+  $userId: String!
+  $email: String
+  $hashedPassword: String
+  $salt: String
+) {
+  updateUser(
+    userId: $userId
+    email: $email
+    hashedPassword: $hashedPassword
+    salt: $salt
+  ) {
+    userId
   }
 }

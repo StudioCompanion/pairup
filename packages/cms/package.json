@@ -10,22 +10,25 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "deploy:graphql": "sanity graphql deploy"
+    "gen-types": "npx sanity-codegen"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
-    "@sanity/base": "^2.13.1",
-    "@sanity/components": "^2.13.0",
-    "@sanity/core": "^2.13.1",
-    "@sanity/default-layout": "^2.13.1",
-    "@sanity/default-login": "^2.13.1",
-    "@sanity/desk-tool": "^2.13.1",
-    "@sanity/vision": "^2.13.1",
+    "@pairup/shared": "*",
+    "@sanity/base": "^2.19.4",
+    "@sanity/components": "^2.14.0",
+    "@sanity/core": "^2.19.2",
+    "@sanity/default-layout": "^2.19.4",
+    "@sanity/default-login": "^2.19.0",
+    "@sanity/desk-tool": "^2.19.4",
+    "@sanity/vision": "^2.19.0",
     "prop-types": "^15.7",
     "react": "^17.0",
-    "react-dom": "^17.0"
+    "react-dom": "^17.0",
+    "react-icons": "^4.2.0",
+    "styled-components": "^5.2.0"
   },
   "devDependencies": {}
 }

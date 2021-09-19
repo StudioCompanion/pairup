@@ -1,4 +1,4 @@
-import handler from 'server/api-route'
+import handler from 'server/middleware/api-route'
 
 export default handler().get((req, res) => {
   req.logout()

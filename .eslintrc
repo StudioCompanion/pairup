@@ -3,7 +3,6 @@
     "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
   },
   "extends": ["@studiocompanion/eslint-config"],
-  "ignorePatterns": "packages/cms/dist",
   "rules": {
     "react/react-in-jsx-scope": "off"
   }

@@ -1,16 +1,11 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
+
 import prisma from 'db/prisma'
+
 import { testData } from './data'
 
 export interface SeedData {
-  users: Array<{
-    id: string
-    firstName?: string
-    email: string
-    hashedPassword: string
-    salt: string
-    userId: string
-  }>
+  users: Array<Omit<User, 'id'>>
 }
 
 // Inspired by prisma/docs#451
