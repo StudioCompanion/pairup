@@ -4,6 +4,7 @@ import moment from 'moment'
 import prisma from 'db/prisma'
 
 import { SLUG_VERIFICATION } from 'references/slugs'
+import createOrUpdateDocument from '../sanity/createOrUpdateDocument'
 
 export const verifyEmail = async (
   req: NextApiRequest,
@@ -18,12 +19,12 @@ export const verifyEmail = async (
       },
     })
 
-    if (user) {
+    if (user && !user.verified) {
       const now = moment()
       const timeout = moment(user.verificationTimeout)
 
       if (now.isBefore(timeout)) {
-        await prisma.user.update({
+        const updatedUser = await prisma.user.update({
           where: {
             userId: user.userId,
           },
@@ -33,7 +34,17 @@ export const verifyEmail = async (
           },
         })
 
-        res.redirect(200, `${SLUG_VERIFICATION}?success=true`)
+        if (updatedUser) {
+          await createOrUpdateDocument({
+            _type: 'pairerProfile',
+            _id: updatedUser.userId,
+            hasVerifiedAccount: true,
+          })
+
+          res.redirect(200, `${SLUG_VERIFICATION}?success=true`)
+        } else {
+          throw new Error()
+        }
       } else {
         res.redirect(
           401,
@@ -43,7 +54,9 @@ export const verifyEmail = async (
     } else {
       res.redirect(
         401,
-        `${SLUG_VERIFICATION}?fail=${encodeURIComponent('no user found')}`
+        `${SLUG_VERIFICATION}?fail=${encodeURIComponent(
+          !user ? 'no user found' : 'user is already verified'
+        )}`
       )
     }
   } catch (e: unknown) {

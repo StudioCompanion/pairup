@@ -233,7 +233,7 @@ export const signup = async (
     }
   } catch (e: unknown) {
     console.error(e)
-    res.status(500).json({
+    res.status(406).json({
       errror: (e as Error).message,
     })
   }

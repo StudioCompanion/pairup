@@ -5,7 +5,8 @@ import { PairerProfileCreationDocument } from 'types/sanity'
 const LABEL = '[services::sanity::createOrUpdateDocument]'
 
 const createOrUpdateDocument = async (
-  document: PairerProfileCreationDocument
+  document: Partial<Omit<PairerProfileCreationDocument, '_id' | '_type'>> &
+    Required<Pick<PairerProfileCreationDocument, '_id' | '_type'>>
 ) => {
   const sanityClient = getSanityClientWrite()
 
