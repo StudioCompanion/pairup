@@ -42,11 +42,7 @@ const SignUp = () => {
     e.preventDefault()
     const formData = omit(signupData, 'stage')
 
-    const res = await fetchApi(
-      API_METHODS.POST,
-      POST_API_SLUGS.ACCOUNTS_SIGN_UP,
-      formData
-    )
+    await fetchApi(API_METHODS.POST, POST_API_SLUGS.ACCOUNTS_SIGN_UP, formData)
   }
 
   // START

@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent } from 'react'
+import { ChangeEvent } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { DAYS_OF_THE_WEEK, TIMEZONES } from '@pairup/shared'
 
