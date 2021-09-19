@@ -10,65 +10,17 @@ datasource db {
 
 model User {
   // Default entry stuff
-  id             String         @id @default(cuid())
-  createdAt      DateTime       @default(now())
-  modifiedAt     DateTime       @default(now())
+  id             String  @id @default(cuid())
   // Account details
-  firstName      String
-  lastName       String
-  email          String         @unique
-  hashedPassword String         @unique
-  salt           String         @unique
+  email          String  @unique
+  hashedPassword String  @unique
+  salt           String  @unique
   // what's their role? Probably a pairer
-  role           Role           @default(PAIRER)
+  role           Role    @default(PAIRER)
   // Unique user ID
-  userId         String         @unique
-  pairerDetails  PairerDetails?
+  userId         String  @unique
   // Verification
-  verified       Boolean        @default(false)
-}
-
-model PairerDetails {
-  // Default entry stuff
-  id           String       @id @default(cuid())
-  createdAt    DateTime     @default(now())
-  modifiedAt   DateTime     @default(now())
-  // Personal Details
-  jobTitle     String
-  companyUrl   String
-  portfolioUrl String
-  bio          String
-  disciplines  String[]
-  twitter      String
-  instagram    String
-  linkedin     String
-  github       String
-  // User
-  user         User         @relation(fields: [userId], references: [userId])
-  userId       String       @unique
-  // Availability
-  availability Availability @relation(fields: [userId], references: [userId])
-}
-
-model Availability {
-  // Default entry stuff
-  id            String         @id @default(cuid())
-  createdAt     DateTime       @default(now())
-  modifiedAt    DateTime       @default(now())
-  // Timezone
-  timezone      String
-  // Days of the week
-  monday        Json[]
-  tuesday       Json[]
-  wednesday     Json[]
-  thursday      Json[]
-  friday        Json[]
-  saturday      Json[]
-  sunday        Json[]
-  // User
-  userId        String         @unique
-  // Pairer details
-  pairerDetails PairerDetails?
+  verified       Boolean @default(false)
 }
 
 enum Role {

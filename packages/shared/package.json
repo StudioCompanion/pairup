@@ -1,5 +1,12 @@
 {
   "name": "@pairup/shared",
   "version": "1.0.0",
-  "description": "Shared workspace that allows shared functions and variables across all packages"
+  "description": "Shared workspace that allows shared functions and variables across all packages",
+  "main": "dist/pairup-shared.cjs.js",
+  "module": "dist/pairup-shared.esm.js",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ]
+  }
 }

@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1>Hello {data.currentUser.firstName}!</h1>
+      <h1>Hello {data.currentUser.email}!</h1>
       <input
         placeholder="Hooli Inc."
         value={name}

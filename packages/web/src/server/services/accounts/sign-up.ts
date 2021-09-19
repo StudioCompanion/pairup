@@ -1,10 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import validator from 'validator'
-import { DISCIPLINES, TIMEZONES } from '@pairup/shared'
+import {
+  DAYS_OF_THE_WEEK,
+  DISCIPLINES,
+  PAIRER_PROFILE_STATUS,
+  TIMEZONES,
+} from '@pairup/shared'
 import { randomUUID, randomBytes, pbkdf2 } from 'crypto'
 
-import prisma from 'server/db/prisma'
-import { sendVerificationEmail } from 'server/emails/sendVerificationEmail'
+import prisma from 'db/prisma'
+import { sendVerificationEmail } from 'services/emails/sendVerificationEmail'
+import createOrUpdateDocument from 'services/sanity/createOrUpdateDocument'
 
 import {
   SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES,
@@ -18,6 +24,8 @@ import {
 } from 'store/slices/signup/slice'
 
 import { SLUG_ACCOUNT } from 'references/slugs'
+
+import { PairerProfileCreationDocument } from 'types/sanity'
 
 type UserBody = SignUpAccountDetails &
   SignUpPersonalDetails &
@@ -130,41 +138,61 @@ export const signup = async (
           // create our user
           const createdUser = await prisma.user.create({
             data: {
-              firstName,
-              lastName,
               email,
               salt: salt.toString(),
               hashedPassword: hashedPassword.toString(),
               userId,
-              pairerDetails: {
-                create: {
-                  jobTitle,
-                  companyUrl,
-                  portfolioUrl,
-                  bio,
-                  disciplines,
-                  twitter,
-                  instagram,
-                  linkedin,
-                  github,
-                  availability: {
-                    create: {
-                      timezone,
-                      userId,
-                      ...availabilityTimes,
-                    },
-                  },
-                },
-              },
-            },
-            include: {
-              pairerDetails: {
-                include: {
-                  availability: true,
-                },
-              },
             },
           })
+
+          const availableTimes = Object.entries(availabilityTimes)
+            .map(([key, value]) => [
+              key,
+              value.map((obj) => ({ ...obj, _key: randomUUID() })),
+            ])
+            .reduce(
+              (acc, [key, value]) => {
+                return {
+                  ...acc,
+                  [key as DAYS_OF_THE_WEEK]: value,
+                }
+              },
+              {} as {
+                [P in DAYS_OF_THE_WEEK]: Array<{
+                  _key: string
+                  startTime: string
+                  endTime: string
+                  _type: 'availableTime'
+                }>
+              }
+            )
+
+          const pairerDocument: PairerProfileCreationDocument = {
+            _type: 'pairerProfile',
+            _id: userId,
+            title: `${firstName} ${lastName}`,
+            createdAt: new Date().toUTCString(),
+            lastModifiedAt: new Date().toUTCString(),
+            status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+            hasVerifiedAccount: false,
+            firstName,
+            lastName,
+            email,
+            uuid: userId,
+            jobTitle,
+            companyUrl,
+            portfolioUrl,
+            bio,
+            disciplines: disciplines.join(','),
+            twitter,
+            instagram,
+            linkedin,
+            github,
+            timezone,
+            ...availableTimes,
+          }
+
+          await createOrUpdateDocument(pairerDocument)
 
           /**
            * Send the verification email

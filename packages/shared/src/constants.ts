@@ -44,3 +44,33 @@ export enum TIMEZONES {
   GMT = 'GMT',
   GMT_PLUS_1 = 'GMT +1',
 }
+
+export enum PAIRER_PROFILE_STATUS {
+  APPROVED = 'approved',
+  AWAITING_APPROVAL = 'awaiting approval',
+}
+
+export enum SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES {
+  firstName = 'firstName',
+  lastName = 'lastName',
+  email = 'email',
+  password = 'password',
+}
+
+export enum SIGNUP_PERSONAL_DETAIL_FIELD_NAMES {
+  jobTitle = 'jobTitle',
+  companyUrl = 'companyUrl',
+  portfolioUrl = 'portfolioUrl',
+  bio = 'bio',
+  disciplines = 'disciplines',
+  twitter = 'twitter',
+  instagram = 'instagram',
+  linkedin = 'linkedin',
+  github = 'github',
+}
+
+export enum SIGNUP_AVAILABILITY_FIELD_NAMES {
+  timezone = 'timezone',
+  startTime = 'startTime',
+  endTime = 'endTime',
+}

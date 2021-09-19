@@ -9,19 +9,25 @@
       "packages/*"
     ]
   },
+  "preconstruct": {
+    "packages": [
+      "packages/shared"
+    ]
+  },
   "scripts": {
     "cms:start": "yarn workspace @pairup/cms start",
     "cms:build": "yarn workspace @pairup/cms build",
     "cms:deploy": "yarn workspace @pairup/cms deploy",
-    "cms:deploy-graphql": "yarn workspace @pairup/cms deploy:graphql",
-    "cms:full-deploy": "yarn cms:deploy && yarn cms:deploy-graphql && yarn web:generate",
     "eslint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache --fix",
     "lint": "yarn run eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && preconstruct dev",
+    "preconstruct:dev": "preconstruct dev",
+    "preconstruct:build": "preconstruct build",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "start:ci": "INSECURE_AUTH=true yarn run web:start",
     "test": "yarn test:e2e && yarn test:unit",
+    "test:ts": "tsc --noEmit",
     "test:e2e": "cypress open",
     "test:unit": "jest",
     "typecheck": "concurrently --raw yarn:typecheck:*",
@@ -29,7 +35,7 @@
     "typecheck:cypress": "tsc --noEmit -p ./cypress/tsconfig.json",
     "web:dev": "yarn workspace @pairup/web dev",
     "web:build": "yarn workspace @pairup/web build",
-    "web:generate": "yarn workspace @pairup/web generate",
+    "web:generate": "yarn workspace @pairup/web generate && yarn workspace @pairup/cms gen-types",
     "web:prisma:migrate": "yarn workspace @pairup/web prisma:migrate",
     "web:prisma:studio": "yarn workspace @pairup/web prisma:studio",
     "web:start": "yarn workspace @pairup/web start",
@@ -47,6 +53,7 @@
     "@graphql-codegen/typescript": "^1.22.0",
     "@graphql-codegen/typescript-operations": "1.17.16",
     "@graphql-codegen/typescript-urql": "^2.0.5",
+    "@preconstruct/cli": "^2.1.4",
     "@studiocompanion/scripts": "^1.1.0",
     "@testing-library/cypress": "^8.0.0",
     "@types/common-tags": "^1.8.0",
@@ -69,6 +76,7 @@
     "next-prisma-plugin": "^0.1.1",
     "patch-package": "^6.4.7",
     "prisma": "^2.29.0",
+    "sanity-codegen": "^0.9.5",
     "ts-jest": "^27.0.4",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"

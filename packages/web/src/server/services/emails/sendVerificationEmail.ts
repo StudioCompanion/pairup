@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { info } from 'next/dist/build/output/log'
 
-import { client, API_TOKEN } from 'server/postmark/client'
+import { client, API_TOKEN } from 'server/services/postmark/client'
 
 type EmailUserData = {
   firstName: string

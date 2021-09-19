@@ -1,5 +1,5 @@
-import handler from 'server/api-route'
+import handler from 'server/middleware/api-route'
 
-import { signup } from 'server/accounts/sign-up'
+import { signup } from 'server/services/accounts/sign-up'
 
 export default handler().post(signup)

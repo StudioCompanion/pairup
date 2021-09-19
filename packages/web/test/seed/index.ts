@@ -1,24 +1,11 @@
-import { Availability, PairerDetails, Prisma, User } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
 
 import prisma from 'db/prisma'
 
 import { testData } from './data'
 
 export interface SeedData {
-  users: Array<
-    Omit<User, 'id' | 'createdAt' | 'modifiedAt'> & {
-      pairerDetails: {
-        create: Omit<
-          PairerDetails,
-          'id' | 'createdAt' | 'modifiedAt' | 'userId'
-        > & {
-          availability: {
-            create: Omit<Availability, 'id' | 'createdAt' | 'modifiedAt'>
-          }
-        }
-      }
-    }
-  >
+  users: Array<Omit<User, 'id' | 'createdAt' | 'modifiedAt'>>
 }
 
 // Inspired by prisma/docs#451
@@ -38,13 +25,6 @@ async function seedDatabase({ users }: SeedData) {
     users.map((user) =>
       prisma.user.create({
         data: user,
-        include: {
-          pairerDetails: {
-            include: {
-              availability: true,
-            },
-          },
-        },
       })
     )
   )

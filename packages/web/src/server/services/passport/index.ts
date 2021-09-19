@@ -1,6 +1,6 @@
 import passport from 'passport'
 
-import { CreatedUser } from 'server/accounts/sign-up'
+import { CreatedUser } from 'server/services/accounts/sign-up'
 
 import { local } from './local'
 

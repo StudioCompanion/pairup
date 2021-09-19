@@ -5,7 +5,7 @@ import nc from 'next-connect'
 import sanitize from 'sanitize'
 import { error } from 'next/dist/build/output/log'
 
-import passport from './passport'
+import passport from '../services/passport'
 import { trustProxyMiddleware } from './trust-proxy-middleware'
 
 export interface Request extends NextApiRequest {
