@@ -51,7 +51,7 @@
     "@graphql-codegen/plugin-helpers": "^1.18.4",
     "@graphql-codegen/typed-document-node": "^1.18.5",
     "@graphql-codegen/typescript": "^1.22.0",
-    "@graphql-codegen/typescript-operations": "1.17.16",
+    "@graphql-codegen/typescript-operations": "2.1.4",
     "@graphql-codegen/typescript-urql": "^2.0.5",
     "@preconstruct/cli": "^2.1.4",
     "@studiocompanion/scripts": "^1.1.0",
