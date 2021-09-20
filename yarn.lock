@@ -3262,10 +3262,10 @@
     date-fns "^2.16.1"
     lodash "^4.17.15"
 
-"@sanity/vision@^2.19.0":
-  version "2.19.0"
-  resolved "https://registry.npmjs.org/@sanity/vision/-/vision-2.19.0.tgz#c849ef16c6e1cdfe59c4482825444fa91ced1fbd"
-  integrity sha512-QN+bDlHHJqApg1+BQoyjYWlOhxuVb4PEwYVKiiZl1wr62s/U/b+qhvGjZN+mxqyN4F/jAsD3ITSg0YyLxkMN3w==
+"@sanity/vision@^2.20.0":
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/@sanity/vision/-/vision-2.20.0.tgz#e40d3e87cfee96586846ba6344244ed5c4b28537"
+  integrity sha512-cpMZ7NSOxpbXvjzJPsVxVlUswL7VF6Lb4REO5hBMzlmK6PK2K9Y1zGkppqkD4tcAYalLHn2iNJK4j2U4iGzjLA==
   dependencies:
     "@sanity/icons" "^1.1.7"
     "@sanity/ui" "^0.36.8"
