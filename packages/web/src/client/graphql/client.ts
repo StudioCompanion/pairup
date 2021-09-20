@@ -1,6 +1,5 @@
 import { createClient, dedupExchange, errorExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
-import toast from 'react-hot-toast'
 
 /**
  * Consistently determine the API URL for the current client even when in a deploy preview or similar
@@ -29,7 +28,7 @@ export const client = createClient({
   exchanges: [
     errorExchange({
       onError: (error) => {
-        toast.error(error.message.replace('[GraphQL]', 'Server error:'))
+        console.error(error.message.replace('[GraphQL]', 'Server error:'))
       },
     }),
     dedupExchange,
