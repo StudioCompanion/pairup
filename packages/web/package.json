@@ -12,7 +12,7 @@
     "generate:prisma": "prisma generate",
     "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json src/server/graphql/schema.ts",
     "generate:graphql-codegen": "graphql-codegen",
-    "prisma:migrate": "yarn prisma migrate dev --preview-feature",
+    "prisma:migrate": "prisma migrate dev --preview-feature",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
@@ -20,11 +20,12 @@
     "@prisma/client": "^2.29.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@urql/exchange-graphcache": "^4.1.1",
-    "apollo-server-micro": "latest",
+    "apollo-server-micro": "^3.3.0",
     "cookie-session": "^1.4.0",
     "dotenv": "^10.0.0",
     "execa": "^5.0.0",
     "graphql": "^15.5.0",
+    "micro": "^9.3.4",
     "moment": "^2.29.1",
     "next": "^11.1.0",
     "next-connect": "^0.10.0",

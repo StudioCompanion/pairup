@@ -17,15 +17,21 @@ export interface GraphQLContext {
   origin: string
 }
 
-export default handler().use(
-  new ApolloServer({
+const startServer = async () => {
+  const server = new ApolloServer({
     schema,
     context: ({ req }): GraphQLContext => ({
       user: req.user,
       origin: getRequestOrigin(req),
       prisma,
     }),
-  }).createHandler({
+  })
+  await server.start()
+  server.createHandler({
     path: '/api',
   })
-)
+
+  return server
+}
+
+export default handler().use(startServer)
