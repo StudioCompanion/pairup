@@ -13,30 +13,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "./packages/web",
-    "paths": {
-      "@constants": ["./constants.ts"],
-      "components/*": ["./src/client/components/*"],
-      "data/*": ["./src/client/data/*"],
-      "db/*": ["./src/server/db/*"],
-      "helpers/*": ["./src/client/helpers/*"],
-      "hooks/*": ["./src/client/hooks/*"],
-      "graphql/*": ["./src/client/graphql/*"],
-      "lib/*": ["./src/server/lib/*"],
-      "references/*": ["./src/client/references/*"],
-      "server/*": ["./src/server/*"],
-      "services/*": ["./src/server/services/*"],
-      "store/*": ["./src/client/store/*"],
-      "test/*": ["./test/*"],
-      "types/*": ["./src/types/*"]
-    }
   },
   "include": [
     "**/*.config.js",
     "packages/**/*",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.d.ts"
-  ],
-  "exclude": ["node_modules", "./cypress/**/*", "**/dist/*"]
+    "**/*.d.ts"],
+  "exclude": ["node_modules", "**/dist/*"]
 }

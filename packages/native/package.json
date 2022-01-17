@@ -1,0 +1,30 @@
+{
+  "name": "@pairup/native",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-native": "0.66.4"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}

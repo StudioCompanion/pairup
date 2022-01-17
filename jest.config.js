@@ -6,14 +6,6 @@ const moduleNameMapper = pathsToModuleNameMapper(compilerOptions.paths, {
 
 module.exports = {
   setupFiles: ['dotenv/config'],
-  setupFilesAfterEnv: ['./packages/web/test/jest-setup.ts'],
+  setupFilesAfterEnv: ['./test/jest-setup.ts'],
   moduleNameMapper,
-  transform: {
-    '\\.tsx?$': [
-      'babel-jest',
-      {
-        configFile: './.babelrc.jest.js',
-      },
-    ],
-  },
 }

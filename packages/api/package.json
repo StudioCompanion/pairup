@@ -1,0 +1,32 @@
+{
+    "name": "@pairup/api",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "predev": "yarn run generate",
+        "prebuild": "yarn run generate",
+        "generate": "yarn run generate:prisma && yarn run generate:nexus && yarn run generate:graphql-codegen",
+        "generate:prisma": "prisma generate",
+        "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json src/server/graphql/schema.ts",
+        "generate:graphql-codegen": "graphql-codegen",
+        "prisma:migrate": "yarn prisma migrate dev --preview-feature",
+        "prisma:studio": "prisma studio"
+    },
+    "dependencies": {
+        "@pairup/shared": "1.0.0",
+        "@prisma/client": "^2.29.0",
+        "cookie-session": "^1.4.0",
+        "dotenv": "^10.0.0",
+        "moment": "^2.29.1",
+        "nexus": "^1.1.0",
+        "nexus-plugin-prisma": "^0.35.0",
+        "passport": "^0.4.1",
+        "passport-local": "^1.0.0",
+        "postmark": "^2.7.8",
+        "raw-body": "^2.4.1",
+        "sanitize": "^2.1.0"
+    },
+    "prisma": {
+        "schema": "src/server/db/schema.prisma"
+    }
+}
