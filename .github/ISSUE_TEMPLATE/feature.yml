@@ -1,0 +1,20 @@
+name: 🚀 Request Something
+description: Submit a proposal for something
+title: '[request]: '
+labels: ['template: request']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing a request!
+  - type: textarea
+    attributes:
+      label: A clear and concise description of what the request is
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Why should this feature be included?
+  - type: textarea
+    attributes:
+      label: Please provide an example for how this would work
