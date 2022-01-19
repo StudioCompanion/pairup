@@ -1,25 +1,27 @@
 ---
-name: 🐛 Bug report
-labels: 'bug'
-about: Create a report to help us improve
+name: 🐞 Bug Report 🐛
+labels: 'template: potential bug'
+about: File a bug report
+title: '[bug]: '
 ---
 
-## 🐛 Bug Report
+## Which area does this apply too?
 
-(A clear and concise description of what the bug is.)
+- [ ] Native (most common)
+- [ ] Api
+- [ ] CMS
+- [ ] Web
+
+## What version of the app are you using?
+
+## What device are you using?
+
+## A concise description of what you expected to happen
 
 ## To Reproduce
 
-Steps to reproduce the behavior:
+(Steps to reproduce the behavior)
 
-## Expected behavior
+## Expected Behaviour
 
-(A clear and concise description of what you expected to happen.)
-
-## Environment
-
-| Info             | Version(s) |
-| ---------------- | ---------- |
-| Browser          |            |
-| Device           |            |
-| Operating System |            |
+(What you expected to happen)
