@@ -12,13 +12,14 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve"
   },
   "include": [
     "**/*.config.js",
     "packages/**/*",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.d.ts"],
+    "**/*.d.ts"
+  ],
   "exclude": ["node_modules", "**/dist/*"]
 }

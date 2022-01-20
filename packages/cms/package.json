@@ -24,10 +24,10 @@
     "@sanity/default-login": "^2.19.0",
     "@sanity/desk-tool": "^2.20.0",
     "@sanity/vision": "^2.20.0",
-    "prop-types": "^15.7",
-    "react": "^17.0",
-    "react-dom": "^17.0",
-    "react-icons": "^4.2.0",
+    "prop-types": "^15.8.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
     "styled-components": "^5.2.0"
   }
 }
