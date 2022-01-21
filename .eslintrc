@@ -1,6 +1,10 @@
 {
   "parserOptions": {
-    "project": ["./tsconfig.json", "./packages/native/tsconfig.json"]
+    "project": [
+      "./tsconfig.json",
+      "./packages/native/tsconfig.json",
+      "./docs/tsconfig.json"
+    ]
   },
   "extends": ["@studiocompanion/eslint-config"],
   "rules": {

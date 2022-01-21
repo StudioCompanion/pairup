@@ -6,7 +6,8 @@
   "author": "Companion Studio ltd",
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "docs"
     ]
   },
   "preconstruct": {
@@ -18,6 +19,7 @@
     "cms:start": "yarn workspace @pairup/cms start",
     "cms:build": "yarn workspace @pairup/cms build",
     "cms:deploy": "yarn workspace @pairup/cms deploy",
+    "docs": "yarn workspace @pairup/docs start",
     "eslint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache --fix",
     "generate": "yarn generate:api && yarn run generate:graphql-codegen",
     "generate:api": "yarn workspace @pairup/api run generate",
