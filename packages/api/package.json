@@ -27,7 +27,8 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "prisma": "^3.8.1"
+    "prisma": "^3.8.1",
+    "ts-node": "^10.4.0"
   },
   "prisma": {
     "schema": "src/db/schema.prisma"
