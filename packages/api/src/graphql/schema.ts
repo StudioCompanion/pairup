@@ -1,4 +1,3 @@
-import { nexusPrisma } from 'nexus-plugin-prisma'
 import { makeSchema } from 'nexus'
 import path from 'path'
 import User from './User'
@@ -10,23 +9,15 @@ const shouldGenerateArtifacts =
 
 export const schema = makeSchema({
   types: [User],
-  plugins: [
-    nexusPrisma({
-      shouldGenerateArtifacts,
-    }),
-  ],
   // Type the GraphQL context when used in Nexus resolvers
-  contextType: {
-    module: path.join(process.cwd(), 'src/pages/api/index.ts'),
-    export: 'GraphQLContext',
-  },
+  // contextType: {
+  //   module: path.join(process.cwd(), 'src/pages/api/index.ts'),
+  //   export: 'GraphQLContext',
+  // },
   // Generate the files
   shouldGenerateArtifacts,
   outputs: {
-    typegen: path.join(
-      process.cwd(),
-      'src/server/graphql/nexus-types.generated.ts'
-    ),
-    schema: path.join(process.cwd(), 'src/server/graphql/schema.graphql'),
+    typegen: path.join(process.cwd(), './src/graphql/nexus-types.generated.ts'),
+    schema: path.join(process.cwd(), './src/graphql/schema.graphql'),
   },
 })

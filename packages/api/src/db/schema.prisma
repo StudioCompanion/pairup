@@ -8,24 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  // Default entry stuff
-  id                  String  @id @default(cuid())
-  // Account details
-  email               String  @unique
-  hashedPassword      String  @unique
-  salt                String  @unique
-  // what's their role? Probably a pairer
-  role                Role    @default(PAIRER)
-  // Unique user ID
-  userId              String  @unique
-  // Verification
-  verified            Boolean @default(false)
-  verificationCode    String  @unique
-  verificationTimeout String
+generator nexusPrisma {
+  provider = "nexus-prisma"
 }
 
-enum Role {
-  PAIRER
-  PAIREE
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
 }

@@ -1,10 +1,11 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
-import prisma from '../../db/prisma'
+import { User } from 'nexus-prisma'
+// import prisma from '../../db/prisma'
 
-const User = objectType({
-  name: 'User',
+const UserType = objectType({
+  name: User.$name,
   definition(t) {
-    t.model.userId()
+    t.field(User.id)
   },
 })
 
@@ -14,13 +15,9 @@ const queries = extendType({
     t.field('currentUser', {
       type: 'User',
       resolve: (_, __, ctx) => {
-        if (!ctx.user?.userId) return null
-
-        return prisma.user.findUnique({
-          where: {
-            userId: ctx.user.userId,
-          },
-        })
+        return {
+          id: 'test',
+        }
       },
     })
   },
@@ -40,17 +37,17 @@ const mutations = extendType({
       resolve: async (_, { userId, email, hashedPassword, salt }, ctx) => {
         if (!ctx.user?.userId || userId !== ctx.user.userId) return null
 
-        return await prisma.user.update({
-          where: { userId },
-          data: {
-            email: email ?? undefined,
-            hashedPassword: hashedPassword ?? undefined,
-            salt: salt ?? undefined,
-          },
-        })
+        // return await prisma.user.update({
+        //   where: { userId },
+        //   data: {
+        //     email: email ?? undefined,
+        //     hashedPassword: hashedPassword ?? undefined,
+        //     salt: salt ?? undefined,
+        //   },
+        // })
       },
     })
   },
 })
 
-export default [User, mutations, queries]
+export default [UserType, mutations, queries]
