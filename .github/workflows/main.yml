@@ -52,30 +52,22 @@ jobs:
 
       # Throw an error if the yarn.lock file doesn't match the installed dependencies (rather than updating it in-place, which it does by default locally)
       - name: Install
-        run: yarn install --frozen-lockfile --silent
+        run: yarn install --immutable --silent
 
-      - name: Copy example env
-        run: cp ./packages/web/.env.example ./packages/web/.env
+      # - name: Copy example env
+      #   run: cp ./packages/web/.env.example ./packages/web/.env
 
       - name: Generate
-        run: yarn web:generate
+        run: yarn generate
 
       - name: Migrate the CI database
-        run: yarn web:prisma:migrate
+        run: yarn api:migrate
 
       - name: Lint
-        run: yarn lint
+        run: yarn eslint
 
       - name: Typecheck
-        run: yarn typecheck
+        run: yarn test:ts
 
-      - name: Tests (Jest)
-        run: yarn test:unit
-
-      - name: End-to-end tests (Cypress)
-        uses: cypress-io/github-action@v2
-        with:
-          install-command: yarn --frozen-lockfile --silent
-          build: yarn web:build
-          start: yarn start:ci
-          wait-on: http://localhost:3000
+      # - name: Tests (Jest)
+      #   run: yarn test:unit
