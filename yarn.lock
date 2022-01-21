@@ -5480,7 +5480,6 @@ __metadata:
     pm2: ^5.1.2
     postmark: ^2.8.1
     prisma: ^3.8.1
-    ts-node: ^10.4.0
     urql: ^2.0.6
   languageName: unknown
   linkType: soft
