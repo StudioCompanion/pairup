@@ -16,6 +16,7 @@
     ]
   },
   "scripts": {
+    "api:dev": "yarn workspace @pairup/api dev",
     "cms:start": "yarn workspace @pairup/cms start",
     "cms:build": "yarn workspace @pairup/cms build",
     "cms:deploy": "yarn workspace @pairup/cms deploy",
