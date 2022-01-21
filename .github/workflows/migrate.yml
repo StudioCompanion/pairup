@@ -23,7 +23,7 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --silent
 
-      - name: Run migrations
-        run: yarn prisma migrate deploy --preview-feature
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # - name: Run migrations
+      #   run: yarn prisma migrate deploy --preview-feature
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
