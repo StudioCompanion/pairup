@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,10 +15,9 @@
   },
   "include": [
     "**/*.config.js",
-    "packages/**/*",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.d.ts"
+    "packages/shared/**/*",
+    "**/*.d.ts",
+    "test/**/*.ts"
   ],
   "exclude": ["node_modules", "**/dist/*"]
 }

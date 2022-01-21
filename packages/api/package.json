@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node ./src/server",
+    "dev": "pm2 start ecosystem.config.js --watch",
+    "stop": "pm2 delete ecosystem.config.js",
     "generate": "yarn generate:prisma && yarn generate:nexus",
     "generate:prisma": "prisma generate",
     "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json ./src/graphql/schema.ts",
     "predev": "yarn run generate",
     "prebuild": "yarn run generate",
     "prisma:migrate": "yarn prisma migrate dev --preview-feature",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "test:ts": "tsc --noEmit"
   },
   "dependencies": {
     "@pairup/shared": "1.0.0",
@@ -25,8 +27,7 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "prisma": "^3.8.1",
-    "ts-node": "^10.4.0"
+    "prisma": "^3.8.1"
   },
   "prisma": {
     "schema": "src/db/schema.prisma"

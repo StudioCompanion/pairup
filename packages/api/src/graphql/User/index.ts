@@ -14,9 +14,9 @@ const queries = extendType({
   definition: (t) => {
     t.field('currentUser', {
       type: 'User',
-      resolve: (_, __, ctx) => {
+      resolve: (_, __) => {
         return {
-          id: 'test',
+          id: 0,
         }
       },
     })
@@ -34,8 +34,12 @@ const mutations = extendType({
         hashedPassword: stringArg(),
         salt: stringArg(),
       },
-      resolve: async (_, { userId, email, hashedPassword, salt }, ctx) => {
+      resolve: (_, { userId }, ctx) => {
         if (!ctx.user?.userId || userId !== ctx.user.userId) return null
+
+        return {
+          id: 0,
+        }
 
         // return await prisma.user.update({
         //   where: { userId },

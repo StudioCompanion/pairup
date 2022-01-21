@@ -1,7 +1,7 @@
 import { graphql as executeGraphQL, Source } from 'graphql'
 import { oneLine } from 'common-tags'
 
-import { schema } from 'server/graphql/schema'
+import { schema } from '@pairup/api/src/graphql/schema'
 
 interface Options {
   context?: {

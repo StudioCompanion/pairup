@@ -1,6 +1,6 @@
 import { Prisma, User } from '@prisma/client'
 
-import prisma from 'db/prisma'
+import prisma from '@pairup/api/src/db/prisma'
 
 import { testData } from './data'
 
@@ -15,7 +15,10 @@ async function emptyDatabase() {
   )
 
   await Promise.all(
-    tables.map((table) => prisma.$executeRaw(`DELETE FROM "${table}";`))
+    tables.map((table) =>
+      // @ts-expect-error pls no
+      prisma.$executeRaw(`DELETE FROM "${table}";`)
+    )
   )
 }
 

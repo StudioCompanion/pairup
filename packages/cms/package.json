@@ -10,7 +10,7 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "gen-types": "npx sanity-codegen"
+    "generate": "npx sanity-codegen"
   },
   "keywords": [
     "sanity"

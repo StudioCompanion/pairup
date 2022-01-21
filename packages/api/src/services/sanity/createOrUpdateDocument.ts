@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import { getSanityClientWrite } from 'lib/sanity'
-import { PairerProfileCreationDocument } from 'types/sanity'
+import { Sanity } from '@pairup/shared'
 
 const LABEL = '[services::sanity::createOrUpdateDocument]'
 
 const createOrUpdateDocument = async (
-  document: Partial<Omit<PairerProfileCreationDocument, '_id' | '_type'>> &
-    Required<Pick<PairerProfileCreationDocument, '_id' | '_type'>>
+  document: Partial<
+    Omit<Sanity.PairerProfileCreationDocument, '_id' | '_type'>
+  > &
+    Required<Pick<Sanity.PairerProfileCreationDocument, '_id' | '_type'>>
 ) => {
   const sanityClient = getSanityClientWrite()
 

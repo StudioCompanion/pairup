@@ -1,6 +1,6 @@
-const { pathsToModuleNameMapper } = require('ts-jest/utils')
-const { compilerOptions } = require('./tsconfig.json')
-const moduleNameMapper = pathsToModuleNameMapper(compilerOptions.paths, {
+const { pathsToModuleNameMapper } = require('ts-jest')
+const { compilerOptions } = require('./packages/api/tsconfig.json')
+const moduleNameMapper = pathsToModuleNameMapper(compilerOptions.paths ?? {}, {
   prefix: '<rootDir>/packages/web/',
 })
 

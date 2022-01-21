@@ -3,13 +3,13 @@ documents:
   - '**/*.graphql'
   - '!packages/api/graphql/schema.graphql'
 generates:
-  packages/shared/types/types.generated.ts:
+  ./packages/shared/src/types/types.generated.ts:
     plugins:
       - typescript
   ./:
     preset: near-operation-file
     presetConfig:
-      baseTypesPath: packages/shared/types/types.generated.ts
+      baseTypesPath: ./packages/shared/src/types/types.generated.ts
     plugins:
       - typescript-operations
       - typescript-urql

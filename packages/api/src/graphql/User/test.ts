@@ -103,10 +103,7 @@ describe(`updateUser`, () => {
             user: testData.users[0],
           },
           variables: {
-            userId: testData.users[0].userId,
             email: testData.users[0].email,
-            hashedPassword: testData.users[0].hashedPassword,
-            salt: testData.users[0].salt,
           },
         }
       )
