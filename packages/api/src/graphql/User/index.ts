@@ -34,21 +34,10 @@ const mutations = extendType({
         hashedPassword: stringArg(),
         salt: stringArg(),
       },
-      resolve: (_, { userId }, ctx) => {
-        if (!ctx.user?.userId || userId !== ctx.user.userId) return null
-
+      resolve: () => {
         return {
           id: 0,
         }
-
-        // return await prisma.user.update({
-        //   where: { userId },
-        //   data: {
-        //     email: email ?? undefined,
-        //     hashedPassword: hashedPassword ?? undefined,
-        //     salt: salt ?? undefined,
-        //   },
-        // })
       },
     })
   },

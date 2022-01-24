@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pm2 start ecosystem.config.js --watch",
-    "stop": "pm2 delete ecosystem.config.js",
+    "logs": "pm2 logs",
     "generate": "yarn generate:prisma && yarn generate:nexus",
     "generate:prisma": "prisma generate",
     "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node --require dotenv/config --transpile-only -P nexus.tsconfig.json ./src/graphql/schema.ts",
@@ -12,13 +12,20 @@
     "prebuild": "yarn run generate",
     "prisma:migrate": "yarn prisma migrate dev --preview-feature",
     "prisma:studio": "prisma studio",
+    "stop": "pm2 delete ecosystem.config.js",
     "test:ts": "tsc --noEmit"
   },
   "dependencies": {
     "@pairup/shared": "1.0.0",
     "@prisma/client": "^3.8.1",
+    "apollo-server-core": "^3.6.2",
+    "apollo-server-express": "^3.6.2",
+    "body-parser": "^1.19.1",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "graphql": "15.8.0",
+    "helmet": "^5.0.2",
     "nexus": "^1.1.0",
     "nexus-prisma": "^0.35.0",
     "pm2": "^5.1.2",
@@ -26,6 +33,7 @@
     "urql": "^2.0.6"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.2",
     "cross-env": "^7.0.3",
     "prisma": "^3.8.1",
     "ts-node": "^10.4.0"

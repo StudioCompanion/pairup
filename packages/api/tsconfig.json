@@ -16,9 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "db/*": ["./src/db/*"],
-      "test/*": ["../../test/*"],
+      "graph/*": ["./src/graphql/*"],
       "lib/*": ["./src/lib/*"],
-      "services/*": ["./src/services/*"]
+      "services/*": ["./src/services/*"],
+      "test/*": ["../../test/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],

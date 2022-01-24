@@ -10,10 +10,10 @@ const shouldGenerateArtifacts =
 export const schema = makeSchema({
   types: [User],
   // Type the GraphQL context when used in Nexus resolvers
-  // contextType: {
-  //   module: path.join(process.cwd(), 'src/pages/api/index.ts'),
-  //   export: 'GraphQLContext',
-  // },
+  contextType: {
+    module: path.join(process.cwd(), './src/server/index.ts'),
+    export: 'GraphQLContext',
+  },
   // Generate the files
   shouldGenerateArtifacts,
   outputs: {

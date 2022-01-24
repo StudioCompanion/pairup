@@ -1,6 +1,6 @@
 import { Prisma, User } from '@prisma/client'
 
-import prisma from '@pairup/api/src/db/prisma'
+import { prisma } from '@pairup/api/src/db/prisma'
 
 import { testData } from './data'
 
