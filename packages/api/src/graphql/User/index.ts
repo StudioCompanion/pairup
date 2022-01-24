@@ -1,10 +1,13 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
 import { User } from 'nexus-prisma'
 
+import { prisma } from '../../db/prisma'
+
 const UserType = objectType({
   name: User.$name,
   definition(t) {
     t.field(User.id)
+    t.field(User.email)
   },
 })
 
@@ -16,7 +19,23 @@ const queries = extendType({
       resolve: (_, __) => {
         return {
           id: 0,
+          email: 'hello',
         }
+      },
+    })
+    t.field('userIsEmailUnique', {
+      type: 'Boolean',
+      args: {
+        email: nonNull(stringArg()),
+      },
+      resolve: async (_, { email }) => {
+        const user = await prisma.user.findFirst({
+          where: {
+            email,
+          },
+        })
+
+        return user !== null
       },
     })
   },
@@ -36,6 +55,7 @@ const mutations = extendType({
       resolve: () => {
         return {
           id: 0,
+          email: 'hello',
         }
       },
     })

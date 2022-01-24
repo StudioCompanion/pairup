@@ -20,6 +20,7 @@
     "api:logs": "yarn workspace @pairup/api logs",
     "api:stop": "yarn workspace @pairup/api stop",
     "api:migrate": "yarn workspace @pairup/api prisma:migrate",
+    "api:studio": "yarn workspace @pairup/api prisma:studio",
     "cms:start": "yarn workspace @pairup/cms start",
     "cms:build": "yarn workspace @pairup/cms build",
     "cms:deploy": "yarn workspace @pairup/cms deploy",
