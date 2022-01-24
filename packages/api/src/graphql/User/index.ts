@@ -1,6 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
 import { User } from 'nexus-prisma'
-// import prisma from '../../db/prisma'
 
 const UserType = objectType({
   name: User.$name,

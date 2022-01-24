@@ -1,5 +1,0 @@
-query GetCurrentUser($money: Int!) {
-  currentUser {
-    id
-  }
-}
