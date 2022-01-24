@@ -15,10 +15,7 @@ async function emptyDatabase() {
   )
 
   await Promise.all(
-    tables.map((table) =>
-      // @ts-expect-error pls no
-      prisma.$executeRaw(`DELETE FROM "${table}";`)
-    )
+    tables.map((table) => prisma.$executeRawUnsafe(`DELETE FROM "${table}";`))
   )
 }
 

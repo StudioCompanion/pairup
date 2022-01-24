@@ -12,8 +12,10 @@ type Mutation {
 
 type Query {
   currentUser: User
+  userIsEmailUnique(email: String!): Boolean
 }
 
 type User {
+  email: String!
   id: Int!
 }

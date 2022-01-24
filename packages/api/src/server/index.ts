@@ -11,9 +11,8 @@ import { handleNoRoute } from './404'
 
 const PORT = process.env.PORT || 3000
 
-export interface GraphQLContext {
-  prisma: typeof prisma
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface GraphQLContext {}
 
 async function startApolloServer() {
   const app = express()
