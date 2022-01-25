@@ -13,6 +13,18 @@ generator nexusPrisma {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
+  // Default entry stuff
+  id       String @id @default(cuid())
+  // Account details
+  email    String @unique
+  password String @unique
+  // what's their role? Probably a pairer
+  role     Role   @default(PAIRER)
+  // Unique user ID
+  userId   String @unique @default(uuid())
+}
+
+enum Role {
+  PAIRER
+  PAIREE
 }
