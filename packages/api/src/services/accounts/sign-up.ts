@@ -1,3 +1,11 @@
+import { FieldResolver } from 'nexus'
+import { z, ZodError } from 'zod'
+import bcrypt from 'bcrypt'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
+
+import { Logger } from '../../helpers/console'
+import { prisma } from '../../db/prisma'
+
 // import moment from 'moment'
 // import {
 //   DAYS_OF_THE_WEEK,
@@ -5,14 +13,87 @@
 //   PAIRER_PROFILE_STATUS,
 //   TIMEZONES,
 // } from '@pairup/shared'
-// import { randomUUID, randomBytes, pbkdf2, randomInt, createHash } from 'crypto'
 
-// import prisma from 'db/prisma'
 // import { sendVerificationEmail } from 'services/emails/sendVerificationEmail'
 // import createOrUpdateDocument from 'services/sanity/createOrUpdateDocument'
 
-export const signup = () => {
-  console.warn('hello world')
+const signupSchema = z.object({
+  email: z
+    .string({
+      required_error: 'Email is required',
+      invalid_type_error: 'Email must be a string',
+    })
+    .email({
+      message: 'Invalid email address provided',
+    })
+    .nonempty(),
+  password: z
+    .string({
+      required_error: 'Password is required',
+      invalid_type_error: 'Password must be a string',
+    })
+    .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, {
+      message:
+        'Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter',
+    }),
+})
+
+export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
+  _,
+  args
+) => {
+  const { email, password } = args
+
+  try {
+    signupSchema.parse({
+      email,
+      password,
+    })
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+      },
+    })
+
+    return {
+      User: user,
+      UserError: null,
+    }
+  } catch (err: unknown) {
+    Logger.error(err)
+
+    if (err instanceof ZodError) {
+      return {
+        User: null,
+        UserError: err.issues.map((issue) => ({
+          errorCode: 'The input value is invalid, see message',
+          input: issue.path[0].toString(),
+          message: issue.message,
+        })),
+      }
+    }
+    if (err instanceof PrismaClientKnownRequestError) {
+      return {
+        User: null,
+        UserError: [
+          {
+            errorCode: 'The input value is invalid, see message',
+            input: 'email',
+            message: 'This email address has already been used',
+          },
+        ],
+      }
+    }
+
+    return {
+      User: null,
+      UserError: [],
+    }
+  }
 }
 
 // type UserBody = SignUpAccountDetails &

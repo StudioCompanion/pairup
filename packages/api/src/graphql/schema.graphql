@@ -2,20 +2,67 @@
 ### Do not make changes to this file directly
 
 type Mutation {
-  updateUser(
-    email: String
-    hashedPassword: String
-    salt: String
-    userId: String!
-  ): User
+  """
+  Create an account for a new user
+  """
+  userCreateAccount(email: String!, password: String!): UserMutationReturn
 }
 
 type Query {
-  currentUser: User
+  """
+  Check if the email address submitted by a user or persepctive user has already been used before
+  """
   userIsEmailUnique(email: String!): Boolean
 }
 
+"""
+Possible roles a user can have within the database
+"""
+enum Role {
+  PAIREE
+  PAIRER
+}
+
+"""
+An individual user of PairUp
+"""
 type User {
+  """
+  User's email
+  """
   email: String!
-  id: Int!
+
+  """
+  The User's role
+  """
+  role: Role!
+
+  """
+  Unique identifier of the user in the database
+  """
+  userId: String!
+}
+
+"""
+An error the user has made when submitting a mutation
+"""
+type UserError {
+  errorCode: UserErrorCodes
+  input: String
+  message: String
+}
+
+"""
+Possible error codes that can be returned from UserError
+"""
+enum UserErrorCodes {
+  INVALID
+}
+
+"""
+Encapsulates return values of user mutations where input fields could be incorrect
+"""
+type UserMutationReturn {
+  User: User
+  UserError: [UserError]
 }

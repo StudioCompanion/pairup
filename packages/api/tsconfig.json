@@ -15,10 +15,6 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "db/*": ["./src/db/*"],
-      "graph/*": ["./src/graphql/*"],
-      "lib/*": ["./src/lib/*"],
-      "services/*": ["./src/services/*"],
       "test/*": ["../../test/*"]
     }
   },

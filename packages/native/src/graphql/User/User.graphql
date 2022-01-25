@@ -1,5 +1,3 @@
-query GetCurrentUser {
-  currentUser {
-    id
-  }
+query IsUserEmailUnique($email: String!) {
+  userIsEmailUnique(email: $email)
 }

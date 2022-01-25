@@ -40,7 +40,7 @@
     "prettier:check": "prettier --check .",
     "test": "yarn test:ts && yarn test:unit",
     "test:ts": "tsc --noEmit && yarn workspace @pairup/api test:ts",
-    "test:unit": "jest",
+    "test:unit": "ENV=test jest",
     "prepare": "husky install"
   },
   "devDependencies": {
