@@ -9,8 +9,6 @@ type Mutation {
 }
 
 type Query {
-  currentUser: User
-
   """
   Check if the email address submitted by a user or persepctive user has already been used before
   """

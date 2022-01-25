@@ -5,16 +5,6 @@ import { prisma } from '../../db/prisma'
 export const queries = extendType({
   type: 'Query',
   definition: (t) => {
-    t.field('currentUser', {
-      type: 'User',
-      resolve: (_, __) => {
-        return {
-          userId: '0',
-          email: 'hello',
-          role: 'PAIREE',
-        }
-      },
-    })
     t.field('userIsEmailUnique', {
       type: 'Boolean',
       description:
