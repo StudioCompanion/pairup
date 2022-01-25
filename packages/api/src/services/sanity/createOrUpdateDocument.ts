@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { getSanityClientWrite } from 'lib/sanity'
+import { getSanityClientWrite } from '../../lib/sanity'
 import { Sanity } from '@pairup/shared'
 
 const LABEL = '[services::sanity::createOrUpdateDocument]'
