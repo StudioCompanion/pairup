@@ -28,6 +28,9 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
       - name: Checkout
         uses: actions/checkout@v2
 
