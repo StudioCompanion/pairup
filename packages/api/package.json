@@ -18,6 +18,7 @@
   "dependencies": {
     "@pairup/shared": "1.0.0",
     "@prisma/client": "^3.8.1",
+    "@sentry/node": "^6.17.1",
     "apollo-server-core": "^3.6.2",
     "apollo-server-express": "^3.6.2",
     "bcrypt": "^5.0.1",

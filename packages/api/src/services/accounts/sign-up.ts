@@ -2,21 +2,20 @@ import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import bcrypt from 'bcrypt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
+import { formatISO } from 'date-fns'
+import { DAYS_OF_THE_WEEK, PAIRER_PROFILE_STATUS } from '@pairup/shared'
 
-import { Logger } from '../../helpers/console'
 import { prisma } from '../../db/prisma'
 
-// import moment from 'moment'
-// import {
-//   DAYS_OF_THE_WEEK,
-//   DISCIPLINES,
-//   PAIRER_PROFILE_STATUS,
-//   TIMEZONES,
-// } from '@pairup/shared'
+import { createOrUpdateDocument } from '../sanity/createOrUpdateDocument'
 
-// import { sendVerificationEmail } from 'services/emails/sendVerificationEmail'
-// import createOrUpdateDocument from 'services/sanity/createOrUpdateDocument'
+import { Logger } from '../../helpers/console'
 
+import { NexusGenInputs } from '../../graphql/nexus-types.generated'
+
+/**
+ * Schema validation for signing up
+ */
 const signupSchema = z.object({
   email: z
     .string({
@@ -38,25 +37,134 @@ const signupSchema = z.object({
     }),
 })
 
+/**
+ * Schema validation for a time object
+ * passed from GraphQL
+ */
+const timeSchema = z.object({
+  startTime: z.string().nonempty(),
+  endTime: z.string().nonempty(),
+})
+
+/**
+ * Schema validation for the
+ * user's profile
+ */
+const profileSchema = z.object({
+  firstName: z.string().nonempty({
+    message: 'First name is required',
+  }),
+  lastName: z.string().nonempty({
+    message: 'Last name is required',
+  }),
+  jobTitle: z.string(),
+  companyUrl: z.string().optional(),
+  portfolioUrl: z.string().optional(),
+  bio: z.string().nonempty({
+    message: 'Your bio is required',
+  }),
+  disciplines: z
+    .array(z.string(), {
+      required_error: 'You have to select at least one discipline',
+    })
+    .nonempty(),
+  twitter: z.string().optional(),
+  instagram: z.string().optional(),
+  linkedin: z.string().optional(),
+  github: z.string().optional(),
+  timezone: z.string().nonempty({
+    message: 'Timezone is required',
+  }),
+  availability: z
+    .object(
+      {
+        monday: z.array(timeSchema),
+        tuesday: z.array(timeSchema),
+        wednesday: z.array(timeSchema),
+        thursday: z.array(timeSchema),
+        friday: z.array(timeSchema),
+        saturday: z.array(timeSchema),
+        sunday: z.array(timeSchema),
+      },
+      {
+        required_error: 'Availability is required',
+      }
+    )
+    .partial(),
+})
+
 export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
   _,
   args
 ) => {
-  const { email, password } = args
+  const { email, password, profile } = args
 
   try {
+    /**
+     * Parse the email & Password
+     * through the schema
+     */
     signupSchema.parse({
       email,
       password,
     })
 
+    /**
+     * Parse the profile too
+     */
+    profileSchema.parse(profile)
+
+    /**
+     * Hash the password
+     */
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    /**
+     * Create our user
+     */
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
       },
+    })
+
+    /**
+     * Begin creating the Sanity Profile entry
+     */
+    const { availability, ...restProfile } = profile
+
+    const now = formatISO(Date.now())
+
+    const allAvailability = Object.values(DAYS_OF_THE_WEEK)
+      .map((day) => {
+        const hours = availability[day] ?? []
+
+        return {
+          [day]: hours.map(
+            (hour: NexusGenInputs['AvailabilityTimeInput'] | null) => ({
+              ...hour,
+              _type: 'availableTime',
+              _key: `${user.userId}_${day}`,
+            })
+          ),
+        }
+      })
+      .reduce((acc, curr) => ({ ...acc, ...curr }), {})
+
+    await createOrUpdateDocument({
+      _type: 'pairerProfile',
+      _id: user.userId,
+      uuid: user.userId,
+      title: `${restProfile.firstName} ${restProfile.lastName}`,
+      status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+      email,
+      hasVerifiedAccount: false,
+      createdAt: now,
+      lastModifiedAt: now,
+      ...restProfile,
+      ...allAvailability,
+      disciplines: restProfile.disciplines.join(','),
     })
 
     return {
@@ -71,7 +179,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
         User: null,
         UserError: err.issues.map((issue) => ({
           errorCode: 'The input value is invalid, see message',
-          input: issue.path[0].toString(),
+          input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
         })),
       }
@@ -95,214 +203,3 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     }
   }
 }
-
-// type UserBody = SignUpAccountDetails &
-//   SignUpPersonalDetails &
-//   SignUpAvailability
-
-// type AllSignUpFieldNames =
-//   | SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES
-//   | SIGNUP_PERSONAL_DETAIL_FIELD_NAMES
-//   | SIGNUP_AVAILABILITY_FIELD_NAMES
-
-// type AllSignUpValues = SignUpAccountDetails &
-//   SignUpPersonalDetails &
-//   SignUpAvailability
-
-// export type CreatedUser = Pick<SignUpAccountDetails, 'email'> & {
-//   userId: string
-// }
-
-// const disciplines = Object.values(DISCIPLINES)
-// const timezones = Object.values(TIMEZONES)
-
-// const validateBodyKey = <T extends AllSignUpValues[keyof AllSignUpValues]>(
-//   key: AllSignUpFieldNames,
-//   value: T
-// ) => {
-//   switch (key) {
-//     case SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES.email:
-//       return validator.isEmail(value as AllSignUpValues['email'])
-//     case SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.companyUrl:
-//       return validator.isURL(value as AllSignUpValues['companyUrl'])
-//     case SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.portfolioUrl:
-//       return validator.isURL(value as AllSignUpValues['portfolioUrl'])
-//     case SIGNUP_PERSONAL_DETAIL_FIELD_NAMES.disciplines:
-//       return !(value as AllSignUpValues['disciplines'])
-//         .map((item) => disciplines.includes(item))
-//         .includes(false)
-//     case SIGNUP_AVAILABILITY_FIELD_NAMES.timezone:
-//       return timezones.includes(value as AllSignUpValues['timezone'])
-//     default:
-//       return true
-//   }
-// }
-
-// export const signup = async (
-//   req: NextApiRequest & {
-//     login: (user: CreatedUser, done: (err: unknown) => void) => void
-//   },
-//   res: NextApiResponse
-// ) => {
-//   try {
-//     /**
-//      * Validate our fields Server Side
-//      */
-//     const validation = Object.entries(req.body).map(([key, value]) =>
-//       validateBodyKey(
-//         key as AllSignUpFieldNames,
-//         value as AllSignUpValues[keyof AllSignUpValues]
-//       )
-//     )
-
-//     /**
-//      * Check the DB for a user that has the email
-//      * If they do, throw because it'll crash the application
-//      */
-//     const users = await prisma.user.findFirst({
-//       where: {
-//         email: req.body.email,
-//       },
-//     })
-
-//     if (validation.includes(false)) {
-//       throw new Error('Data is not expected form')
-//     } else if (users) {
-//       throw new Error('Email address already exists with a user')
-//     } else {
-//       const {
-//         firstName,
-//         lastName,
-//         email,
-//         password,
-//         jobTitle,
-//         companyUrl,
-//         portfolioUrl,
-//         bio,
-//         disciplines,
-//         twitter,
-//         instagram,
-//         linkedin,
-//         github,
-//         timezone,
-//         availabilityTimes,
-//       } = req.body as UserBody
-//       // Salt
-//       const salt = randomBytes(16)
-//       // Create password
-//       pbkdf2(
-//         password,
-//         salt,
-//         10000,
-//         32,
-//         'sha256',
-//         async (err, hashedPassword) => {
-//           if (err) {
-//             throw err
-//           }
-
-//           // create the uuid we'll use across the app
-//           const userId = randomUUID()
-
-//           const now = moment()
-
-//           /**
-//            * This will timeout in 1 day.
-//            */
-//           const verificationCode = createHash('md5')
-//             .update(randomInt(1000).toFixed(0))
-//             .digest('hex')
-
-//           // create our user
-//           const createdUser = await prisma.user.create({
-//             data: {
-//               email,
-//               salt: salt.toString(),
-//               hashedPassword: hashedPassword.toString(),
-//               userId,
-//               verificationCode,
-//               verificationTimeout: now.add(1, 'days').format(),
-//             },
-//           })
-
-//           const availableTimes = Object.entries(availabilityTimes)
-//             .map(([key, value]) => [
-//               key,
-//               value.map((obj) => ({ ...obj, _key: randomUUID() })),
-//             ])
-//             .reduce(
-//               (acc, [key, value]) => {
-//                 return {
-//                   ...acc,
-//                   [key as DAYS_OF_THE_WEEK]: value,
-//                 }
-//               },
-//               {} as {
-//                 [P in DAYS_OF_THE_WEEK]: Array<{
-//                   _key: string
-//                   startTime: string
-//                   endTime: string
-//                   _type: 'availableTime'
-//                 }>
-//               }
-//             )
-
-//           const pairerDocument: PairerProfileCreationDocument = {
-//             _type: 'pairerProfile',
-//             _id: userId,
-//             title: `${firstName} ${lastName}`,
-//             createdAt: now.format(),
-//             lastModifiedAt: now.format(),
-//             status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
-//             hasVerifiedAccount: false,
-//             firstName,
-//             lastName,
-//             email,
-//             uuid: userId,
-//             jobTitle,
-//             companyUrl,
-//             portfolioUrl,
-//             bio,
-//             disciplines: disciplines.join(','),
-//             twitter,
-//             instagram,
-//             linkedin,
-//             github,
-//             timezone,
-//             ...availableTimes,
-//           }
-
-//           await createOrUpdateDocument(pairerDocument)
-
-//           /**
-//            * Send the verification email
-//            */
-//           await sendVerificationEmail(email, verificationCode, {
-//             firstName,
-//           })
-
-//           /**
-//            * return the CreateUser to the req.login
-//            * function injected by passport
-//            */
-//           const user: CreatedUser = {
-//             userId: createdUser.userId,
-//             email: createdUser.email,
-//           }
-
-//           req.login(user, function (err) {
-//             if (err) {
-//               throw err
-//             }
-//             res.redirect(SLUG_ACCOUNT)
-//           })
-//         }
-//       )
-//     }
-//   } catch (e: unknown) {
-//     console.error(e)
-//     res.status(406).json({
-//       errror: (e as Error).message,
-//     })
-//   }
-// }

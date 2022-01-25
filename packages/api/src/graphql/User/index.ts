@@ -4,6 +4,10 @@ import {
   UserErrorCodesType,
   UserRoleType,
   UserMutationReturnType,
+  UserAvailabilityInputType,
+  UserDisciplinesType,
+  UserProfileInputType,
+  AvailabilityTimeInputType,
 } from './types'
 import { mutations } from './mutations'
 import { queries } from './queries'
@@ -14,6 +18,10 @@ export default [
   UserErrorCodesType,
   UserRoleType,
   UserMutationReturnType,
+  UserAvailabilityInputType,
+  UserDisciplinesType,
+  UserProfileInputType,
+  AvailabilityTimeInputType,
   mutations,
   queries,
 ]
