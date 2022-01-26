@@ -4,8 +4,8 @@
       "./tsconfig.json",
       "./packages/native/tsconfig.json",
       "./packages/api/tsconfig.json",
-      "./docs/tsconfig.json",
-      "./packages/cms/tsconfig.json"
+      "./packages/cms/tsconfig.json",
+      "./docs/tsconfig.json"
     ]
   },
   "extends": ["@studiocompanion/eslint-config"],

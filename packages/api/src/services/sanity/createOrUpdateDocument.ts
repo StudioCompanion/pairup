@@ -1,39 +1,44 @@
-/* eslint-disable no-console */
+import { IdentifiedSanityDocumentStub } from '@sanity/client'
+import { captureException, Scope } from '@sentry/node'
+
+import { Logger } from '../../helpers/console'
+
 import { getSanityClientWrite } from '../../lib/sanity'
-import { Sanity } from '@pairup/shared'
 
-const LABEL = '[services::sanity::createOrUpdateDocument]'
-
-const createOrUpdateDocument = async (
-  document: Partial<
-    Omit<Sanity.PairerProfileCreationDocument, '_id' | '_type'>
-  > &
-    Required<Pick<Sanity.PairerProfileCreationDocument, '_id' | '_type'>>
+export const createOrUpdateDocument = async (
+  document: IdentifiedSanityDocumentStub
 ) => {
-  const sanityClient = getSanityClientWrite()
+  try {
+    const sanityClient = getSanityClientWrite()
 
-  // Create new document / patch existing
-  await sanityClient
-    .transaction()
-    .createIfNotExists(document)
-    .patch(document._id, (patch) => patch.set(document))
-    .commit()
-
-  // Check for and patch draft document, if present
-  const draftId = `drafts.${document._id}`
-  const draft = await sanityClient.getDocument(draftId)
-  if (draft) {
-    const documentDraft = Object.assign({}, document, {
-      _id: draftId,
-    })
-
+    // Create new document / patch existing
     await sanityClient
       .transaction()
-      .patch(draftId, (patch) => patch.set(documentDraft))
+      .createIfNotExists(document)
+      .patch(document._id, (patch) => patch.set(document))
       .commit()
+
+    // Check for and patch draft document, if present
+    const draftId = `drafts.${document._id}`
+    const draft = await sanityClient.getDocument(draftId)
+    if (draft) {
+      const documentDraft = Object.assign({}, document, {
+        _id: draftId,
+      })
+
+      await sanityClient
+        .transaction()
+        .patch(draftId, (patch) => patch.set(documentDraft))
+        .commit()
+    }
+  } catch (err) {
+    const errMsg = 'Failed to create sanity profile after account creation'
+    Logger.error(errMsg)
+    captureException(
+      errMsg,
+      new Scope().setExtras({
+        err,
+      })
+    )
   }
-
-  console.log(`${LABEL} Completed!`)
 }
-
-export default createOrUpdateDocument

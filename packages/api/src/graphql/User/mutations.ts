@@ -11,6 +11,7 @@ export const mutations = extendType({
       args: {
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
+        profile: nonNull('UserProfileInput'),
       },
       resolve: signup,
     })
