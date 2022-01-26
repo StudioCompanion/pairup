@@ -3,9 +3,9 @@ title: How it works 📇
 sidebar_position: 2
 ---
 
-:::info
-Every report submitted by a user creates a new record in our table.
-:::
+### Every report submitted by a user creates a new record in our table 📥
+
+![New Record](/img/new-record.png)
 
 - The fields submitted by the user are:
 
@@ -16,6 +16,10 @@ Every report submitted by a user creates a new record in our table.
   - Is the abuser a pairer?
   - Incident description
   - Attachments
+
+### Admin record fields 🧰
+
+![Admin Fields](/img/admin-fields.png)
 
 - We attach some extra fields to each record for admin purposes. These are:
   - Record creation date
