@@ -17,7 +17,8 @@
     "**/*.config.js",
     "packages/shared/**/*",
     "**/*.d.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "__mocks__/**/*.ts"
   ],
   "exclude": ["node_modules", "**/dist/*"]
 }

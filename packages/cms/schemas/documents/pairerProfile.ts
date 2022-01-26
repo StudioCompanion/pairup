@@ -10,7 +10,6 @@ import { capitalCase } from 'capital-case'
 import { Rule } from '../../types'
 
 export default {
-  // __experimental_actions: [/*'create',*/ 'update', /*'delete',*/ 'publish'],
   name: 'pairerProfile',
   title: 'Parier Profile',
   type: 'document',

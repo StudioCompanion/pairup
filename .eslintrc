@@ -4,6 +4,7 @@
       "./tsconfig.json",
       "./packages/native/tsconfig.json",
       "./packages/api/tsconfig.json",
+      "./packages/cms/tsconfig.json",
       "./docs/tsconfig.json"
     ]
   },

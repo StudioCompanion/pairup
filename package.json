@@ -26,7 +26,7 @@
     "cms:deploy": "yarn workspace @pairup/cms deploy",
     "docs": "yarn workspace @pairup/docs start",
     "eslint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache --fix",
-    "generate": "yarn generate:api && yarn generate:cms && yarn run generate:graphql-codegen",
+    "generate": "yarn generate:cms && yarn generate:api && yarn run generate:graphql-codegen",
     "generate:api": "yarn workspace @pairup/api run generate",
     "generate:cms": "yarn workspace @pairup/cms run generate",
     "generate:graphql-codegen": "graphql-codegen",
