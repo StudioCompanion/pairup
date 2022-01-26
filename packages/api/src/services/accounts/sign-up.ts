@@ -16,6 +16,7 @@ import { Logger } from '../../helpers/console'
 import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 
 import { sendVerificationEmail } from '../emails/sendVerificationEmail'
+import { sendNewUserEmail } from '../emails/sendNewUserEmail'
 
 /**
  * Schema validation for signing up
@@ -200,6 +201,11 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     sendVerificationEmail(user.email, verificationCode, {
       name: restProfile.firstName,
     })
+
+    /**
+     * Send email to super user so they can approve the profile.
+     */
+    sendNewUserEmail(user.userId)
 
     return {
       User: user,
