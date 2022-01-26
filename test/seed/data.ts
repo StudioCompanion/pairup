@@ -7,6 +7,9 @@ export const testData: SeedData = {
       userId: '123',
       password: 'hello',
       role: 'PAIRER',
+      verificationCode: 'yesplease',
+      verificationTimeout: 'tomorrrow',
+      verified: false,
     },
   ],
 }
