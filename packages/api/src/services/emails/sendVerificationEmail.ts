@@ -1,13 +1,7 @@
-/* eslint-disable no-console */
+import { Logger } from 'src/helpers/console'
+import { EmailData, sendEmail } from '../postmark/sendEmail'
 
-import { client, API_TOKEN } from '../postmark/client'
-
-type EmailUserData = {
-  firstName: string
-}
-
-const TEMPLATE_ID = process.env.VERIFICATION_EMAIL_TEMPLATE_ID
-const FROM_EMAIL = process.env.POSTMARK_FROM_EMAIL
+const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_VERIFY
 
 /**
  * Send a verification email with Postmark
@@ -24,41 +18,27 @@ const FROM_EMAIL = process.env.POSTMARK_FROM_EMAIL
 export const sendVerificationEmail = (
   email: string,
   verificationCode: string,
-  { firstName }: EmailUserData
+  { name }: Pick<EmailData, 'name'>
 ) => {
   const verificationEmail = `https://www.pairup.com${'a'}?code=${verificationCode}`
 
-  if (process.env.NODE_ENV === `development`) {
-    console.log()
-    console.log(`To: ${firstName} – ${email}`)
-    console.log(`TemplateId – ${TEMPLATE_ID}`)
-    console.log()
-    console.log(`This link will verify the user ${verificationEmail}`)
-    console.log()
+  const templateModel = {
+    product_url: 'pairup.com',
+    product_name: 'Pair Up',
+    action_url: verificationEmail,
+    login_url: 'https://www.pairup.com',
+    sender_name: 'Josh',
+    company_name: 'PairUp',
+    company_address: 'My house',
+  }
+
+  if (!TEMPLATE_ID) {
+    Logger.warn('No TEMPLATE_ID set for sending a verification email')
     return
   }
 
-  if (API_TOKEN === 'fake' || !FROM_EMAIL || !TEMPLATE_ID) {
-    console.error(
-      `Please specify the POSTMARK_FROM_EMAIL and POSTMARK_API_TOKEN env variables.`
-    )
-    return
-  }
-
-  return client.sendEmailWithTemplate({
-    To: email,
-    From: FROM_EMAIL,
-    TemplateId: Number(TEMPLATE_ID),
-    TemplateModel: {
-      product_url: 'pairup.com',
-      product_name: 'Pair Up',
-      name: firstName,
-      action_url: verificationEmail,
-      login_url: 'https://www.pairup.com/login',
-      username: email,
-      sender_name: 'Josh',
-      company_name: 'PairUp',
-      company_address: 'My house',
-    },
+  sendEmail(TEMPLATE_ID, { name, email, templateModel }, () => {
+    // only printed in development
+    Logger.log(`sent verification email with code: ${verificationCode}`)
   })
 }
