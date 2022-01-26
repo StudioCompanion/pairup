@@ -14,14 +14,18 @@ generator nexusPrisma {
 
 model User {
   // Default entry stuff
-  id       String @id @default(cuid())
+  id                  String  @id @default(cuid())
   // Account details
-  email    String @unique
-  password String @unique
+  email               String  @unique
+  password            String  @unique
   // what's their role? Probably a pairer
-  role     Role   @default(PAIRER)
+  role                Role    @default(PAIRER)
   // Unique user ID
-  userId   String @unique @default(uuid())
+  userId              String  @unique @default(uuid())
+  // Verification
+  verified            Boolean @default(false)
+  verificationCode    String
+  verificationTimeout String
 }
 
 enum Role {

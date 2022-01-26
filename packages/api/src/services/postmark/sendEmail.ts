@@ -16,7 +16,7 @@ export const sendEmail = async (
   { name, email, templateModel }: EmailData,
   additionalLogs?: () => void
 ): Promise<void> => {
-  if (process.env.NODE_ENV === `development`) {
+  if (process.env.ENV === `development`) {
     Logger.log()
     Logger.log(`To: ${name} – ${email}`)
     Logger.log(`TemplateId – ${templateId}`)

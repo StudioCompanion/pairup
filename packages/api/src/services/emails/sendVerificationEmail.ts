@@ -1,4 +1,5 @@
-import { Logger } from 'src/helpers/console'
+import { Logger } from '../../helpers/console'
+
 import { EmailData, sendEmail } from '../postmark/sendEmail'
 
 const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_VERIFY

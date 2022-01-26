@@ -2,8 +2,10 @@ import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import bcrypt from 'bcrypt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
-import { formatISO } from 'date-fns'
+import { formatISO, add } from 'date-fns'
 import { DAYS_OF_THE_WEEK, PAIRER_PROFILE_STATUS } from '@pairup/shared'
+import { captureException, Scope } from '@sentry/node'
+import { randomBytes } from 'crypto'
 
 import { prisma } from '../../db/prisma'
 
@@ -12,6 +14,8 @@ import { createOrUpdateDocument } from '../sanity/createOrUpdateDocument'
 import { Logger } from '../../helpers/console'
 
 import { NexusGenInputs } from '../../graphql/nexus-types.generated'
+
+import { sendVerificationEmail } from '../emails/sendVerificationEmail'
 
 /**
  * Schema validation for signing up
@@ -119,6 +123,15 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      */
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    const now = Date.now()
+
+    const verificationCode = randomBytes(32).toString('base64')
+    const verificationTimeout = formatISO(
+      add(now, {
+        days: 1,
+      })
+    )
+
     /**
      * Create our user
      */
@@ -126,6 +139,8 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       data: {
         email,
         password: hashedPassword,
+        verificationCode,
+        verificationTimeout,
       },
     })
 
@@ -134,8 +149,10 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      */
     const { availability, ...restProfile } = profile
 
-    const now = formatISO(Date.now())
-
+    /**
+     * Make a default object shape of availability
+     * so the client of GraphQL doesnt have too
+     */
     const allAvailability = Object.values(DAYS_OF_THE_WEEK)
       .map((day) => {
         const hours = availability[day] ?? []
@@ -152,6 +169,13 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       })
       .reduce((acc, curr) => ({ ...acc, ...curr }), {})
 
+    /**
+     * Create the sanity document
+     * If this fails it's tracked in Sentry,
+     * If the pairer doesn't have a profile
+     * they will be a bit broken so someone
+     * has to do something manual
+     */
     await createOrUpdateDocument({
       _type: 'pairerProfile',
       _id: user.userId,
@@ -160,11 +184,21 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
       email,
       hasVerifiedAccount: false,
-      createdAt: now,
-      lastModifiedAt: now,
+      createdAt: formatISO(now),
+      lastModifiedAt: formatISO(now),
       ...restProfile,
       ...allAvailability,
       disciplines: restProfile.disciplines.join(','),
+    })
+
+    /**
+     * Send a verification email to the new pairer
+     * If this fails Sentry will be notified,
+     * with the verification code in the DB we'll
+     * have to fetch it out there
+     */
+    sendVerificationEmail(user.email, verificationCode, {
+      name: restProfile.firstName,
     })
 
     return {
@@ -172,9 +206,15 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       UserError: null,
     }
   } catch (err: unknown) {
-    Logger.error(err)
+    const errMsg = 'Failed to create user account'
+    Logger.error(errMsg, err)
 
     if (err instanceof ZodError) {
+      /**
+       * One of our schemas failed validation check
+       * Send back the input name which is the last
+       * in the path array
+       */
       return {
         User: null,
         UserError: err.issues.map((issue) => ({
@@ -185,6 +225,11 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       }
     }
     if (err instanceof PrismaClientKnownRequestError) {
+      /**
+       * I've assumed this will only happen if
+       * an email has already been used,
+       * lets pray I was right.
+       */
       return {
         User: null,
         UserError: [
@@ -197,6 +242,15 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       }
     }
 
+    /**
+     * Any other error, capture it & return a failed object
+     */
+    captureException(
+      errMsg,
+      new Scope().setExtras({
+        err,
+      })
+    )
     return {
       User: null,
       UserError: [],
