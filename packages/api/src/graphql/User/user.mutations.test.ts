@@ -4,8 +4,16 @@ import { request, graphql } from 'test/request'
 describe('User Mutations', () => {
   describe('userCreateAccount', () => {
     const mutation = graphql`
-      mutation UserCreateAccount($email: String!, $password: String!) {
-        userCreateAccount(email: $email, password: $password) {
+      mutation UserCreateAccount(
+        $email: String!
+        $password: String!
+        $profile: UserProfileInput!
+      ) {
+        userCreateAccount(
+          email: $email
+          password: $password
+          profile: $profile
+        ) {
           User {
             email
           }
@@ -24,6 +32,22 @@ describe('User Mutations', () => {
           variables: {
             email: 'josh@gmail.com',
             password: 'DVUE8j=uQ;?>,6w%EOh8',
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+              jobTitle: 'Developer',
+            },
           },
         })
       ).toMatchInlineSnapshot(`
@@ -46,6 +70,22 @@ describe('User Mutations', () => {
           variables: {
             email: 'josh@gmail.com',
             password: 'hello',
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+              jobTitle: 'Developer',
+            },
           },
         })
       ).toMatchInlineSnapshot(`
@@ -72,6 +112,22 @@ describe('User Mutations', () => {
           variables: {
             email: 'josh',
             password: 'DVUE8j=uQ;?>,6w%EOh8',
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+              jobTitle: 'Developer',
+            },
           },
         })
       ).toMatchInlineSnapshot(`
@@ -98,6 +154,22 @@ describe('User Mutations', () => {
           variables: {
             email: testData.users[0].email,
             password: 'DVUE8j=uQ;?>,6w%EOh8',
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+              jobTitle: 'Developer',
+            },
           },
         })
       ).toMatchInlineSnapshot(`
@@ -118,12 +190,28 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return a UserErrors list with both inputs listed if neither are correct', async () => {
+    it('should return a UserErrors list with both inputs listed if neither are correct & and profile is missing', async () => {
       expect(
         await request(mutation, {
           variables: {
             email: 'josh',
             password: 'hello',
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+              jobTitle: 'Developer',
+            },
           },
         })
       ).toMatchInlineSnapshot(`
