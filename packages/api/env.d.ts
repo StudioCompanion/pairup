@@ -10,5 +10,9 @@ declare namespace NodeJS {
     SANITY_API_KEY?: string
     // SENTRY
     SENTRY_DNS?: string
+    // POSTMARK
+    POSTMARK_API_TOKEN?: string
+    POSTMARK_FROM_EMAIL?: string
+    POSTMARK_TEMPLATE_ID_VERIFY?: string
   }
 }
