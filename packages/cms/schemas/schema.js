@@ -8,6 +8,11 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
  * Documents
  */
 import pairerProfile from './documents/pairerProfile'
+import spamOrHarmful from './documents/spamOrHarmful'
+import harassmentOrBullying from './documents/harassmentOrBullying'
+import pretendingToBeSomeone from './documents/pretendingToBeSomeone'
+import somethingElse from './documents/somethingElse'
+import report from './documents/report'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -20,5 +25,10 @@ export default createSchema({
      * Documents
      */
     pairerProfile,
+    spamOrHarmful,
+    harassmentOrBullying,
+    pretendingToBeSomeone,
+    somethingElse,
+    report,
   ]),
 })
