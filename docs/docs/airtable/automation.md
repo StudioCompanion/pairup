@@ -3,7 +3,7 @@ title: Automated Emails 📨
 sidebar_position: 3
 ---
 
-Airtable provides an [automation feature](https://www.airtable.com/product/automations?utm_source=google&utm_medium=cpc&utm_extra5=kwd-926474341320&utm_extra2=1026788878&utm_extra10=107435214159&creative=541781718166&device=c&cx=non-us-core&targetid=kwd-926474341320&campaignid=1026788878&adgroupid=107435214159&utm_campaign=brand_creator&utm_content=bofu_freetrial&gclid=Cj0KCQiAosmPBhCPARIsAHOen-PXZpJgsbtOMwcAJZu3YTJQB-5BAnM5zJ8cYVDs4wRPHNebeJKZoV8aAvHzEALw_wcB). We can create `trigger - action` pairs to simulate repeated actions and be more efficient in managing the records.
+Airtable provides an [automation feature](https://www.airtable.com/product/automations). We can create `trigger - action` pairs to simulate repeated actions and be more efficient in managing the records.
 
 ## Sending an email to the reporter upon case completion ⚡️
 
