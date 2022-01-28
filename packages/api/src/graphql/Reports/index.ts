@@ -1,5 +1,5 @@
-import {ReportAbuseInputType} from './types'
+import { ReportAbuseInputType } from './types'
 
-import {mutations} from './mutations'
+import { mutations } from './mutations'
 
 export default [ReportAbuseInputType, mutations]
