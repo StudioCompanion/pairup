@@ -24,7 +24,9 @@ export const applyMiddleware = (app: Express) => {
   app.use(
     helmet({
       contentSecurityPolicy:
-        process.env.NODE_ENV === 'production' ? undefined : false,
+        process.env.ENV === 'production' ? undefined : false,
+      crossOriginEmbedderPolicy:
+        process.env.ENV === 'production' ? undefined : false,
     })
   )
   /**
