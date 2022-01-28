@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css?family=Inter');
+
+:root {
+  --black: #191919;
+
+  --font-family-base: 'Inter';
+}
+
+*[data-testid='group-tab-all-fields'] {
+  display: none !important;
+}

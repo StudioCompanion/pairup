@@ -1,6 +1,6 @@
 import S from '@sanity/desk-tool/structure-builder'
 
-import { IoIosPerson } from 'react-icons/io'
+import { UserList } from 'phosphor-react'
 
 export default () => {
   // prettier-ignore
@@ -11,7 +11,7 @@ export default () => {
         // Parier Profiles
         S.listItem()
           .title('Pairer Profiles')
-          .icon(IoIosPerson)
+          .icon(UserList)
           .schemaType('pairerProfile')
           .child(
               S.documentTypeList('pairerProfile')

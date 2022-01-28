@@ -169,7 +169,10 @@ describe('service signup', () => {
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
 
-    expect(patchMock).toBeCalledWith(res?.User?.userId, expect.any(Function))
+    expect(patchMock).toBeCalledWith(
+      `drafts.${res?.User?.userId}`,
+      expect.any(Function)
+    )
   })
 
   it('should use the postmark server client to send a verification email & send a new user email', async () => {

@@ -179,20 +179,23 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      * they will be a bit broken so someone
      * has to do something manual
      */
-    await createOrUpdateDocument({
-      _type: 'pairerProfile',
-      _id: user.userId,
-      uuid: user.userId,
-      title: `${restProfile.firstName} ${restProfile.lastName}`,
-      status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
-      email,
-      hasVerifiedAccount: false,
-      createdAt: formatISO(now),
-      lastModifiedAt: formatISO(now),
-      ...restProfile,
-      ...allAvailability,
-      disciplines: restProfile.disciplines.join(','),
-    })
+    await createOrUpdateDocument(
+      {
+        _type: 'pairerProfile',
+        _id: user.userId,
+        uuid: user.userId,
+        title: `${restProfile.firstName} ${restProfile.lastName}`,
+        status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+        email,
+        hasVerifiedAccount: false,
+        createdAt: formatISO(now),
+        lastModifiedAt: formatISO(now),
+        ...restProfile,
+        ...allAvailability,
+        disciplines: restProfile.disciplines.join(','),
+      },
+      true
+    )
 
     /**
      * Send a verification email to the new pairer

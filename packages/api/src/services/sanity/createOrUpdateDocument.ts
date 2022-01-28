@@ -6,22 +6,29 @@ import { Logger } from '../../helpers/console'
 import { getSanityClientWrite } from '../../lib/sanity'
 
 export const createOrUpdateDocument = async (
-  document: IdentifiedSanityDocumentStub
+  document: IdentifiedSanityDocumentStub,
+  createAsDraft = false
 ) => {
   try {
     const sanityClient = getSanityClientWrite()
 
+    const draftId = `drafts.${document._id}`
+    const workingId = createAsDraft ? draftId : document._id
+
+    const workingDocument = Object.assign({}, document, {
+      _id: workingId,
+    })
+
     // Create new document / patch existing
     await sanityClient
       .transaction()
-      .createIfNotExists(document)
-      .patch(document._id, (patch) => patch.set(document))
+      .createIfNotExists(workingDocument)
+      .patch(workingId, (patch) => patch.set(workingDocument))
       .commit()
 
     // Check for and patch draft document, if present
-    const draftId = `drafts.${document._id}`
     const draft = await sanityClient.getDocument(draftId)
-    if (draft) {
+    if (!createAsDraft && draft) {
       const documentDraft = Object.assign({}, document, {
         _id: draftId,
       })
