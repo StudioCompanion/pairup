@@ -160,6 +160,7 @@ Possible error codes that can be returned from UserError
 """
 enum UserErrorCodes {
   INVALID
+  NOT_FOUND
 }
 
 """

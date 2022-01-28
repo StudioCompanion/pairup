@@ -5,7 +5,8 @@ export const UserErrorCodesType = enumType({
   name: 'UserErrorCodes',
   description: 'Possible error codes that can be returned from UserError',
   members: {
-    INVALID: 'The input value is invalid, see message',
+    INVALID: 'Invalid',
+    NOT_FOUND: 'NotFound',
   },
 })
 

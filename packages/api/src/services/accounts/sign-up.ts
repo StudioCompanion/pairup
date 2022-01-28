@@ -229,7 +229,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       return {
         User: null,
         UserError: err.issues.map((issue) => ({
-          errorCode: 'The input value is invalid, see message',
+          errorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
         })),
@@ -245,7 +245,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
         User: null,
         UserError: [
           {
-            errorCode: 'The input value is invalid, see message',
+            errorCode: 'Invalid',
             input: 'email',
             message: 'This email address has already been used',
           },

@@ -237,4 +237,63 @@ describe('User Mutations', () => {
       `)
     })
   })
+
+  describe('userCreateAccessToken', () => {
+    const accountDetails = {
+      email: 'dev@companion.studio',
+      password: 'DVUE8j=uQ;?>,6w%EOh8',
+    }
+
+    beforeEach(async () => {
+      /**
+       * Add the user to the DB with the PW & email
+       */
+      await request(
+        graphql`
+          mutation UserCreateAccount(
+            $email: String!
+            $password: String!
+            $profile: UserProfileInput!
+          ) {
+            userCreateAccount(
+              email: $email
+              password: $password
+              profile: $profile
+            ) {
+              User {
+                email
+              }
+            }
+          }
+        `,
+        {
+          variables: {
+            ...accountDetails,
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+              jobTitle: 'Developer',
+            },
+          },
+        }
+      )
+    })
+
+    it.todo('should return an access token if successful')
+
+    it.todo('should return an error if the password doesnt match')
+
+    it.todo('should return an error if the email doesnt match')
+  })
 })
