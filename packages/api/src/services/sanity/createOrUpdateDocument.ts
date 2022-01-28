@@ -33,7 +33,7 @@ export const createOrUpdateDocument = async (
     }
   } catch (err) {
     const errMsg = 'Failed to create sanity profile after account creation'
-    Logger.error(errMsg)
+    Logger.error(errMsg, err)
     /**
      * If this fails we don't want to have to ask the
      * pairer for their details again so instead we

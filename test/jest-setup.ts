@@ -2,6 +2,17 @@
 import { reseedDatabase } from './seed'
 import { prisma } from '@pairup/api/src/db/prisma'
 
+/**
+ * Our mocks are written here so we can override them
+ * in the test files for the purpose of testing
+ * various things.
+ * e.g. Sanity Client actually patches a document
+ */
+jest.mock('@sanity/client', () => jest.fn())
+jest.mock('postmark', () => ({
+  ServerClient: jest.fn(),
+}))
+
 beforeEach(async () => {
   await reseedDatabase()
 })

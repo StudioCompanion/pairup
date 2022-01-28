@@ -62,7 +62,9 @@ const profileSchema = z.object({
   lastName: z.string().nonempty({
     message: 'Last name is required',
   }),
-  jobTitle: z.string(),
+  jobTitle: z.string().nonempty({
+    message: 'Your job title is required',
+  }),
   companyUrl: z.string().optional(),
   portfolioUrl: z.string().optional(),
   bio: z.string().nonempty({
