@@ -26,12 +26,12 @@ type Query {
 }
 
 input ReportAbuseInput {
-  Email: String!
-  Incident Description: String!
-  Is the abuser a pairer?: Boolean!
-  Name: String!
-  Nature of the abuse: String!
-  Pairer or Pairee: String!
+  email: String!
+  incidentDescription: String!
+  name: String!
+  natureOfAbuse: String!
+  pairer: Boolean!
+  pairerOrPairee: String!
 }
 
 """Possible roles a user can have within the database"""

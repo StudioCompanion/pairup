@@ -3,11 +3,11 @@ import { inputObjectType } from 'nexus'
 export const ReportAbuseInputType = inputObjectType({
   name: 'ReportAbuseInput',
   definition(t) {
-    t.nonNull.string('Name')
-    t.nonNull.string('Email')
-    t.nonNull.string('Incident Description')
-    t.nonNull.string('Pairer or Pairee')
-    t.nonNull.boolean('Is the abuser a pairer?')
-    t.nonNull.string('Nature of the abuse')
+    t.nonNull.string('name')
+    t.nonNull.string('email')
+    t.nonNull.string('incidentDescription')
+    t.nonNull.string('pairerOrPairee')
+    t.nonNull.boolean('pairer')
+    t.nonNull.string('natureOfAbuse')
   },
 })

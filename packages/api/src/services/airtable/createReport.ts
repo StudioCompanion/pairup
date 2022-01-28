@@ -1,43 +1,40 @@
 import { FieldResolver } from 'nexus'
 
-import { base } from 'airtable'
+import { base, Record, CreateMultipleRecordsMutation } from 'airtable'
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
   async (_, args) => {
-    const {
-      name,
-      email,
-      incidentDescription,
-      pairerOrPairee,
-      isTheAbuserAPairer,
-      natureOfTheAbuse,
-    } = args
+    const report = args
 
-    try {
-      await base('Reports').create(
-        [
-          {
-            fields: {
-              Name: name,
-              Email: email,
-              'Incident description': incidentDescription,
-              'Pairer or Pairee': pairerOrPairee,
-              'Nature of the abuse': natureOfTheAbuse,
-              'Is the abuser a Pairer?': isTheAbuserAPairer,
-            },
+    // await fetch('/api/createRecord', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(report),
+    // }).then((result) => console.log('result is: ', result))
+
+    await base('Reports').create(
+      [
+        {
+          fields: {
+            Name: report.name,
+            Email: report.email,
+            'Incident description': report.incidentDescription,
+            'Pairer or Pairee': report.reportpairerOrPairee,
+            'Nature of the abuse': report.natureOfTheAbuse,
+            'Is the abuser a Pairer?': report.isTheAbuserAPairer,
           },
-        ],
-        function (err, records) {
-          if (err) {
-            console.error(err)
-            return
-          }
-          records.forEach(function (record) {
-            console.log(record.getId())
-          })
+        },
+      ],
+      function (err, records) {
+        if (err) {
+          console.error(err)
+          return
         }
-      )
-    } catch (err: unknown) {
-      return 'Failed to create abuse report!'
-    }
+        records.forEach(function (record) {
+          console.log(record.getId())
+        })
+      }
+    )
   }

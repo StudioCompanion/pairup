@@ -21,12 +21,13 @@ export const applyMiddleware = (app: Express) => {
   /**
    * Helmet
    */
-  app.use(
-    helmet({
-      contentSecurityPolicy:
-        process.env.NODE_ENV === 'production' ? undefined : false,
-    })
-  )
+  // TODO: bring this back!!!
+  // app.use(
+  //   helmet({
+  //     contentSecurityPolicy:
+  //       process.env.NODE_ENV === 'production' ? undefined : false,
+  //   })
+  // )
   /**
    * Compression
    */
