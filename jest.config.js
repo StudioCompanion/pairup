@@ -4,6 +4,7 @@ const moduleNameMapper = pathsToModuleNameMapper(compilerOptions.paths ?? {}, {
   prefix: '<rootDir>/packages/web/',
 })
 
+/** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   preset: 'ts-jest',
   setupFiles: ['dotenv/config'],
@@ -11,6 +12,11 @@ module.exports = {
   moduleNameMapper,
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/packages/native/'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/packages/shared/',
+    '<rootDir>/packages/cms/',
+    '<rootDir>/packages/api/helpers/console',
+  ],
   globals: {
     'ts-jest': {
       tsconfig: './tsconfig.test.json',

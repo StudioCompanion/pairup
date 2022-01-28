@@ -31,6 +31,7 @@ export const sendVerificationEmail = (
     sender_name: 'Josh',
     company_name: 'PairUp',
     company_address: 'My house',
+    username: email,
   }
 
   if (!TEMPLATE_ID) {

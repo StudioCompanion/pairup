@@ -16,6 +16,7 @@ import { Logger } from '../../helpers/console'
 import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 
 import { sendVerificationEmail } from '../emails/sendVerificationEmail'
+import { sendNewUserEmail } from '../emails/sendNewUserEmail'
 
 /**
  * Schema validation for signing up
@@ -61,7 +62,9 @@ const profileSchema = z.object({
   lastName: z.string().nonempty({
     message: 'Last name is required',
   }),
-  jobTitle: z.string(),
+  jobTitle: z.string().nonempty({
+    message: 'Your job title is required',
+  }),
   companyUrl: z.string().optional(),
   portfolioUrl: z.string().optional(),
   bio: z.string().nonempty({
@@ -200,6 +203,11 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     sendVerificationEmail(user.email, verificationCode, {
       name: restProfile.firstName,
     })
+
+    /**
+     * Send email to super user so they can approve the profile.
+     */
+    sendNewUserEmail(user.userId)
 
     return {
       User: user,

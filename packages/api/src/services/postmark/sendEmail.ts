@@ -44,7 +44,6 @@ export const sendEmail = async (
       TemplateId: Number(templateId),
       TemplateModel: {
         name,
-        username: email,
         ...templateModel,
       },
     })

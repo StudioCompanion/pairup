@@ -13,6 +13,8 @@ declare namespace NodeJS {
     // POSTMARK
     POSTMARK_API_TOKEN?: string
     POSTMARK_FROM_EMAIL?: string
+    POSTMARK_ADMIN_EMAIL?: string
     POSTMARK_TEMPLATE_ID_VERIFY?: string
+    POSTMARK_TEMPLATE_NEW_USER?: string
   }
 }
