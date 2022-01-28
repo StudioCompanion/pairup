@@ -7,7 +7,7 @@ export const ReportAbuseInputType = inputObjectType({
     t.nonNull.string('email')
     t.nonNull.string('incidentDescription')
     t.nonNull.string('pairerOrPairee')
-    t.nonNull.boolean('pairer')
+    t.nonNull.string('pairer')
     t.nonNull.string('natureOfAbuse')
   },
 })

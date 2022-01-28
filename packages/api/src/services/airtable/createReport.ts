@@ -3,7 +3,14 @@ import Airtable from 'airtable'
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
   async (_, args) => {
-    const report = args
+    const {
+      name,
+      email,
+      incidentDescription,
+      pairerOrPairee,
+      natureOfAbuse,
+      pairer,
+    } = args
 
     const base = new Airtable({
       apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
@@ -17,18 +24,15 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
     //   body: JSON.stringify(report),
     // }).then((result) => console.log('result is: ', result))
 
-    const records = await base('Reports').create([
-      {
-        fields: {
-          Name: report.name,
-          Email: report.email,
-          'Incident description': report.incidentDescription,
-          'Pairer or Pairee': report.reportpairerOrPairee,
-          'Nature of the abuse': report.natureOfTheAbuse,
-          'Is the abuser a Pairer?': report.isTheAbuserAPairer,
-        },
-      },
-    ])
+    const records = await base('Reports').create({
+      Name: name,
+      Email: email,
+      'Incident description': incidentDescription,
+      'Pairer or Pairee': pairerOrPairee,
+      'Nature of the abuse': natureOfAbuse,
+      'Is the abuser a Pairer?': pairer,
+    })
+    return records
 
     records.forEach(function (record) {
       console.log(record.getId())
