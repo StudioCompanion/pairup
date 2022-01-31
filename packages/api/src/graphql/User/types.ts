@@ -32,8 +32,8 @@ export const UserErrorType = objectType({
   },
 })
 
-export const UserCreateAccountMutationReturnType = objectType({
-  name: 'UserCreateAccountMutationReturn',
+export const UserCreateAccountPayloadType = objectType({
+  name: 'UserCreateAccountPayload',
   description:
     'Encapsulates return values of user mutations where input fields could be incorrect',
   definition: (t) => {
@@ -60,10 +60,22 @@ export const UserAccessTokenType = objectType({
   },
 })
 
-export const UserCreateTokenMutationReturnType = objectType({
-  name: 'UserCreateTokenMutationReturn',
-  description:
-    'Encapsulates return values of user mutations where input fields could be incorrect',
+export const UserCreateTokenPayloadType = objectType({
+  name: 'UserCreateTokenPayload',
+  description: 'Payload from the userCreateToken mutation',
+  definition: (t) => {
+    t.field('UserAccessToken', {
+      type: 'UserAccessToken',
+    })
+    t.list.field('UserError', {
+      type: 'UserError',
+    })
+  },
+})
+
+export const UserUpdateAccountPayloadType = objectType({
+  name: 'UserUpdateAccountPayload',
+  description: 'Payload from the userUpdateAccount mutation',
   definition: (t) => {
     t.field('UserAccessToken', {
       type: 'UserAccessToken',

@@ -22,7 +22,7 @@ export const refreshToken = (token: string, opts?: RefreshOptions) => {
     }
 
     const payload = jwt.verify(token, JWT_SECRET, opts?.verifyOptions)
-    return jwt.sign(payload, JWT_SECRET, opts?.signOptions)
+    return createToken(payload, opts?.signOptions)
   } catch (err) {
     const errMsg = 'Failed to refresh User Token'
     Logger.error(errMsg, err)
@@ -32,5 +32,29 @@ export const refreshToken = (token: string, opts?: RefreshOptions) => {
         err,
       })
     )
+  }
+}
+
+export const createToken = (
+  payload: jwt.JwtPayload | string,
+  signOptions?: jwt.SignOptions
+) => {
+  try {
+    if (!JWT_SECRET) {
+      throw new Error('No JWT_SECRET set – cannot refresh tokens')
+    }
+
+    return jwt.sign(payload, JWT_SECRET, signOptions)
+  } catch (err) {
+    const errMsg = 'Failed to create User Token'
+    Logger.error(errMsg, err)
+    captureException(
+      errMsg,
+      new Scope().setExtras({
+        err,
+      })
+    )
+
+    return null
   }
 }

@@ -2,10 +2,10 @@ import { captureException, Scope } from '@sentry/node'
 import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 import { add } from 'date-fns'
 
 import { Logger } from '../../helpers/console'
+import { createToken } from '../../helpers/tokens'
 
 import { prisma } from '../../db/prisma'
 
@@ -46,17 +46,11 @@ const NO_MATCH_ERROR: Array<NexusGenRootTypes['UserError']> = [
   },
 ]
 
-const JWT_SECRET = process.env.JWT_SECRET
-
 export const createAccessToken: FieldResolver<
   'Mutation',
   'userCreateAccessToken'
 > = async (_, { password, email }) => {
   try {
-    if (!JWT_SECRET) {
-      throw new Error('No JWT_SECRET – cannot make any tokens')
-    }
-
     schema.parse({
       email,
       password,
@@ -84,11 +78,10 @@ export const createAccessToken: FieldResolver<
       }
     }
 
-    const token = jwt.sign(
+    const token = createToken(
       {
         userId: user.userId,
       },
-      JWT_SECRET,
       {
         expiresIn: '7d',
       }
@@ -99,10 +92,12 @@ export const createAccessToken: FieldResolver<
     })
 
     return {
-      UserAccessToken: {
-        accessToken: token,
-        expiresAt: expiresAt,
-      },
+      UserAccessToken: token
+        ? {
+            accessToken: token,
+            expiresAt: expiresAt,
+          }
+        : null,
       UserError: [],
     }
   } catch (err: unknown) {

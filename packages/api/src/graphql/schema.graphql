@@ -21,7 +21,7 @@ type Mutation {
   userCreateAccessToken(
     email: String!
     password: String!
-  ): UserCreateTokenMutationReturn
+  ): UserCreateTokenPayload
 
   """
   Create an account for a new user
@@ -30,7 +30,16 @@ type Mutation {
     email: String!
     password: String!
     profile: UserProfileInput!
-  ): UserCreateAccountMutationReturn
+  ): UserCreateAccountPayload
+
+  """
+  Update an account for an existing user
+  """
+  userUpdateAccount(
+    email: String
+    password: String
+    profile: UserProfileInput
+  ): UserUpdateAccountPayload
 }
 
 type Query {
@@ -99,15 +108,15 @@ input UserAvailabilityInput {
 """
 Encapsulates return values of user mutations where input fields could be incorrect
 """
-type UserCreateAccountMutationReturn {
+type UserCreateAccountPayload {
   User: User
   UserError: [UserError]
 }
 
 """
-Encapsulates return values of user mutations where input fields could be incorrect
+Payload from the userCreateToken mutation
 """
-type UserCreateTokenMutationReturn {
+type UserCreateTokenPayload {
   UserAccessToken: UserAccessToken
   UserError: [UserError]
 }
@@ -231,4 +240,12 @@ input UserProfileInput {
   Pairer's twitter url
   """
   twitter: String
+}
+
+"""
+Payload from the userUpdateAccount mutation
+"""
+type UserUpdateAccountPayload {
+  UserAccessToken: UserAccessToken
+  UserError: [UserError]
 }
