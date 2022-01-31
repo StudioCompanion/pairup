@@ -244,6 +244,22 @@ describe('User Mutations', () => {
       password: 'DVUE8j=uQ;?>,6w%EOh8',
     }
 
+    const mutation = graphql`
+      mutation userCreateAccessToken($email: String!, $password: String!) {
+        userCreateAccessToken(email: $email, password: $password) {
+          UserAccessToken {
+            accessToken
+            expiresAt
+          }
+          UserError {
+            message
+            input
+            errorCode
+          }
+        }
+      }
+    `
+
     beforeEach(async () => {
       /**
        * Add the user to the DB with the PW & email
@@ -290,10 +306,86 @@ describe('User Mutations', () => {
       )
     })
 
-    it.todo('should return an access token if successful')
+    it('should return an access token if successful', async () => {
+      expect(
+        await request(mutation, {
+          variables: accountDetails,
+        })
+      ).toEqual(
+        expect.objectContaining({
+          data: {
+            userCreateAccessToken: {
+              UserAccessToken: {
+                accessToken: expect.any(String),
+                expiresAt: expect.any(String),
+              },
+              UserError: [],
+            },
+          },
+        })
+      )
+    })
 
-    it.todo('should return an error if the password doesnt match')
+    it('should return an error if the password doesnt match', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            ...accountDetails,
+            password: 'DVUE8j=uQ;?>,6w%EOh8!!',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userCreateAccessToken": Object {
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "email",
+                  "message": "Email and Password combination does not match records",
+                },
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "password",
+                  "message": "Email and Password combination does not match records",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
 
-    it.todo('should return an error if the email doesnt match')
+    it('should return an error if the email doesnt match', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            ...accountDetails,
+            email: 'devs@companion.studio',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userCreateAccessToken": Object {
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "email",
+                  "message": "Email and Password combination does not match records",
+                },
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "password",
+                  "message": "Email and Password combination does not match records",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
   })
 })
