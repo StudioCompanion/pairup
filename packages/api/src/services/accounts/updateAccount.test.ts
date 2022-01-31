@@ -74,14 +74,18 @@ describe('service updateAccount', () => {
         null as unknown as GraphQLContext,
         null as unknown as GraphQLResolveInfo
       )
-    ).toMatchInlineSnapshot(`
-      Object {
-        "UserAccessToken": Object {
-          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMiLCJpYXQiOjE2NDM2NTI1NzAsImV4cCI6MTY0NDI1NzM3MH0.gfvzCCrIekf67DEL3lomOded9SnobyGC-GZ2GaPIT6M",
-          "expiresAt": 2022-02-07T18:09:30.652Z,
+    ).toEqual(
+      expect.objectContaining({
+        data: {
+          userUpdateAccount: {
+            UserAccessToken: {
+              accessToken: expect.any(String),
+              expiresAt: expect.any(String),
+            },
+            UserError: [],
+          },
         },
-        "UserError": Array [],
-      }
-    `)
+      })
+    )
   })
 })
