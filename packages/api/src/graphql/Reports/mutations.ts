@@ -1,5 +1,4 @@
-import { extendType, nonNull, stringArg, booleanArg } from 'nexus'
-import { boolean, string } from 'zod'
+import { extendType, nonNull, stringArg } from 'nexus'
 
 import { createReport } from '../../services/airtable/createReport'
 
@@ -10,7 +9,6 @@ export const mutations = extendType({
       type: 'Boolean',
       description: 'Create an abuse report',
       args: {
-        // report: nonNull('ReportAbuseInput'),
         name: nonNull(stringArg()),
         email: nonNull(stringArg()),
         incidentDescription: nonNull(stringArg()),
