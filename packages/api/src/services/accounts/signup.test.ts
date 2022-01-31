@@ -151,7 +151,7 @@ describe('service signup', () => {
       }
     })
 
-    const { signup: mockedSignup } = require('./sign-up')
+    const { signup: mockedSignup } = require('./signup')
 
     const res = (await mockedSignup(
       {},
@@ -201,7 +201,7 @@ describe('service signup', () => {
       }),
     }))
 
-    const { signup: mockedSignup } = require('./sign-up')
+    const { signup: mockedSignup } = require('./signup')
 
     ;(await mockedSignup(
       {},
