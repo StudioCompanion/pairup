@@ -179,20 +179,23 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      * they will be a bit broken so someone
      * has to do something manual
      */
-    await createOrUpdateDocument({
-      _type: 'pairerProfile',
-      _id: user.userId,
-      uuid: user.userId,
-      title: `${restProfile.firstName} ${restProfile.lastName}`,
-      status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
-      email,
-      hasVerifiedAccount: false,
-      createdAt: formatISO(now),
-      lastModifiedAt: formatISO(now),
-      ...restProfile,
-      ...allAvailability,
-      disciplines: restProfile.disciplines.join(','),
-    })
+    await createOrUpdateDocument(
+      {
+        _type: 'pairerProfile',
+        _id: user.userId,
+        uuid: user.userId,
+        title: `${restProfile.firstName} ${restProfile.lastName}`,
+        status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+        email,
+        hasVerifiedAccount: false,
+        createdAt: formatISO(now),
+        lastModifiedAt: formatISO(now),
+        ...restProfile,
+        ...allAvailability,
+        disciplines: restProfile.disciplines.join(','),
+      },
+      true
+    )
 
     /**
      * Send a verification email to the new pairer
@@ -226,7 +229,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       return {
         User: null,
         UserError: err.issues.map((issue) => ({
-          errorCode: 'The input value is invalid, see message',
+          errorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
         })),
@@ -242,7 +245,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
         User: null,
         UserError: [
           {
-            errorCode: 'The input value is invalid, see message',
+            errorCode: 'Invalid',
             input: 'email',
             message: 'This email address has already been used',
           },

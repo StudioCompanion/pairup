@@ -61,6 +61,7 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@studiocompanion/scripts": "^1.2.2",
     "@types/common-tags": "^1.8.1",
+    "@types/graphql-iso-date": "^3.4.0",
     "@types/jest": "^27.4.0",
     "@types/node": "^15.6.1",
     "@types/react": "^17.0.38",

@@ -1,14 +1,16 @@
 import {
   UserType,
   UserErrorType,
-  UserErrorCodesType,
-  UserRoleType,
-  UserMutationReturnType,
+  UserCreateAccountMutationReturnType,
+  UserCreateTokenMutationReturnType,
+  UserAccessTokenType,
+} from './types'
+import {
   UserAvailabilityInputType,
-  UserDisciplinesType,
   UserProfileInputType,
   AvailabilityTimeInputType,
-} from './types'
+} from './inputs'
+import { UserErrorCodesType, UserRoleType, UserDisciplinesType } from './enums'
 import { mutations } from './mutations'
 import { queries } from './queries'
 
@@ -17,11 +19,13 @@ export default [
   UserErrorType,
   UserErrorCodesType,
   UserRoleType,
-  UserMutationReturnType,
+  UserCreateAccountMutationReturnType,
+  UserCreateTokenMutationReturnType,
   UserAvailabilityInputType,
   UserDisciplinesType,
   UserProfileInputType,
   AvailabilityTimeInputType,
+  UserAccessTokenType,
   mutations,
   queries,
 ]

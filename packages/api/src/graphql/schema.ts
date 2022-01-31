@@ -1,5 +1,6 @@
 import { makeSchema } from 'nexus'
 import path from 'path'
+import { DateTime } from './Scalars'
 import User from './User'
 import Reports from './Reports'
 
@@ -9,7 +10,7 @@ const shouldGenerateArtifacts =
   process.env.NODE_ENV === 'development' || !!process.env.GENERATE
 
 export const schema = makeSchema({
-  types: [User, Reports],
+  types: [User, Reports, DateTime],
   // Type the GraphQL context when used in Nexus resolvers
   contextType: {
     module: path.join(process.cwd(), './src/server/index.ts'),
