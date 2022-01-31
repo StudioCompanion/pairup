@@ -30,6 +30,9 @@ describe('service signup', () => {
       },
       {
         prisma,
+        user: {
+          userId: null,
+        },
       },
       null as unknown as GraphQLResolveInfo
     )
@@ -79,6 +82,9 @@ describe('service signup', () => {
       },
       {
         prisma,
+        user: {
+          userId: null,
+        },
       },
       null as unknown as GraphQLResolveInfo
     )
@@ -171,6 +177,9 @@ describe('service signup', () => {
       },
       {
         prisma,
+        user: {
+          userId: null,
+        },
       },
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
@@ -218,6 +227,9 @@ describe('service signup', () => {
       },
       {
         prisma,
+        user: {
+          userId: null,
+        },
       },
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>

@@ -36,7 +36,7 @@ export const request = (
     schema,
     query,
     undefined,
-    { prisma, ...context },
+    { prisma, user: { userId: null }, ...context },
     variables
   )
 }
