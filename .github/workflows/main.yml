@@ -31,6 +31,7 @@ jobs:
       POSTMARK_FROM_EMAIL: '{{ secrets.POSTMARK_FROM_EMAIL }}'
       POSTMARK_TEMPLATE_ID_VERIFY: '{{ secrets.POSTMARK_TEMPLATE_ID_VERIFY }}'
       POSTMARK_TEMPLATE_NEW_USER: '{{ secrets.POSTMARK_TEMPLATE_NEW_USER }}'
+      JWT_SECRET: '{{ secrets.JWT_SECRET }}'
 
     steps:
       - name: Cancel Previous Runs

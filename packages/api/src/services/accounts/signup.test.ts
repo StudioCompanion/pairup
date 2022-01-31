@@ -36,12 +36,12 @@ describe('service signup', () => {
         "User": null,
         "UserError": Array [
           Object {
-            "errorCode": "The input value is invalid, see message",
+            "errorCode": "Invalid",
             "input": "email",
             "message": "Invalid email address provided",
           },
           Object {
-            "errorCode": "The input value is invalid, see message",
+            "errorCode": "Invalid",
             "input": "password",
             "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
           },
@@ -84,22 +84,22 @@ describe('service signup', () => {
         "User": null,
         "UserError": Array [
           Object {
-            "errorCode": "The input value is invalid, see message",
+            "errorCode": "Invalid",
             "input": "firstName",
             "message": "First name is required",
           },
           Object {
-            "errorCode": "The input value is invalid, see message",
+            "errorCode": "Invalid",
             "input": "lastName",
             "message": "Last name is required",
           },
           Object {
-            "errorCode": "The input value is invalid, see message",
+            "errorCode": "Invalid",
             "input": "jobTitle",
             "message": "Your job title is required",
           },
           Object {
-            "errorCode": "The input value is invalid, see message",
+            "errorCode": "Invalid",
             "input": "bio",
             "message": "Your bio is required",
           },

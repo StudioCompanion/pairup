@@ -9,7 +9,20 @@ input AvailabilityTimeInput {
   startTime: String
 }
 
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
 type Mutation {
+  """
+  Create an access token for the current user
+  """
+  userCreateAccessToken(
+    email: String!
+    password: String!
+  ): UserCreateTokenMutationReturn
+
   """
   Create an account for a new user
   """
@@ -17,7 +30,7 @@ type Mutation {
     email: String!
     password: String!
     profile: UserProfileInput!
-  ): UserMutationReturn
+  ): UserCreateAccountMutationReturn
 }
 
 type Query {
@@ -56,6 +69,21 @@ type User {
 }
 
 """
+Access token required to make modifications to the User & Messaging
+"""
+type UserAccessToken {
+  """
+  The actual token used to authenticate mutations & queries
+  """
+  accessToken: String!
+
+  """
+  ISO 8601 date of when the token expires
+  """
+  expiresAt: Date!
+}
+
+"""
 A Pairer's availability related to their profile
 """
 input UserAvailabilityInput {
@@ -66,6 +94,22 @@ input UserAvailabilityInput {
   thursday: [AvailabilityTimeInput]
   tuesday: [AvailabilityTimeInput]
   wednesday: [AvailabilityTimeInput]
+}
+
+"""
+Encapsulates return values of user mutations where input fields could be incorrect
+"""
+type UserCreateAccountMutationReturn {
+  User: User
+  UserError: [UserError]
+}
+
+"""
+Encapsulates return values of user mutations where input fields could be incorrect
+"""
+type UserCreateTokenMutationReturn {
+  UserAccessToken: UserAccessToken
+  UserError: [UserError]
 }
 
 """
@@ -116,14 +160,7 @@ Possible error codes that can be returned from UserError
 """
 enum UserErrorCodes {
   INVALID
-}
-
-"""
-Encapsulates return values of user mutations where input fields could be incorrect
-"""
-type UserMutationReturn {
-  User: User
-  UserError: [UserError]
+  NOT_FOUND
 }
 
 """

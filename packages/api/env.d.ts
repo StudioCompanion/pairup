@@ -16,5 +16,7 @@ declare namespace NodeJS {
     POSTMARK_ADMIN_EMAIL?: string
     POSTMARK_TEMPLATE_ID_VERIFY?: string
     POSTMARK_TEMPLATE_NEW_USER?: string
+    // JWT
+    JWT_SECRET?: string
   }
 }
