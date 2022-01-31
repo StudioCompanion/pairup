@@ -2,7 +2,7 @@ import { GraphQLResolveInfo } from 'graphql'
 
 import { prisma } from '../../db/prisma'
 
-import { signup } from './sign-up'
+import { signup } from './signup'
 
 describe('service signup', () => {
   it('should fail if email or password is not the correct format', async () => {

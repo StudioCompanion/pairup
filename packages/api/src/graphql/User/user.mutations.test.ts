@@ -387,5 +387,268 @@ describe('User Mutations', () => {
         }
       `)
     })
+
+    it('should return an error if the email or password do not pass validation', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            password: '1234',
+            email: 'devs@gma',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userCreateAccessToken": Object {
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "email",
+                  "message": "Invalid email address provided",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "password",
+                  "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
+  })
+
+  describe('userUpdateAccount', () => {
+    it('should throw if no user is signed in', async () => {
+      expect(
+        await request(
+          graphql`
+            mutation UserUpdateAccount($email: String) {
+              userUpdateAccount(email: $email) {
+                UserAccessToken {
+                  accessToken
+                }
+              }
+            }
+          `,
+          {
+            variables: {
+              email: 'dev@companion.studio',
+            },
+          }
+        )
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userUpdateAccount": null,
+          },
+          "errors": Array [
+            [GraphQLError: User must be logged in],
+          ],
+        }
+      `)
+    })
+
+    it('should throw if no email, password or profile has been passed', async () => {
+      expect(
+        await request(
+          graphql`
+            mutation UserUpdateAccount {
+              userUpdateAccount {
+                UserAccessToken {
+                  accessToken
+                }
+              }
+            }
+          `,
+          {
+            context: {
+              user: {
+                userId: testData.users[0].userId,
+              },
+            },
+          }
+        )
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userUpdateAccount": null,
+          },
+          "errors": Array [
+            [GraphQLError: Mutation userUpdateAccount requires at least one parameter],
+          ],
+        }
+      `)
+    })
+
+    describe('changing password', () => {
+      it('should return an access code if the new password is an acceptable password', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($password: String) {
+                userUpdateAccount(password: $password) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                password: 'DVUE8j=uQ;?>,6w%EOh8',
+              },
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toEqual(
+          expect.objectContaining({
+            data: {
+              userUpdateAccount: {
+                UserAccessToken: {
+                  accessToken: expect.any(String),
+                  expiresAt: expect.any(String),
+                },
+                UserError: [],
+              },
+            },
+          })
+        )
+      })
+
+      it('should return UserError if the password does not meet requirements', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($password: String) {
+                userUpdateAccount(password: $password) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                password: 'applepie',
+              },
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userUpdateAccount": Object {
+                "UserAccessToken": null,
+                "UserError": Array [
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "password",
+                    "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
+                  },
+                ],
+              },
+            },
+          }
+        `)
+      })
+
+      it('should return UserError if the new password is the same as the old password', async () => {
+        await request(
+          graphql`
+            mutation UserUpdateAccount($password: String) {
+              userUpdateAccount(password: $password) {
+                UserAccessToken {
+                  accessToken
+                  expiresAt
+                }
+                UserError {
+                  message
+                  input
+                  errorCode
+                }
+              }
+            }
+          `,
+          {
+            variables: {
+              password: 'DVUE8j=uQ;?>,6w%EOh8',
+            },
+            context: {
+              user: {
+                userId: testData.users[0].userId,
+              },
+            },
+          }
+        )
+
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($password: String) {
+                userUpdateAccount(password: $password) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                password: 'DVUE8j=uQ;?>,6w%EOh8',
+              },
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userUpdateAccount": Object {
+                "UserAccessToken": null,
+                "UserError": Array [
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "password",
+                    "message": "New password cannot be the same as old password",
+                  },
+                ],
+              },
+            },
+          }
+        `)
+      })
+    })
   })
 })

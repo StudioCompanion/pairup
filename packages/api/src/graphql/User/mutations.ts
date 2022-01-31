@@ -1,7 +1,7 @@
 import { extendType, nonNull, stringArg } from 'nexus'
 import { createAccessToken } from '../../services/tokens/createAccessToken'
 
-import { signup } from '../../services/accounts/sign-up'
+import { signup } from '../../services/accounts/signup'
 import { updateAccount } from '../../services/accounts/updateAccount'
 
 export const mutations = extendType({

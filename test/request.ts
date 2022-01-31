@@ -8,6 +8,9 @@ import { prisma } from '@pairup/api/src/db/prisma'
 interface Options {
   context?: {
     prisma?: PrismaClient
+    user?: {
+      userId: string
+    }
   }
   variables?: Record<string, unknown>
 }
