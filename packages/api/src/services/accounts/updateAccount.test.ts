@@ -78,7 +78,7 @@ describe('service updateAccount', () => {
       expect.objectContaining({
         UserAccessToken: {
           accessToken: expect.any(String),
-          expiresAt: expect.any(String),
+          expiresAt: expect.any(Date),
         },
         UserError: [],
       })
