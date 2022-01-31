@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { GraphQLContext } from '../../server'
+import { prisma } from '../../db/prisma'
 
 import { signup } from './sign-up'
 
@@ -28,7 +28,9 @@ describe('service signup', () => {
           jobTitle: 'Developer',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+      },
       null as unknown as GraphQLResolveInfo
     )
     expect(res).toMatchInlineSnapshot(`
@@ -75,7 +77,9 @@ describe('service signup', () => {
           jobTitle: '',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+      },
       null as unknown as GraphQLResolveInfo
     )
 
@@ -165,7 +169,9 @@ describe('service signup', () => {
           jobTitle: 'Developer',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+      },
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
 
@@ -210,7 +216,9 @@ describe('service signup', () => {
           jobTitle: 'Developer',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+      },
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
 

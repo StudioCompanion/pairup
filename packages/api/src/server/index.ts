@@ -9,12 +9,14 @@ import { prisma } from '../db/prisma'
 
 import { applyMiddleware } from './middleware'
 import { handleNoRoute } from './404'
+import { PrismaClient } from '@prisma/client'
 
 const PORT = process.env.PORT || 3000
 const isProduction = process.env.ENV === 'production'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface GraphQLContext {}
+export interface GraphQLContext {
+  prisma: PrismaClient
+}
 
 async function startApolloServer() {
   const app = express()

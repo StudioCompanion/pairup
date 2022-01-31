@@ -1,11 +1,13 @@
 import { graphql as executeGraphQL, Source } from 'graphql'
 import { oneLine } from 'common-tags'
+import { PrismaClient } from '@prisma/client'
 
 import { schema } from '@pairup/api/src/graphql/schema'
+import { prisma } from '@pairup/api/src/db/prisma'
 
 interface Options {
   context?: {
-    user?: unknown
+    prisma?: PrismaClient
   }
   variables?: Record<string, unknown>
 }
@@ -30,7 +32,13 @@ export const request = (
   query: string | Source,
   { context, variables }: Options = {}
 ) => {
-  return executeGraphQL(schema, query, undefined, context || {}, variables)
+  return executeGraphQL(
+    schema,
+    query,
+    undefined,
+    { prisma, ...context },
+    variables
+  )
 }
 
 /**
