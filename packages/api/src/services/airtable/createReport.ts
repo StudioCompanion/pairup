@@ -43,7 +43,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
       })
       return {
         success: true,
-        ReportError: {message: null, input:null},
+        ReportError: [],
       }
     } catch (err: unknown) {
       const errMsg = 'Failed to create report'
@@ -57,9 +57,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
         return {
           success: false,
           Report: null,
-          ReportError: err.issues.map((issue) => {
-            message: issue.message
-          }),
+          ReportError: [],
         }
       }
 

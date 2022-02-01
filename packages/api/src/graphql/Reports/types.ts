@@ -19,7 +19,6 @@ export const ReportErrorType = objectType({
   description: 'An error that has happened when submitting an abuse report',
   definition: (t) => {
     t.string('message')
-    t.string('input')
     t.list.field('ReportErrorCodes', {
       type: ReportErrorCodesType,
     })
