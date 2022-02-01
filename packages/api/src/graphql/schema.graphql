@@ -28,10 +28,13 @@ type Mutation {
   reportsSubmitAbuse(report: ReportAbuseInput): Boolean
 
   """Create an access token for the current user"""
-  userCreateAccessToken(email: String!, password: String!): UserCreateTokenMutationReturn
+  userCreateAccessToken(email: String!, password: String!): UserCreateTokenPayload
 
   """Create an account for a new user"""
-  userCreateAccount(email: String!, password: String!, profile: UserProfileInput!): UserCreateAccountMutationReturn
+  userCreateAccount(email: String!, password: String!, profile: UserProfileInput!): UserCreateAccountPayload
+
+  """Update an account for an existing user"""
+  userUpdateAccount(email: String, password: String, profile: UserProfileInput): UserUpdateAccountPayload
 }
 
 type Query {
@@ -90,15 +93,13 @@ input UserAvailabilityInput {
 """
 Encapsulates return values of user mutations where input fields could be incorrect
 """
-type UserCreateAccountMutationReturn {
+type UserCreateAccountPayload {
   User: User
   UserError: [UserError]
 }
 
-"""
-Encapsulates return values of user mutations where input fields could be incorrect
-"""
-type UserCreateTokenMutationReturn {
+"""Payload from the userCreateToken mutation"""
+type UserCreateTokenPayload {
   UserAccessToken: UserAccessToken
   UserError: [UserError]
 }
@@ -188,4 +189,10 @@ input UserProfileInput {
 
   """Pairer's twitter url"""
   twitter: String
+}
+
+"""Payload from the userUpdateAccount mutation"""
+type UserUpdateAccountPayload {
+  UserAccessToken: UserAccessToken
+  UserError: [UserError]
 }

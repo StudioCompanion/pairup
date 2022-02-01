@@ -9,12 +9,19 @@ import { prisma } from '../db/prisma'
 
 import { applyMiddleware } from './middleware'
 import { handleNoRoute } from './404'
+import { PrismaClient } from '@prisma/client'
+import {
+  AuthenticatedUser,
+  verifyAuthToken,
+} from '../services/tokens/verifyAuthToken'
 
 const PORT = process.env.PORT || 3000
 const isProduction = process.env.ENV === 'production'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface GraphQLContext {}
+export interface GraphQLContext {
+  prisma: PrismaClient
+  user: AuthenticatedUser
+}
 
 async function startApolloServer() {
   const app = express()
@@ -31,8 +38,9 @@ async function startApolloServer() {
 
   const server = new ApolloServer({
     schema,
-    context: (): GraphQLContext => ({
+    context: ({ req }): GraphQLContext => ({
       prisma,
+      user: verifyAuthToken(req),
     }),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   })

@@ -1,8 +1,8 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { GraphQLContext } from '../../server'
+import { prisma } from '../../db/prisma'
 
-import { signup } from './sign-up'
+import { signup } from './signup'
 
 describe('service signup', () => {
   it('should fail if email or password is not the correct format', async () => {
@@ -28,7 +28,12 @@ describe('service signup', () => {
           jobTitle: 'Developer',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+        user: {
+          userId: null,
+        },
+      },
       null as unknown as GraphQLResolveInfo
     )
     expect(res).toMatchInlineSnapshot(`
@@ -75,7 +80,12 @@ describe('service signup', () => {
           jobTitle: '',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+        user: {
+          userId: null,
+        },
+      },
       null as unknown as GraphQLResolveInfo
     )
 
@@ -141,7 +151,7 @@ describe('service signup', () => {
       }
     })
 
-    const { signup: mockedSignup } = require('./sign-up')
+    const { signup: mockedSignup } = require('./signup')
 
     const res = (await mockedSignup(
       {},
@@ -165,7 +175,12 @@ describe('service signup', () => {
           jobTitle: 'Developer',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+        user: {
+          userId: null,
+        },
+      },
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
 
@@ -186,7 +201,7 @@ describe('service signup', () => {
       }),
     }))
 
-    const { signup: mockedSignup } = require('./sign-up')
+    const { signup: mockedSignup } = require('./signup')
 
     ;(await mockedSignup(
       {},
@@ -210,7 +225,12 @@ describe('service signup', () => {
           jobTitle: 'Developer',
         },
       },
-      null as unknown as GraphQLContext,
+      {
+        prisma,
+        user: {
+          userId: null,
+        },
+      },
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
 

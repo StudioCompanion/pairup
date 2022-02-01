@@ -7,7 +7,7 @@ import { DAYS_OF_THE_WEEK, PAIRER_PROFILE_STATUS } from '@pairup/shared'
 import { captureException, Scope } from '@sentry/node'
 import { randomBytes } from 'crypto'
 
-import { prisma } from '../../db/prisma'
+// import { prisma } from '../../db/prisma'
 
 import { createOrUpdateDocument } from '../sanity/createOrUpdateDocument'
 
@@ -102,9 +102,11 @@ const profileSchema = z.object({
 
 export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
   _,
-  args
+  args,
+  ctx
 ) => {
   const { email, password, profile } = args
+  const { prisma } = ctx
 
   try {
     /**
