@@ -3,11 +3,11 @@
 
 
 """The type of abuse"""
-enum AbuseType {
-  TYPE_1
-  TYPE_2
-  TYPE_3
-  TYPE_4
+enum Abuse {
+  HARASSMENT_OR_BULLYING
+  PRETENDING_TO_BE_SOMEONE
+  SOMETHING_ELSE
+  SPAM_OR_HARMFUL
 }
 
 """
@@ -25,7 +25,7 @@ scalar Date
 
 type Mutation {
   """Create an abuse report"""
-  reportsSubmitAbuse(report: ReportAbuseInput): Boolean
+  reportsSubmitAbuse(report: ReportAbuseInput!): ReportAbuseInputMutationPayload
 
   """Create an access token for the current user"""
   userCreateAccessToken(email: String!, password: String!): UserCreateTokenPayload
@@ -45,11 +45,34 @@ type Query {
 }
 
 input ReportAbuseInput {
-  description: String
-  email: String
-  isAbuserPairer: Boolean
-  name: String
-  type: AbuseType
+  abuseType: Abuse!
+  description: String!
+  email: String!
+  isAbuserPairer: Boolean!
+  name: String!
+}
+
+"""
+Encapsulates return values of report mutations where input values could be incorrect
+"""
+type ReportAbuseInputMutationPayload {
+  ReportError: [ReportError]
+  success: Boolean
+}
+
+"""An error that has happened when submitting an abuse report"""
+type ReportError {
+  ReportErrorCodes: [ReportErrorCodes]
+  input: String
+  message: String
+}
+
+"""Possible error codes that can be returned from ReportError"""
+enum ReportErrorCodes {
+  BAD_USER_INPUT
+  GRAPHQL_VALIDATION_FAILED
+  INTERNAL_SERVER_ERROR
+  INVALID
 }
 
 """Possible roles a user can have within the database"""

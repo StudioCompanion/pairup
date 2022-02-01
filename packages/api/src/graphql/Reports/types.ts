@@ -1,45 +1,39 @@
-import { inputObjectType, objectType, enumType } from 'nexus'
-
-export const AbuseTypeType = enumType({
-  name: 'AbuseType',
-  description: 'The type of abuse',
-  members: {
-    TYPE_1: 'Spam or harmful',
-    TYPE_2: 'Harassment or bullying',
-    TYPE_3: 'Pretending to be someone',
-    TYPE_4: 'Something else',
-  },
-})
+import { inputObjectType, objectType } from 'nexus'
+import { AbuseType, ReportErrorCodesType } from './enums'
 
 export const ReportAbuseInputType = inputObjectType({
   name: 'ReportAbuseInput',
   definition: (t) => {
-    t.string('name')
-    t.string('email')
-    t.string('description')
-    t.boolean('isAbuserPairer')
-    t.field('type', {
-      type: AbuseTypeType,
+    t.nonNull.string('name')
+    t.nonNull.string('email')
+    t.nonNull.string('description')
+    t.nonNull.boolean('isAbuserPairer')
+    t.nonNull.field('abuseType', {
+      type: AbuseType,
     })
   },
 })
 
-// export const ReportErrorType = objectType({
-//   name: 'Report',
-//   description: 'An error that has happened when submitting an abuse report',
-//   definition: (t) => {
-//     t.string('message')
-//     t.string('input')
-//   },
-// })
+export const ReportErrorType = objectType({
+  name: 'ReportError',
+  description: 'An error that has happened when submitting an abuse report',
+  definition: (t) => {
+    t.string('message')
+    t.string('input')
+    t.list.field('ReportErrorCodes', {
+      type: ReportErrorCodesType,
+    })
+  },
+})
 
-// export const ReportAbuseInputMutationReturnType = objectType({
-//   name: 'ReportAbuseInputMutationReturn',
-//   description:
-//     'Encapsulates return values of report mutations where input values could be incorrect',
-//   definition: (t) => {
-//     t.list.field('ReportAbuseInput', {
-//       type: ReportAbuseInputType,
-//     })
-//   },
-// })
+export const ReportAbuseInputMutationPayloadType = objectType({
+  name: 'ReportAbuseInputMutationPayload',
+  description:
+    'Encapsulates return values of report mutations where input values could be incorrect',
+  definition: (t) => {
+    t.boolean('success')
+    t.list.field('ReportError', {
+      type: ReportErrorType,
+    })
+  },
+})
