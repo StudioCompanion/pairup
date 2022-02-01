@@ -1,5 +1,5 @@
-import { extendType, nonNull, stringArg } from 'nexus'
-
+import { extendType } from 'nexus'
+import { ReportAbuseInputType } from './types'
 import { createReport } from '../../services/airtable/createReport'
 
 export const mutations = extendType({
@@ -9,12 +9,7 @@ export const mutations = extendType({
       type: 'Boolean',
       description: 'Create an abuse report',
       args: {
-        name: nonNull(stringArg()),
-        email: nonNull(stringArg()),
-        incidentDescription: nonNull(stringArg()),
-        pairerOrPairee: nonNull(stringArg()),
-        natureOfAbuse: nonNull(stringArg()),
-        pairer: nonNull(stringArg()),
+        report: ReportAbuseInputType,
       },
       resolve: createReport,
     })

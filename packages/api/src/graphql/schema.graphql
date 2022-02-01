@@ -2,6 +2,14 @@
 ### Do not make changes to this file directly
 
 
+"""The type of abuse"""
+enum AbuseType {
+  TYPE_1
+  TYPE_2
+  TYPE_3
+  TYPE_4
+}
+
 """
 Defines a start & end time for a section of a Parier's availability during a day
 """
@@ -17,7 +25,7 @@ scalar Date
 
 type Mutation {
   """Create an abuse report"""
-  reportsSubmitAbuse(email: String!, incidentDescription: String!, name: String!, natureOfAbuse: String!, pairer: String!, pairerOrPairee: String!): Boolean
+  reportsSubmitAbuse(report: ReportAbuseInput): Boolean
 
   """Create an access token for the current user"""
   userCreateAccessToken(email: String!, password: String!): UserCreateTokenMutationReturn
@@ -34,12 +42,11 @@ type Query {
 }
 
 input ReportAbuseInput {
+  description: String!
   email: String!
-  incidentDescription: String!
+  isAbuserPairer: Boolean!
   name: String!
-  natureOfAbuse: String!
-  pairer: String!
-  pairerOrPairee: String!
+  type: AbuseType
 }
 
 """Possible roles a user can have within the database"""
