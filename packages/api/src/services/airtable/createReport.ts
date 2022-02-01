@@ -1,9 +1,8 @@
 import { FieldResolver } from 'nexus'
-import { ReportAbuseInputType } from 'src/graphql/Reports/types'
 import Airtable from 'airtable'
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
-  async (_, args: typeof ReportAbuseInputType) => {
+  async (_, args) => {
     const { name, email, description, isAbuserPairer, type } = args.report
 
     const base = new Airtable({

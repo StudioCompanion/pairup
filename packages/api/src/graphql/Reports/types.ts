@@ -14,23 +14,32 @@ export const AbuseTypeType = enumType({
 export const ReportAbuseInputType = inputObjectType({
   name: 'ReportAbuseInput',
   definition: (t) => {
-    t.nonNull.string('name')
-    t.nonNull.string('email')
-    t.nonNull.string('description')
-    t.nonNull.boolean('isAbuserPairer')
+    t.string('name')
+    t.string('email')
+    t.string('description')
+    t.boolean('isAbuserPairer')
     t.field('type', {
       type: AbuseTypeType,
     })
   },
 })
 
+// export const ReportErrorType = objectType({
+//   name: 'Report',
+//   description: 'An error that has happened when submitting an abuse report',
+//   definition: (t) => {
+//     t.string('message')
+//     t.string('input')
+//   },
+// })
+
 // export const ReportAbuseInputMutationReturnType = objectType({
 //   name: 'ReportAbuseInputMutationReturn',
 //   description:
 //     'Encapsulates return values of report mutations where input values could be incorrect',
 //   definition: (t) => {
-//     t.field('ReportAbuseInput', {
-//       type: 'ReportAbuseInput'
+//     t.list.field('ReportAbuseInput', {
+//       type: ReportAbuseInputType,
 //     })
 //   },
 // })

@@ -42,10 +42,10 @@ type Query {
 }
 
 input ReportAbuseInput {
-  description: String!
-  email: String!
-  isAbuserPairer: Boolean!
-  name: String!
+  description: String
+  email: String
+  isAbuserPairer: Boolean
+  name: String
   type: AbuseType
 }
 
