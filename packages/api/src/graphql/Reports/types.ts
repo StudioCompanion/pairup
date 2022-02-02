@@ -1,5 +1,6 @@
 import { inputObjectType, objectType } from 'nexus'
-import { AbuseType, ReportErrorCodesType } from './enums'
+import { AbuseType } from './enums'
+import { ErrorType } from '../types'
 
 export const ReportAbuseInputType = inputObjectType({
   name: 'ReportAbuseInput',
@@ -14,25 +15,14 @@ export const ReportAbuseInputType = inputObjectType({
   },
 })
 
-export const ReportErrorType = objectType({
-  name: 'ReportError',
-  description: 'An error that has happened when submitting an abuse report',
-  definition: (t) => {
-    t.string('message')
-    t.list.field('ReportErrorCodes', {
-      type: ReportErrorCodesType,
-    })
-  },
-})
-
-export const ReportAbuseInputMutationPayloadType = objectType({
-  name: 'ReportAbuseInputMutationPayload',
+export const ReportSubmitAbusePayloadType = objectType({
+  name: 'ReportSubmitAbusePayload',
   description:
     'Encapsulates return values of report mutations where input values could be incorrect',
   definition: (t) => {
     t.boolean('success')
-    t.list.field('ReportError', {
-      type: ReportErrorType,
+    t.list.field('Error', {
+      type: ErrorType,
     })
   },
 })

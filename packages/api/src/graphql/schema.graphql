@@ -23,9 +23,22 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
+"""An error that has happened when submitting an abuse report"""
+type Error {
+  ReportErrorCodes: [ErrorCodes]
+  input: String
+  message: String
+}
+
+"""Possible error codes that can be returned"""
+enum ErrorCodes {
+  INVALID
+  NOT_FOUND
+}
+
 type Mutation {
   """Create an abuse report"""
-  reportsSubmitAbuse(report: ReportAbuseInput!): ReportAbuseInputMutationPayload
+  reportsSubmitAbuse(report: ReportAbuseInput!): ReportSubmitAbusePayload
 
   """Create an access token for the current user"""
   userCreateAccessToken(email: String!, password: String!): UserCreateTokenPayload
@@ -55,23 +68,9 @@ input ReportAbuseInput {
 """
 Encapsulates return values of report mutations where input values could be incorrect
 """
-type ReportAbuseInputMutationPayload {
-  ReportError: [ReportError]
+type ReportSubmitAbusePayload {
+  Error: [Error]
   success: Boolean
-}
-
-"""An error that has happened when submitting an abuse report"""
-type ReportError {
-  ReportErrorCodes: [ReportErrorCodes]
-  message: String
-}
-
-"""Possible error codes that can be returned from ReportError"""
-enum ReportErrorCodes {
-  BAD_USER_INPUT
-  GRAPHQL_VALIDATION_FAILED
-  INTERNAL_SERVER_ERROR
-  INVALID
 }
 
 """Possible roles a user can have within the database"""

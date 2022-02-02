@@ -21,25 +21,42 @@ const abuseReportSchema = z.object({
   description: z.string().nonempty({
     message: 'Description is required',
   }),
+  isAbuserPairer: z.boolean({
+    required_error: 'isAbuserPairer is required',
+    invalid_type_error: 'isActive must be a boolean',
+  }),
+  abuseType: z.enum([
+    'Spam or harmful',
+    'Harassment or bullying',
+    'Pretending to be someone',
+    'Something else',
+  ]),
 })
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
   async (_, args) => {
     const { name, email, description, isAbuserPairer, abuseType } = args.report
 
-    abuseReportSchema.parse({ name, email, description })
-
-    const base = new Airtable({
-      apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
-    }).base('appt58t6XthcfoN5i')
+    abuseReportSchema.parse({
+      name,
+      email,
+      description,
+      isAbuserPairer,
+      abuseType,
+    })
 
     try {
+      const base = new Airtable({
+        apiKey: process.env.AIRTABLE_API_KEY,
+      }).base('appt58t6XthcfoN5i')
+
       await base('Reports').create({
         Name: name,
         Email: email,
         'Incident description': description,
         'Nature of the abuse': abuseType,
         'Is the abuser a Pairer?': isAbuserPairer,
+        Status: 'New',
       })
       return {
         success: true,
@@ -56,20 +73,27 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
          */
         return {
           success: false,
-          Report: null,
-          ReportError: [],
+          ReportError: err.issues.map((issue) => ({
+            errorCode: 'Invalid',
+            input: issue.path[0].toString(),
+            message: issue.message,
+          })),
         }
       }
 
       captureException(
-        errMsg,
+        { errMsg, name, email, description, isAbuserPairer, abuseType },
         new Scope().setExtras({
           err,
+          name,
+          email,
+          description,
+          isAbuserPairer,
+          abuseType,
         })
       )
       return {
         success: false,
-        Report: null,
         ReportError: [],
       }
     }

@@ -1,15 +1,5 @@
-import {
-  ReportAbuseInputType,
-  ReportAbuseInputMutationPayloadType,
-} from './types'
+import { ReportAbuseInputType, ReportSubmitAbusePayloadType } from './types'
 
-import { AbuseType, ReportErrorCodesType } from './enums'
 import { mutations } from './mutations'
 
-export default [
-  ReportAbuseInputType,
-  mutations,
-  ReportAbuseInputMutationPayloadType,
-  AbuseType,
-  ReportErrorCodesType,
-]
+export default [ReportAbuseInputType, mutations, ReportSubmitAbusePayloadType]

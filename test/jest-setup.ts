@@ -12,6 +12,7 @@ jest.mock('@sanity/client', () => jest.fn())
 jest.mock('postmark', () => ({
   ServerClient: jest.fn(),
 }))
+jest.mock('airtable', () => jest.fn())
 
 beforeEach(async () => {
   await reseedDatabase()
