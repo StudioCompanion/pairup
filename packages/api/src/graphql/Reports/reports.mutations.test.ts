@@ -1,29 +1,42 @@
-import { testData } from 'test/seed/data'
 import { request, graphql } from 'test/request'
-import { ReportAbuseInputType } from './types'
-
 
 describe('Reports Mutations', () => {
-    describe('createAbuseReport', () =>{
-        const mutation = graphql`
-        mutation CreateAbuseReport(
-            $report: ReportAbuseInputType
-        ) {
-            createAbuseReport(report: {name, email, description, isAbuserPairer, abuseType}) {
-                Report {
-                    name
-                    email
-                    description
-                    isAbuserPairer
-                    abuseType
-                }
-                Error {
-                    errorCode
-                    input
-                    message
-                }
-            }
+  describe('reportsSubmitAbuse', () => {
+    const mutation = graphql`
+      mutation ReportsSubmitAbuse($report: ReportAbuseInput!) {
+        reportsSubmitAbuse(report: $report) {
+          success
+          Error {
+            message
+            input
+            ReportErrorCodes
+          }
         }
-        `
+      }
+    `
+    it('should return a data object with success: true if creating the record was successful', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            report: {
+              name: 'Lilian',
+              email: 'lilian@test.com',
+              description: '....',
+              isAbuserPairer: true,
+              abuseType: 'PRETENDING_TO_BE_SOMEONE',
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "reportsSubmitAbuse": Object {
+              "Error": null,
+              "success": true,
+            },
+          },
+        }
+      `)
     })
+  })
 })
