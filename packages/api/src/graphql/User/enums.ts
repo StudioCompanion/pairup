@@ -4,10 +4,18 @@ import { Role } from 'nexus-prisma'
 export const UserErrorCodesType = enumType({
   name: 'UserErrorCodes',
   description: 'Possible error codes that can be returned from UserError',
-  members: {
-    INVALID: 'Invalid',
-    NOT_FOUND: 'NotFound',
-  },
+  members: [
+    {
+      name: 'Invalid',
+      value: 'INVALID',
+      description: 'An invalid value has been passed',
+    },
+    {
+      name: 'NotFound',
+      value: 'NOT_FOUND',
+      description: 'The entry was not found',
+    },
+  ],
 })
 
 export const UserDisciplinesType = enumType({
