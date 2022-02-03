@@ -12,7 +12,7 @@ export const updateDocument = async (
     const sanityClient = getSanityClientWrite()
 
     // Create new document
-    await sanityClient.patch(document.id).set(document).commit()
+    await sanityClient.patch(document._id).set(document).commit()
   } catch (err) {
     const errMsg = 'Failed to update sanity profile'
     Logger.error(errMsg, err)
