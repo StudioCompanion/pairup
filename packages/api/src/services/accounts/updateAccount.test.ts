@@ -9,6 +9,7 @@ import { createAccessToken } from '../tokens/createAccessToken'
 
 import { updateAccount } from './updateAccount'
 import { PAIRER_PROFILE_STATUS } from '@pairup/shared'
+import { SanityDocumentTypes } from '../../constants'
 
 describe('service updateAccount', () => {
   it('should change the password of a user', async () => {
@@ -172,21 +173,15 @@ describe('service updateAccount', () => {
       return () => {
         // @ts-ignore
         const client = {
-          transaction() {
-            return client
-          },
-          createIfNotExists() {
-            return client
-          },
           patch: patchMock.mockImplementation(() => {
+            return client
+          }),
+          set: setMock.mockImplementation(() => {
             return client
           }),
           commit() {
             return client
           },
-          set: setMock.mockImplementation(() => {
-            return client
-          }),
           getDocument() {
             return false
           },
@@ -224,8 +219,76 @@ describe('service updateAccount', () => {
       expect.objectContaining({
         email,
         _id: id,
-        _type: 'pairerProfile',
+        _type: SanityDocumentTypes.PAIRER_PROFILE,
         status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+        lastModifiedAt: expect.any(String),
+      })
+    )
+  })
+
+  it.only('should not require approval for availability updates and publish a new version of their profile', async () => {
+    const patchMock = jest.fn()
+    const setMock = jest.fn()
+
+    jest.resetModules()
+    jest.unmock('@sanity/client')
+
+    jest.doMock('@sanity/client', () => {
+      return () => {
+        // @ts-ignore
+        const client = {
+          patch: patchMock.mockImplementation(() => {
+            return client
+          }),
+          set: setMock.mockImplementation(() => {
+            return client
+          }),
+          commit() {
+            return client
+          },
+          getDocument() {
+            return true
+          },
+        }
+        return client
+      }
+    })
+
+    const { updateAccount: mockedUpdateAccount } = require('./updateAccount')
+
+    const userId = testData.users[0].userId
+
+    await mockedUpdateAccount(
+      {},
+      {
+        profile: {
+          availability: {
+            monday: [
+              { startTime: '08:00', endTime: '17:30' },
+              { startTime: '18:00', endTime: '18:20' },
+            ],
+            friday: [
+              { startTime: '14:00', endTime: '15:00' },
+              { startTime: '17:00', endTime: '18:00' },
+            ],
+          },
+        },
+      },
+      {
+        prisma,
+        user: {
+          userId,
+        },
+      },
+      null as unknown as GraphQLResolveInfo
+    )
+
+    expect(patchMock).toBeCalledWith(userId)
+
+    expect(setMock).toBeCalledWith(
+      expect.objectContaining({
+        _id: userId,
+        _type: SanityDocumentTypes.PAIRER_PROFILE,
         lastModifiedAt: expect.any(String),
       })
     )
@@ -233,9 +296,5 @@ describe('service updateAccount', () => {
 
   it.todo(
     'should send a SuperUser an email when someone has made changes to their profile'
-  )
-
-  it.todo(
-    'should not require approval for availability updates and publish a new version of their profile'
   )
 })

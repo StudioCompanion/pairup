@@ -16,6 +16,7 @@ import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 import { sendVerificationEmail } from '../emails/sendVerificationEmail'
 import { sendNewUserEmail } from '../emails/sendNewUserEmail'
 import { nanoid } from 'nanoid'
+import { SanityDocumentTypes } from '../../constants'
 
 /**
  * Schema validation for signing up
@@ -186,7 +187,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      */
     await createDocument(
       {
-        _type: 'pairerProfile',
+        _type: SanityDocumentTypes.PAIRER_PROFILE,
         _id: user.userId,
         uuid: user.userId,
         title: `${restProfile.firstName} ${restProfile.lastName}`,

@@ -12,6 +12,8 @@ import { createToken } from '../../helpers/tokens'
 
 import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 import { updateDocument } from '../sanity/updateDocument'
+import { getDocument } from '../sanity/getDocument'
+import { SanityDocumentTypes } from '../../constants'
 
 /**
  * Schema validation for detail args
@@ -84,6 +86,11 @@ const profileSchema = z
   .partial()
   .optional()
 
+type UpdatedAvailability = Record<
+  string,
+  Array<NexusGenInputs['AvailabilityTimeInput']>
+>
+
 export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
   async (_, args, ctx) => {
     const { email, password, profile } = args
@@ -124,7 +131,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
       const parsedProfile = profileSchema.parse(profile)
 
       /**
-       * Handle DB Updates in one call
+       * Prisma entry handling
        */
       if (password || email) {
         const user = (await prisma.user.findUnique({
@@ -198,51 +205,74 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
         }
       }
 
+      /**
+       * Sanity Profile handling
+       */
+      const hasProfileBeenPublished = await getDocument(userId)
       const now = Date.now()
+      const formattedTime = formatISO(now)
+
+      const { availability, ...restProfile } = parsedProfile ?? {}
+
+      let updatedAvailability: UpdatedAvailability = {}
+
+      if (availability) {
+        updatedAvailability = Object.entries(availability).reduce(
+          (acc, [day, hours]) => {
+            acc[day] = hours.map((hour) => ({
+              ...hour,
+              _type: 'availableTime',
+              _key: `${userId}_${nanoid()}`,
+            }))
+            return acc
+          },
+          {} as UpdatedAvailability
+        )
+
+        if (hasProfileBeenPublished) {
+          /**
+           * If the profile has been updated we
+           * want to make sure it can be republished
+           * straight away to avoid schedule conflicts
+           */
+          await updateDocument({
+            _type: SanityDocumentTypes.PAIRER_PROFILE,
+            _id: userId,
+            lastModifiedAt: formattedTime,
+            ...updatedAvailability,
+          })
+        }
+      }
 
       /**
        * If we actually have the values,
        * then update the sanity profile
        */
-      if (profile || email) {
-        let profileUpdates: IdentifiedSanityDocumentStub = {
-          _type: 'pairerProfile',
+      if (restProfile || email) {
+        let draftProfileUpdates: IdentifiedSanityDocumentStub = {
+          _type: SanityDocumentTypes.PAIRER_PROFILE,
           _id: `drafts.${userId}`,
           status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
-          lastModifiedAt: formatISO(now),
+          lastModifiedAt: formattedTime,
+          ...restProfile,
+          ...updatedAvailability,
         }
 
-        if (profile) {
-          const { availability, ...restProfile } = parsedProfile ?? {}
-
-          const updatedAvailability = Object.entries(availability ?? {}).reduce(
-            (acc, [day, hours]) => {
-              acc[day] = (hours ?? []).map((hour) => ({
-                ...hour,
-                _type: 'availableTime',
-                _key: `${userId}_${nanoid()}`,
-              }))
-              return acc
-            },
-            {} as Record<string, Array<NexusGenInputs['AvailabilityTimeInput']>>
-          )
-
-          profileUpdates = {
-            ...profileUpdates,
-            ...restProfile,
-            ...updatedAvailability,
-            disciplines: restProfile.disciplines?.join(','),
+        if (restProfile.disciplines) {
+          draftProfileUpdates = {
+            ...draftProfileUpdates,
+            disciplines: restProfile.disciplines.join(','),
           }
         }
 
         if (email) {
-          profileUpdates = {
-            ...profileUpdates,
+          draftProfileUpdates = {
+            ...draftProfileUpdates,
             email,
           }
         }
 
-        await updateDocument(profileUpdates)
+        await updateDocument(draftProfileUpdates)
       }
 
       /**
