@@ -84,6 +84,7 @@ describe('User Mutations', () => {
                   },
                 ],
               },
+
               jobTitle: 'Developer',
             },
           },
@@ -126,6 +127,7 @@ describe('User Mutations', () => {
                   },
                 ],
               },
+
               jobTitle: 'Developer',
             },
           },
@@ -168,6 +170,7 @@ describe('User Mutations', () => {
                   },
                 ],
               },
+
               jobTitle: 'Developer',
             },
           },
@@ -210,6 +213,7 @@ describe('User Mutations', () => {
                   },
                 ],
               },
+
               jobTitle: 'Developer',
             },
           },
@@ -658,6 +662,7 @@ describe('User Mutations', () => {
               variables: {
                 password: 'applepie',
               },
+
               context: {
                 user: {
                   userId: testData.users[0].userId,
@@ -733,6 +738,7 @@ describe('User Mutations', () => {
               variables: {
                 password: 'DVUE8j=uQ;?>,6w%EOh8',
               },
+
               context: {
                 user: {
                   userId: testData.users[0].userId,
@@ -980,6 +986,7 @@ describe('User Mutations', () => {
                     // should pass an empty array
                     tuesday: [],
                   },
+
                   // should not pass an empty array
                   disciplines: [],
                 },
@@ -1068,6 +1075,84 @@ describe('User Mutations', () => {
           },
         })
       )
+    })
+  })
+
+  describe('userRecover', () => {
+    const mutation = graphql`
+      mutation UserRecover($email: String!) {
+        userRecover(email: $email) {
+          success
+          UserError {
+            errorCode
+            message
+            input
+          }
+        }
+      }
+    `
+
+    it('should return successfully if the email exists in the database', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            email: testData.users[0].email,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userRecover": Object {
+              "UserError": Array [],
+              "success": true,
+            },
+          },
+        }
+      `)
+    })
+
+    it('should return successfully if the email is not in the database', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            email: 'awesomeperson@gmail.com',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userRecover": Object {
+              "UserError": Array [],
+              "success": true,
+            },
+          },
+        }
+      `)
+    })
+
+    it('should throw if the email is not actually an email', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            email: 'apples',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userRecover": Object {
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "email",
+                  "message": "Invalid email address provided",
+                },
+              ],
+              "success": false,
+            },
+          },
+        }
+      `)
     })
   })
 })
