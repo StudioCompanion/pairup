@@ -2,8 +2,22 @@ import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import Airtable from 'airtable'
 import { Logger } from '../../helpers/console'
-
 import { captureException, Scope } from '@sentry/node'
+
+type Dictionary = { [index: string]: string }
+
+const SEVERITY_MAP: Dictionary = {
+  'Spam or harmful': 'MEDIUM',
+  'Harassment or bullying': 'HIGH',
+  'Pretending to be someone': 'HIGH',
+  'Something else': 'LOW',
+}
+
+const severity = (abuseType: string) => {
+  for (const key in SEVERITY_MAP) {
+    if (abuseType === key) return SEVERITY_MAP[key]
+  }
+}
 
 const abuseReportSchema = z.object({
   name: z.string().nonempty({
@@ -57,6 +71,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
         'Nature of the abuse': abuseType,
         'Is the abuser a Pairer?': isAbuserPairer,
         Status: 'New',
+        Severity: severity(abuseType),
       })
       return {
         success: true,
