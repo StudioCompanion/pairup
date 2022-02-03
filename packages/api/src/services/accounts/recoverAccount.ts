@@ -80,7 +80,7 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
       return {
         success: false,
         UserError: err.issues.map((issue) => ({
-          errorCode: 'INVALID',
+          errorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
         })),

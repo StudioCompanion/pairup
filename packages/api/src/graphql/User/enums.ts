@@ -6,13 +6,13 @@ export const UserErrorCodesType = enumType({
   description: 'Possible error codes that can be returned from UserError',
   members: [
     {
-      name: 'Invalid',
-      value: 'INVALID',
+      value: 'Invalid',
+      name: 'INVALID',
       description: 'An invalid value has been passed',
     },
     {
-      name: 'NotFound',
-      value: 'NOT_FOUND',
+      value: 'NotFound',
+      name: 'NOT_FOUND',
       description: 'The entry was not found',
     },
   ],

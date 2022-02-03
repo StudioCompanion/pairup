@@ -176,12 +176,12 @@ enum UserErrorCodes {
   """
   An invalid value has been passed
   """
-  Invalid
+  INVALID
 
   """
   The entry was not found
   """
-  NotFound
+  NOT_FOUND
 }
 
 """
@@ -259,6 +259,7 @@ Payload from the userRecover mutation
 """
 type UserRecoverPayload {
   UserError: [UserError]
+  success: Boolean
 }
 
 """

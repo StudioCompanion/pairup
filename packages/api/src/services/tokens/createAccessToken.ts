@@ -35,12 +35,12 @@ const schema = z.object({
 const NO_MATCH_MSG = 'Email and Password combination does not match records'
 const NO_MATCH_ERROR: Array<NexusGenRootTypes['UserError']> = [
   {
-    errorCode: 'NOT_FOUND',
+    errorCode: 'NotFound',
     input: 'email',
     message: NO_MATCH_MSG,
   },
   {
-    errorCode: 'NOT_FOUND',
+    errorCode: 'NotFound',
     input: 'password',
     message: NO_MATCH_MSG,
   },
@@ -113,7 +113,7 @@ export const createAccessToken: FieldResolver<
       return {
         UserAccessToken: null,
         UserError: err.issues.map((issue) => ({
-          errorCode: 'INVALID',
+          errorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
         })),

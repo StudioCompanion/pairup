@@ -154,7 +154,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
               UserAccessToken: null,
               UserError: [
                 {
-                  errorCode: 'INVALID',
+                  errorCode: 'Invalid',
                   input: 'password',
                   message: 'New password cannot be the same as old password',
                 },
@@ -176,7 +176,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
               UserAccessToken: null,
               UserError: [
                 {
-                  errorCode: 'INVALID',
+                  errorCode: 'Invalid',
                   input: 'email',
                   message: 'New email cannot be the same as old email',
                 },
@@ -316,7 +316,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
         return {
           UserAccessToken: null,
           UserError: err.issues.map((issue) => ({
-            errorCode: 'INVALID',
+            errorCode: 'Invalid',
             input: issue.path.slice(-1)[0].toString(),
             message: issue.message,
           })),
