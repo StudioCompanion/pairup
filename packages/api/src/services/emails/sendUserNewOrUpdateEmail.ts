@@ -5,7 +5,7 @@ import { sendEmail } from '../postmark/sendEmail'
 const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_NEW_USER
 const ADMIN_EMAIL_ADDRESS = process.env.POSTMARK_ADMIN_EMAIL
 
-export const sendNewUserEmail = (id: string) => {
+export const sendUserNewOrUpdateEmail = (id: string) => {
   const templateModel = {
     product_url: 'pairup.com',
     product_name: 'Pair Up',

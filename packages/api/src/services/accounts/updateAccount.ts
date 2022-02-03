@@ -14,6 +14,7 @@ import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 import { updateDocument } from '../sanity/updateDocument'
 import { getDocument } from '../sanity/getDocument'
 import { SanityDocumentTypes } from '../../constants'
+import { sendUserNewOrUpdateEmail } from '../emails/sendUserNewOrUpdateEmail'
 
 /**
  * Schema validation for detail args
@@ -273,6 +274,8 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
         }
 
         await updateDocument(draftProfileUpdates)
+
+        sendUserNewOrUpdateEmail(userId)
       }
 
       /**

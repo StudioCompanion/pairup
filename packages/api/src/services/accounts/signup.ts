@@ -14,7 +14,7 @@ import { Logger } from '../../helpers/console'
 import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 
 import { sendVerificationEmail } from '../emails/sendVerificationEmail'
-import { sendNewUserEmail } from '../emails/sendNewUserEmail'
+import { sendUserNewOrUpdateEmail } from '../emails/sendUserNewOrUpdateEmail'
 import { nanoid } from 'nanoid'
 import { SanityDocumentTypes } from '../../constants'
 
@@ -216,7 +216,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     /**
      * Send email to super user so they can approve the profile.
      */
-    sendNewUserEmail(user.userId)
+    sendUserNewOrUpdateEmail(user.userId)
 
     return {
       User: user,

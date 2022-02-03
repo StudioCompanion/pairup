@@ -226,7 +226,7 @@ describe('service updateAccount', () => {
     )
   })
 
-  it.only('should not require approval for availability updates and publish a new version of their profile', async () => {
+  it('should not require approval for availability updates and publish a new version of their profile', async () => {
     const patchMock = jest.fn()
     const setMock = jest.fn()
 
@@ -294,7 +294,40 @@ describe('service updateAccount', () => {
     )
   })
 
-  it.todo(
-    'should send a SuperUser an email when someone has made changes to their profile'
-  )
+  it('should send a SuperUser an email when someone has made changes to their profile', async () => {
+    const sendEmailWithTemplateMock = jest.fn()
+    jest.resetModules()
+    jest.unmock('postmark')
+
+    jest.doMock('postmark', () => ({
+      ServerClient: () => ({
+        sendEmailWithTemplate: sendEmailWithTemplateMock,
+      }),
+    }))
+
+    const { updateAccount: mockedUpdateAccount } = require('./updateAccount')
+
+    await mockedUpdateAccount(
+      {},
+      {
+        email: 'dev@companion.studio',
+      },
+      {
+        prisma,
+        user: {
+          userId: testData.users[0].userId,
+        },
+      },
+      null as unknown as GraphQLResolveInfo
+    )
+
+    expect(sendEmailWithTemplateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        To: process.env.POSTMARK_ADMIN_EMAIL,
+        From: process.env.POSTMARK_FROM_EMAIL,
+        TemplateId: Number(process.env.POSTMARK_TEMPLATE_NEW_USER),
+        TemplateModel: expect.any(Object),
+      })
+    )
+  })
 })
