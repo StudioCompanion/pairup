@@ -33,6 +33,11 @@ type Mutation {
   ): UserCreateAccountPayload
 
   """
+  Starts the recovery process for a user who has forgotten their password
+  """
+  userRecover(email: String!): UserRecoverPayload
+
+  """
   Update an account for an existing user
   """
   userUpdateAccount(
@@ -168,8 +173,15 @@ type UserError {
 Possible error codes that can be returned from UserError
 """
 enum UserErrorCodes {
-  INVALID
-  NOT_FOUND
+  """
+  An invalid value has been passed
+  """
+  Invalid
+
+  """
+  The entry was not found
+  """
+  NotFound
 }
 
 """
@@ -240,6 +252,13 @@ input UserProfileInput {
   Pairer's twitter url
   """
   twitter: String
+}
+
+"""
+Payload from the userRecover mutation
+"""
+type UserRecoverPayload {
+  UserError: [UserError]
 }
 
 """
