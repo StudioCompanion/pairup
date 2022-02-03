@@ -4,24 +4,22 @@ import { createReport } from './createReport'
 
 describe('Create Airtable Record', () => {
   it('should use airtable client to create a new record', async () => {
-    const patchMock = jest.fn()
+    const mockCreate = jest.fn()
 
     jest.resetModules()
     jest.unmock('airtable')
 
     jest.doMock('airtable', () => {
-      return () => {
-        // @ts-ignore
-        const record = {
-          create() {
-            return record
-          },
+      return class MockedAirtableClass {
+        base() {
+          return () => ({
+            create: mockCreate,
+          })
         }
-        return record
       }
     })
 
-    const { createReport: mockedCreateReport } = require('./createReport')
+    const { createReport: mockedCreateReport } = await require('./createReport')
 
     const res = (await mockedCreateReport(
       {},
@@ -38,31 +36,16 @@ describe('Create Airtable Record', () => {
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof createReport>>
 
-    expect(patchMock).toBeCalledWith(
-      `drafts.${res?.success}`,
-      expect.any(Function)
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        Name: 'Elena',
+        Email: 'elena@test.com',
+        'Incident description': '....',
+        'Nature of the abuse': 'Something else',
+        'Is the abuser a Pairer?': false,
+      })
     )
 
-    expect(res?.Error).toHaveLength(2)
     expect(res?.success).toBe(true)
-  })
-
-  it('should fail if name field is not completed', async () => {
-    const res = await createReport(
-      {},
-      {
-        report: {
-          name: '',
-          email: 'elena@test.com',
-          description: '....',
-          isAbuserPairer: false,
-          abuseType: 'Something else',
-        },
-      },
-      null as unknown as GraphQLContext,
-      null as unknown as GraphQLResolveInfo
-    )
-
-    expect(res).toMatchInlineSnapshot()
   })
 })

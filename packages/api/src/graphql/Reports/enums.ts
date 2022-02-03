@@ -10,6 +10,3 @@ export const AbuseType = enumType({
     SOMETHING_ELSE: 'Something else',
   },
 })
-
-
-
