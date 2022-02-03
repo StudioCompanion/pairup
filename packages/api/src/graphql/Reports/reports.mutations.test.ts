@@ -1,3 +1,4 @@
+import { PairUp } from '@pairup/shared'
 import { request, graphql } from 'test/request'
 
 describe('Reports Mutations', () => {
@@ -23,7 +24,7 @@ describe('Reports Mutations', () => {
               email: 'lilian@test.com',
               description: '....',
               isAbuserPairer: true,
-              abuseType: 'PRETENDING_TO_BE_SOMEONE',
+              abuseType: PairUp.Abuse.PretendingToBeSomeone,
             },
           },
         })
