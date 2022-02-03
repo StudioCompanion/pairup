@@ -7,9 +7,7 @@ import { DAYS_OF_THE_WEEK, PAIRER_PROFILE_STATUS } from '@pairup/shared'
 import { captureException, Scope } from '@sentry/node'
 import { randomBytes } from 'crypto'
 
-// import { prisma } from '../../db/prisma'
-
-import { createOrUpdateDocument } from '../sanity/createOrUpdateDocument'
+import { createDocument } from '../sanity/createDocument'
 
 import { Logger } from '../../helpers/console'
 
@@ -17,6 +15,7 @@ import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 
 import { sendVerificationEmail } from '../emails/sendVerificationEmail'
 import { sendNewUserEmail } from '../emails/sendNewUserEmail'
+import { nanoid } from 'nanoid'
 
 /**
  * Schema validation for signing up
@@ -167,7 +166,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
             (hour: NexusGenInputs['AvailabilityTimeInput'] | null) => ({
               ...hour,
               _type: 'availableTime',
-              _key: `${user.userId}_${day}`,
+              _key: `${user.userId}_${nanoid()}`,
             })
           ),
         }
@@ -181,7 +180,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      * they will be a bit broken so someone
      * has to do something manual
      */
-    await createOrUpdateDocument(
+    await createDocument(
       {
         _type: 'pairerProfile',
         _id: user.userId,

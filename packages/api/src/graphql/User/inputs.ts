@@ -14,7 +14,7 @@ export const UserAvailabilityInputType = inputObjectType({
   name: 'UserAvailabilityInput',
   description: "A Pairer's availability related to their profile",
   definition(t) {
-    t.list.field({
+    t.list.nullable.field({
       name: 'monday',
       type: 'AvailabilityTimeInput',
     })
