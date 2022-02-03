@@ -236,6 +236,114 @@ describe('User Mutations', () => {
         }
       `)
     })
+
+    it('should return a UserError if vital information is missing from the profile', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            email: 'josh@gmail.com',
+            password: 'DVUE8j=uQ;?>,6w%EOh8',
+            profile: {
+              availability: {},
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userCreateAccount": Object {
+              "User": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "firstName",
+                  "message": "Required",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "lastName",
+                  "message": "Required",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "jobTitle",
+                  "message": "Required",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "bio",
+                  "message": "Required",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "disciplines",
+                  "message": "You have to select at least one discipline",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "timezone",
+                  "message": "Required",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "availability",
+                  "message": "Availability must have at least one day added",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
+
+    it('should return a UserError if days are specified in availability yet include no times', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            email: 'josh@gmail.com',
+            password: 'DVUE8j=uQ;?>,6w%EOh8',
+            profile: {
+              firstName: 'Josh',
+              lastName: 'Ellis',
+              jobTitle: 'Developer',
+              bio: 'Josh is a developer',
+              disciplines: ['UX', 'VR'],
+              timezone: 'GMT +1',
+              availability: {
+                monday: [],
+                tuesday: [],
+                friday: [
+                  {
+                    startTime: '08:00',
+                    endTime: '12:00',
+                  },
+                ],
+              },
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userCreateAccount": Object {
+              "User": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "monday",
+                  "message": "Should have at least 1 items",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "tuesday",
+                  "message": "Should have at least 1 items",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
   })
 
   describe('userCreateAccessToken', () => {
@@ -649,6 +757,317 @@ describe('User Mutations', () => {
           }
         `)
       })
+    })
+
+    describe('updating email', () => {
+      it('should return a new accessToken if successful', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($email: String) {
+                userUpdateAccount(email: $email) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                email: 'amazinguser@companion.studio',
+              },
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toEqual(
+          expect.objectContaining({
+            data: {
+              userUpdateAccount: {
+                UserAccessToken: {
+                  accessToken: expect.any(String),
+                  expiresAt: expect.any(String),
+                },
+                UserError: [],
+              },
+            },
+          })
+        )
+      })
+
+      it('should return UserError if the email does not meet requirements', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($email: String) {
+                userUpdateAccount(email: $email) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                email: 'myemail',
+              },
+
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userUpdateAccount": Object {
+                "UserAccessToken": null,
+                "UserError": Array [
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "email",
+                    "message": "Invalid email address provided",
+                  },
+                ],
+              },
+            },
+          }
+        `)
+      })
+
+      it('should return UserError if the new email is the same as the old email', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($email: String) {
+                userUpdateAccount(email: $email) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                email: testData.users[0].email,
+              },
+
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userUpdateAccount": Object {
+                "UserAccessToken": null,
+                "UserError": Array [
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "email",
+                    "message": "New email cannot be the same as old email",
+                  },
+                ],
+              },
+            },
+          }
+        `)
+      })
+    })
+
+    describe('updating profile', () => {
+      it('should return a new accessToken if successful', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($profile: UserProfileInput) {
+                userUpdateAccount(profile: $profile) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                profile: {
+                  firstName: 'Mr',
+                  lastName: 'Pickles',
+                  availability: {
+                    tuesday: [{ startTime: '08:00', endTime: '12:00' }],
+                  },
+                },
+              },
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toEqual(
+          expect.objectContaining({
+            data: {
+              userUpdateAccount: {
+                UserAccessToken: {
+                  accessToken: expect.any(String),
+                  expiresAt: expect.any(String),
+                },
+                UserError: [],
+              },
+            },
+          })
+        )
+      })
+
+      it('should return UserError when fields are not correct', async () => {
+        expect(
+          await request(
+            graphql`
+              mutation UserUpdateAccount($profile: UserProfileInput) {
+                userUpdateAccount(profile: $profile) {
+                  UserAccessToken {
+                    accessToken
+                    expiresAt
+                  }
+                  UserError {
+                    message
+                    input
+                    errorCode
+                  }
+                }
+              }
+            `,
+            {
+              variables: {
+                profile: {
+                  // should not pass an empty string
+                  firstName: '',
+                  jobTitle: '',
+                  availability: {
+                    // should pass an empty array
+                    tuesday: [],
+                  },
+                  // should not pass an empty array
+                  disciplines: [],
+                },
+              },
+
+              context: {
+                user: {
+                  userId: testData.users[0].userId,
+                },
+              },
+            }
+          )
+        ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userUpdateAccount": Object {
+                "UserAccessToken": null,
+                "UserError": Array [
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "firstName",
+                    "message": "First name is required",
+                  },
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "jobTitle",
+                    "message": "Your job title is required",
+                  },
+                  Object {
+                    "errorCode": "INVALID",
+                    "input": "disciplines",
+                    "message": "Should have at least 1 items",
+                  },
+                ],
+              },
+            },
+          }
+        `)
+      })
+    })
+
+    it('should return an accessToken when changing more than one parameter at a time', async () => {
+      expect(
+        await request(
+          graphql`
+            mutation UserUpdateAccount($password: String) {
+              userUpdateAccount(password: $password) {
+                UserAccessToken {
+                  accessToken
+                  expiresAt
+                }
+                UserError {
+                  message
+                  input
+                  errorCode
+                }
+              }
+            }
+          `,
+          {
+            variables: {
+              email: 'amazinguser@companion.studio',
+              password: 'DVUE8j=uQ;?>,6w%EOh8',
+              profile: {
+                firstName: 'User',
+                lastName: 'fantastic',
+              },
+            },
+            context: {
+              user: {
+                userId: testData.users[0].userId,
+              },
+            },
+          }
+        )
+      ).toEqual(
+        expect.objectContaining({
+          data: {
+            userUpdateAccount: {
+              UserAccessToken: {
+                accessToken: expect.any(String),
+                expiresAt: expect.any(String),
+              },
+              UserError: [],
+            },
+          },
+        })
+      )
     })
   })
 })

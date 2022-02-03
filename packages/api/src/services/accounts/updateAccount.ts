@@ -45,18 +45,30 @@ const timeSchema = z.object({
  */
 const profileSchema = z
   .object({
-    firstName: z.string(),
-    lastName: z.string(),
-    jobTitle: z.string(),
-    companyUrl: z.string(),
-    portfolioUrl: z.string(),
-    bio: z.string(),
-    disciplines: z.array(z.string()),
+    firstName: z.string().nonempty({
+      message: 'First name is required',
+    }),
+    lastName: z.string().nonempty({
+      message: 'Last name is required',
+    }),
+    jobTitle: z.string().nonempty({
+      message: 'Your job title is required',
+    }),
+    companyUrl: z.string().nonempty(),
+    portfolioUrl: z.string().nonempty(),
+    bio: z.string().nonempty({
+      message: 'Your bio is required',
+    }),
+    disciplines: z
+      .array(z.string(), {
+        required_error: 'You have to select at least one discipline',
+      })
+      .nonempty(),
     twitter: z.string(),
     instagram: z.string(),
     linkedin: z.string(),
     github: z.string(),
-    timezone: z.string(),
+    timezone: z.string().nonempty(),
     availability: z
       .object({
         monday: z.array(timeSchema),
@@ -109,7 +121,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
       /**
        * Parse the profile too
        */
-      profileSchema.parse(profile)
+      const parsedProfile = profileSchema.parse(profile)
 
       /**
        * Handle DB Updates in one call
@@ -201,9 +213,9 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
         }
 
         if (profile) {
-          const { availability, ...restProfile } = profile
+          const { availability, ...restProfile } = parsedProfile ?? {}
 
-          const updatedAvailability = Object.entries(availability).reduce(
+          const updatedAvailability = Object.entries(availability ?? {}).reduce(
             (acc, [day, hours]) => {
               acc[day] = (hours ?? []).map((hour) => ({
                 ...hour,
@@ -219,7 +231,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
             ...profileUpdates,
             ...restProfile,
             ...updatedAvailability,
-            disciplines: restProfile.disciplines.join(','),
+            disciplines: restProfile.disciplines?.join(','),
           }
         }
 

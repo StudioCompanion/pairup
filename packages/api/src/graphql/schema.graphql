@@ -179,12 +179,12 @@ input UserProfileInput {
   """
   Pairer's availability
   """
-  availability: UserAvailabilityInput!
+  availability: UserAvailabilityInput
 
   """
   Pairer's biography
   """
-  bio: String!
+  bio: String
 
   """
   Pairer's company url
@@ -194,12 +194,12 @@ input UserProfileInput {
   """
   Pairer's disciplines
   """
-  disciplines: [UserDisciplines]!
+  disciplines: [UserDisciplines]
 
   """
   Pairer's first name
   """
-  firstName: String!
+  firstName: String
 
   """
   Pairer's github url
@@ -214,12 +214,12 @@ input UserProfileInput {
   """
   Pairer's job title
   """
-  jobTitle: String!
+  jobTitle: String
 
   """
   Pairer's last name
   """
-  lastName: String!
+  lastName: String
 
   """
   Pairer's linkedin url
@@ -234,7 +234,7 @@ input UserProfileInput {
   """
   Pairer's timezeon
   """
-  timezone: String!
+  timezone: String
 
   """
   Pairer's twitter url
