@@ -122,7 +122,7 @@ describe('service signup', () => {
   })
 
   it('should use the sanity client to create a pairer profile', async () => {
-    const patchMock = jest.fn()
+    const createMock = jest.fn()
 
     jest.resetModules()
     jest.unmock('@sanity/client')
@@ -134,17 +134,9 @@ describe('service signup', () => {
           transaction() {
             return client
           },
-          createIfNotExists() {
-            return client
-          },
-          patch: patchMock.mockImplementation(() => {
-            return client
-          }),
+          createIfNotExists: createMock,
           commit() {
             return client
-          },
-          getDocument() {
-            return false
           },
         }
         return client
@@ -184,9 +176,10 @@ describe('service signup', () => {
       null as unknown as GraphQLResolveInfo
     )) as Awaited<ReturnType<typeof signup>>
 
-    expect(patchMock).toBeCalledWith(
-      `drafts.${res?.User?.userId}`,
-      expect.any(Function)
+    expect(createMock).toBeCalledWith(
+      expect.objectContaining({
+        _id: `drafts.${res?.User?.userId}`,
+      })
     )
   })
 

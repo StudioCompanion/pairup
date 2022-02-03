@@ -2,10 +2,16 @@ import { captureException, Scope } from '@sentry/node'
 import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import bcrypt from 'bcrypt'
-import { add } from 'date-fns'
+import { add, formatISO } from 'date-fns'
+import { PAIRER_PROFILE_STATUS } from '@pairup/shared'
+import { nanoid } from 'nanoid'
+import { IdentifiedSanityDocumentStub } from '@sanity/client'
 
 import { Logger } from '../../helpers/console'
 import { createToken } from '../../helpers/tokens'
+
+import { NexusGenInputs } from '../../graphql/nexus-types.generated'
+import { updateDocument } from '../sanity/updateDocument'
 
 /**
  * Schema validation for detail args
@@ -39,18 +45,30 @@ const timeSchema = z.object({
  */
 const profileSchema = z
   .object({
-    firstName: z.string(),
-    lastName: z.string(),
-    jobTitle: z.string(),
-    companyUrl: z.string(),
-    portfolioUrl: z.string(),
-    bio: z.string(),
-    disciplines: z.array(z.string()),
+    firstName: z.string().nonempty({
+      message: 'First name is required',
+    }),
+    lastName: z.string().nonempty({
+      message: 'Last name is required',
+    }),
+    jobTitle: z.string().nonempty({
+      message: 'Your job title is required',
+    }),
+    companyUrl: z.string().nonempty(),
+    portfolioUrl: z.string().nonempty(),
+    bio: z.string().nonempty({
+      message: 'Your bio is required',
+    }),
+    disciplines: z
+      .array(z.string(), {
+        required_error: 'You have to select at least one discipline',
+      })
+      .nonempty(),
     twitter: z.string(),
     instagram: z.string(),
     linkedin: z.string(),
     github: z.string(),
-    timezone: z.string(),
+    timezone: z.string().nonempty(),
     availability: z
       .object({
         monday: z.array(timeSchema),
@@ -103,48 +121,133 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
       /**
        * Parse the profile too
        */
-      profileSchema.parse(profile)
+      const parsedProfile = profileSchema.parse(profile)
 
       /**
-       * Handle updating password
+       * Handle DB Updates in one call
        */
-      if (password) {
+      if (password || email) {
         const user = (await prisma.user.findUnique({
           where: {
             userId,
           },
         }))!
 
-        const arePasswordsTheSame = await bcrypt.compare(
-          password,
-          user.password
-        )
+        let dbUpdates = {}
 
-        if (arePasswordsTheSame) {
-          return {
-            UserAccessToken: null,
-            UserError: [
-              {
-                errorCode: 'Invalid',
-                input: 'password',
-                message: 'New password cannot be the same as old password',
-              },
-            ],
+        if (password) {
+          const arePasswordsTheSame = await bcrypt.compare(
+            password,
+            user.password
+          )
+
+          if (arePasswordsTheSame) {
+            return {
+              UserAccessToken: null,
+              UserError: [
+                {
+                  errorCode: 'Invalid',
+                  input: 'password',
+                  message: 'New password cannot be the same as old password',
+                },
+              ],
+            }
+          }
+
+          const newPassword = await bcrypt.hash(password, 10)
+
+          dbUpdates = {
+            ...dbUpdates,
+            password: newPassword,
           }
         }
 
-        const newPassword = await bcrypt.hash(password, 10)
+        if (email) {
+          if (email === user.email) {
+            return {
+              UserAccessToken: null,
+              UserError: [
+                {
+                  errorCode: 'Invalid',
+                  input: 'email',
+                  message: 'New email cannot be the same as old email',
+                },
+              ],
+            }
+          }
 
-        await prisma.user.update({
-          where: {
-            userId,
-          },
-          data: {
-            password: newPassword,
-          },
-        })
+          dbUpdates = {
+            ...dbUpdates,
+            email,
+          }
+        }
+
+        if (Object.keys(dbUpdates).length > 0) {
+          /**
+           * TODO: probably need to revalidate
+           * the email of the user?
+           */
+          await prisma.user.update({
+            where: {
+              userId,
+            },
+            data: {
+              ...dbUpdates,
+            },
+          })
+        }
       }
 
+      const now = Date.now()
+
+      /**
+       * If we actually have the values,
+       * then update the sanity profile
+       */
+      if (profile || email) {
+        let profileUpdates: IdentifiedSanityDocumentStub = {
+          _type: 'pairerProfile',
+          _id: `drafts.${userId}`,
+          status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+          lastModifiedAt: formatISO(now),
+        }
+
+        if (profile) {
+          const { availability, ...restProfile } = parsedProfile ?? {}
+
+          const updatedAvailability = Object.entries(availability ?? {}).reduce(
+            (acc, [day, hours]) => {
+              acc[day] = (hours ?? []).map((hour) => ({
+                ...hour,
+                _type: 'availableTime',
+                _key: `${userId}_${nanoid()}`,
+              }))
+              return acc
+            },
+            {} as Record<string, Array<NexusGenInputs['AvailabilityTimeInput']>>
+          )
+
+          profileUpdates = {
+            ...profileUpdates,
+            ...restProfile,
+            ...updatedAvailability,
+            disciplines: restProfile.disciplines?.join(','),
+          }
+        }
+
+        if (email) {
+          profileUpdates = {
+            ...profileUpdates,
+            email,
+          }
+        }
+
+        await updateDocument(profileUpdates)
+      }
+
+      /**
+       * Create a new access token for the user
+       */
       const newToken = createToken(
         {
           userId,
@@ -154,7 +257,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
         }
       )
 
-      const expiresAt = add(Date.now(), {
+      const expiresAt = add(now, {
         days: 7,
       })
 

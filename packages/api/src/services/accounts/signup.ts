@@ -7,9 +7,7 @@ import { DAYS_OF_THE_WEEK, PAIRER_PROFILE_STATUS } from '@pairup/shared'
 import { captureException, Scope } from '@sentry/node'
 import { randomBytes } from 'crypto'
 
-// import { prisma } from '../../db/prisma'
-
-import { createOrUpdateDocument } from '../sanity/createOrUpdateDocument'
+import { createDocument } from '../sanity/createDocument'
 
 import { Logger } from '../../helpers/console'
 
@@ -17,6 +15,7 @@ import { NexusGenInputs } from '../../graphql/nexus-types.generated'
 
 import { sendVerificationEmail } from '../emails/sendVerificationEmail'
 import { sendNewUserEmail } from '../emails/sendNewUserEmail'
+import { nanoid } from 'nanoid'
 
 /**
  * Schema validation for signing up
@@ -85,19 +84,23 @@ const profileSchema = z.object({
   availability: z
     .object(
       {
-        monday: z.array(timeSchema),
-        tuesday: z.array(timeSchema),
-        wednesday: z.array(timeSchema),
-        thursday: z.array(timeSchema),
-        friday: z.array(timeSchema),
-        saturday: z.array(timeSchema),
-        sunday: z.array(timeSchema),
+        monday: z.array(timeSchema).nonempty(),
+        tuesday: z.array(timeSchema).nonempty(),
+        wednesday: z.array(timeSchema).nonempty(),
+        thursday: z.array(timeSchema).nonempty(),
+        friday: z.array(timeSchema).nonempty(),
+        saturday: z.array(timeSchema).nonempty(),
+        sunday: z.array(timeSchema).nonempty(),
       },
       {
         required_error: 'Availability is required',
       }
     )
-    .partial(),
+    .partial()
+    .refine(
+      (val) => Object.keys(val).length > 0,
+      'Availability must have at least one day added'
+    ),
 })
 
 export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
@@ -121,7 +124,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     /**
      * Parse the profile too
      */
-    profileSchema.parse(profile)
+    const parsedProfile = profileSchema.parse(profile)
 
     /**
      * Hash the password
@@ -152,7 +155,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     /**
      * Begin creating the Sanity Profile entry
      */
-    const { availability, ...restProfile } = profile
+    const { availability, ...restProfile } = parsedProfile
 
     /**
      * Make a default object shape of availability
@@ -167,7 +170,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
             (hour: NexusGenInputs['AvailabilityTimeInput'] | null) => ({
               ...hour,
               _type: 'availableTime',
-              _key: `${user.userId}_${day}`,
+              _key: `${user.userId}_${nanoid()}`,
             })
           ),
         }
@@ -181,7 +184,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      * they will be a bit broken so someone
      * has to do something manual
      */
-    await createOrUpdateDocument(
+    await createDocument(
       {
         _type: 'pairerProfile',
         _id: user.userId,
@@ -194,7 +197,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
         lastModifiedAt: formatISO(now),
         ...restProfile,
         ...allAvailability,
-        disciplines: restProfile.disciplines.join(','),
+        disciplines: parsedProfile.disciplines.join(','),
       },
       true
     )

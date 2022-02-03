@@ -14,7 +14,7 @@ export const UserAvailabilityInputType = inputObjectType({
   name: 'UserAvailabilityInput',
   description: "A Pairer's availability related to their profile",
   definition(t) {
-    t.list.field({
+    t.list.nullable.field({
       name: 'monday',
       type: 'AvailabilityTimeInput',
     })
@@ -49,13 +49,13 @@ export const UserProfileInputType = inputObjectType({
   name: 'UserProfileInput',
   description: "A Pairer's profile that is submitted to the CMS",
   definition(t) {
-    t.nonNull.string('firstName', {
+    t.string('firstName', {
       description: "Pairer's first name",
     })
-    t.nonNull.string('lastName', {
+    t.string('lastName', {
       description: "Pairer's last name",
     })
-    t.nonNull.string('jobTitle', {
+    t.string('jobTitle', {
       description: "Pairer's job title",
     })
     t.string('companyUrl', {
@@ -64,10 +64,10 @@ export const UserProfileInputType = inputObjectType({
     t.string('portfolioUrl', {
       description: "Pairer's portfoli url",
     })
-    t.nonNull.string('bio', {
+    t.string('bio', {
       description: "Pairer's biography",
     })
-    t.nonNull.list.field({
+    t.list.field({
       name: 'disciplines',
       type: 'UserDisciplines',
       description: "Pairer's disciplines",
@@ -87,10 +87,10 @@ export const UserProfileInputType = inputObjectType({
     /**
      * TODO: This probably needs to be an Enum
      */
-    t.nonNull.string('timezone', {
+    t.string('timezone', {
       description: "Pairer's timezeon",
     })
-    t.nonNull.field({
+    t.field({
       name: 'availability',
       description: "Pairer's availability",
       type: 'UserAvailabilityInput',

@@ -1,3 +1,3 @@
 export * as Sanity from './sanity.generated'
 
-export * from './types.generated'
+export * as PairUp from './types.generated'
