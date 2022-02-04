@@ -26,6 +26,8 @@ model User {
   verified            Boolean @default(false)
   verificationCode    String
   verificationTimeout String
+  // Recovery
+  resetToken          String  @default("")
 }
 
 enum Role {

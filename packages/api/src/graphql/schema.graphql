@@ -38,6 +38,11 @@ type Mutation {
   userRecover(email: String!): UserRecoverPayload
 
   """
+  Reset a users password by providing a resetToken
+  """
+  userReset(password: String!, resetToken: String!): UserResetPayload
+
+  """
   Update an account for an existing user
   """
   userUpdateAccount(
@@ -260,6 +265,15 @@ Payload from the userRecover mutation
 type UserRecoverPayload {
   UserError: [UserError]
   success: Boolean
+}
+
+"""
+Payload from the userReset mutation
+"""
+type UserResetPayload {
+  User: User
+  UserAccessToken: UserAccessToken
+  UserError: [UserError]
 }
 
 """

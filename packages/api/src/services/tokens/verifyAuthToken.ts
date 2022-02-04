@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import jwt from 'jsonwebtoken'
+import jwt, { JsonWebTokenError } from 'jsonwebtoken'
 
 import { Logger } from '../../helpers/console'
 
@@ -30,6 +30,11 @@ export const verifyAuthToken = (req: Request): AuthenticatedUser => {
     return jwt.verify(token, JWT_SECRET) as AuthenticatedUser
   } catch (err) {
     Logger.error(err)
+
+    if (err instanceof JsonWebTokenError) {
+      throw err
+    }
+
     return { userId: null }
   }
 }

@@ -55,6 +55,15 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
         }
       )
 
+      await prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          resetToken,
+        },
+      })
+
       sendRecoveryEmail(email, resetToken)
     }
 
