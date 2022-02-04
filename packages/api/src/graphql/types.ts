@@ -1,5 +1,4 @@
 import { objectType } from 'nexus'
-import { ErrorCodesType } from './enums'
 
 export const ErrorType = objectType({
   name: 'Error',
@@ -7,8 +6,8 @@ export const ErrorType = objectType({
   definition: (t) => {
     t.string('message')
     t.string('input')
-    t.list.field('ReportErrorCodes', {
-      type: ErrorCodesType,
+    t.field('errorCode', {
+      type: 'ErrorCodes',
     })
   },
 })

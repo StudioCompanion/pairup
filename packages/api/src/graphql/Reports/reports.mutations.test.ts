@@ -10,7 +10,7 @@ describe('Reports Mutations', () => {
           Error {
             message
             input
-            ReportErrorCodes
+            ErrorCodes
           }
         }
       }

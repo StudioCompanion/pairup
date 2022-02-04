@@ -1,25 +1,27 @@
 import {
   UserType,
-  UserErrorType,
+  // UserErrorType,
   UserCreateAccountPayloadType,
   UserCreateTokenPayloadType,
   UserAccessTokenType,
   UserUpdateAccountPayloadType,
   UserRecoverPayloadType,
 } from './types'
+import { ErrorType } from '../types'
 import {
   UserAvailabilityInputType,
   UserProfileInputType,
   AvailabilityTimeInputType,
 } from './inputs'
-import { UserErrorCodesType, UserRoleType, UserDisciplinesType } from './enums'
+import { UserRoleType, UserDisciplinesType } from './enums'
+import { ErrorCodesType } from '../enums'
 import { mutations } from './mutations'
 import { queries } from './queries'
 
 export default [
   UserType,
-  UserErrorType,
-  UserErrorCodesType,
+  // UserErrorType,
+  // UserErrorCodesType,
   UserRoleType,
   UserCreateAccountPayloadType,
   UserCreateTokenPayloadType,
@@ -32,4 +34,6 @@ export default [
   UserRecoverPayloadType,
   mutations,
   queries,
+  ErrorType,
+  ErrorCodesType,
 ]
