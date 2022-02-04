@@ -8,6 +8,10 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT E'PAIRER',
     "userId" TEXT NOT NULL,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "verificationCode" TEXT NOT NULL,
+    "verificationTimeout" TEXT NOT NULL,
+    "resetToken" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

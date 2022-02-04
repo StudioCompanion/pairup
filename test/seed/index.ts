@@ -5,7 +5,7 @@ import { prisma } from '@pairup/api/src/db/prisma'
 import { testData } from './data'
 
 export interface SeedData {
-  users: Array<Omit<User, 'id'>>
+  users: Array<Omit<User, 'id' | 'resetToken'>>
 }
 
 // Inspired by prisma/docs#451
