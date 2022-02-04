@@ -220,7 +220,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
 
     return {
       User: user,
-      Error: null,
+      UserInputError: null,
     }
   } catch (err: unknown) {
     const errMsg = 'Failed to create user account'
@@ -234,7 +234,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
        */
       return {
         User: null,
-        Error: err.issues.map((issue) => ({
+        UserInputError: err.issues.map((issue) => ({
           errorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
@@ -249,7 +249,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
        */
       return {
         User: null,
-        Error: [
+        UserInputError: [
           {
             errorCode: 'Invalid',
             input: 'email',
@@ -270,7 +270,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
     )
     return {
       User: null,
-      Error: [],
+      UserInputError: [],
     }
   }
 }

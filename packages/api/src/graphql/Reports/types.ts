@@ -1,6 +1,6 @@
 import { inputObjectType, objectType } from 'nexus'
 import { AbuseType } from './enums'
-import { ErrorType } from '../types'
+import { NexusGenEnums } from '../nexus-types.generated'
 
 export const ReportAbuseInputType = inputObjectType({
   name: 'ReportAbuseInput',
@@ -21,8 +21,18 @@ export const ReportSubmitAbusePayloadType = objectType({
     'Encapsulates return values of report mutations where input values could be incorrect',
   definition: (t) => {
     t.boolean('success')
-    t.list.field('Error', {
-      type: ErrorType,
+    t.list.field('ReportInputError', {
+      type: 'InputErrors',
     })
   },
 })
+
+export type AbuseReportRow = {
+  Name?: string
+  Email?: string
+  'Incident description'?: string
+  'Nature of the abuse'?: NexusGenEnums['Abuse']
+  'Is the abuser a Pairer?'?: boolean
+  Status?: string
+  Severity?: string
+}

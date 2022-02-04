@@ -65,7 +65,7 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
      */
     return {
       success: true,
-      Error: [],
+      UserInputError: [],
     }
   } catch (err) {
     const errMsg = 'Failed to recover user'
@@ -79,8 +79,8 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
        */
       return {
         success: false,
-        Error: err.issues.map((issue) => ({
-          errorCode: 'Invalid',
+        UserInputError: err.issues.map((issue) => ({
+          ErrorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
         })),
@@ -99,7 +99,7 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
     )
     return {
       success: false,
-      Error: [],
+      UserInputError: [],
     }
   }
 }

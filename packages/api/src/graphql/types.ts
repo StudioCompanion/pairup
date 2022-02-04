@@ -1,8 +1,8 @@
 import { objectType } from 'nexus'
 
-export const ErrorType = objectType({
-  name: 'Error',
-  description: 'An error that has happened when submitting an abuse report',
+export const InputErrorsType = objectType({
+  name: 'InputErrors',
+  description: 'An error that has happened when interacting with the API',
   definition: (t) => {
     t.string('message')
     t.string('input')

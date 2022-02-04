@@ -152,7 +152,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
           if (arePasswordsTheSame) {
             return {
               UserAccessToken: null,
-              Error: [
+              UserInputError: [
                 {
                   errorCode: 'Invalid',
                   input: 'password',
@@ -174,7 +174,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
           if (email === user.email) {
             return {
               UserAccessToken: null,
-              Error: [
+              UserInputError: [
                 {
                   errorCode: 'Invalid',
                   input: 'email',
@@ -301,7 +301,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
               expiresAt,
             }
           : null,
-        Error: [],
+        UserInputError: [],
       }
     } catch (err: unknown) {
       const errMsg = 'Failed to update user account'
@@ -315,7 +315,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
          */
         return {
           UserAccessToken: null,
-          Error: err.issues.map((issue) => ({
+          UserInputError: err.issues.map((issue) => ({
             errorCode: 'Invalid',
             input: issue.path.slice(-1)[0].toString(),
             message: issue.message,
@@ -334,7 +334,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
       )
       return {
         UserAccessToken: null,
-        Error: [],
+        UserInputError: [],
       }
     }
   }

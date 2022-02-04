@@ -28,8 +28,8 @@ export const UserCreateAccountPayloadType = objectType({
     t.field('User', {
       type: 'User',
     })
-    t.list.field('Error', {
-      type: 'Error',
+    t.list.field('UserInputError', {
+      type: 'InputErrors',
     })
   },
 })
@@ -55,8 +55,8 @@ export const UserCreateTokenPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('Error', {
-      type: 'Error',
+    t.list.field('UserInputError', {
+      type: 'InputErrors',
     })
   },
 })
@@ -68,8 +68,8 @@ export const UserUpdateAccountPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('Error', {
-      type: 'Error',
+    t.list.field('UserInputError', {
+      type: 'InputErrors',
     })
   },
 })
@@ -79,8 +79,8 @@ export const UserRecoverPayloadType = objectType({
   description: 'Payload from the userRecover mutation',
   definition: (t) => {
     t.boolean('success')
-    t.list.field('Error', {
-      type: 'Error',
+    t.list.field('UserInputError', {
+      type: 'InputErrors',
     })
   },
 })

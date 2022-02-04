@@ -23,13 +23,6 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
-"""An error that has happened when submitting an abuse report"""
-type Error {
-  errorCode: ErrorCodes
-  input: String
-  message: String
-}
-
 """Possible error codes that can be returned"""
 enum ErrorCodes {
   """An invalid value has been passed"""
@@ -37,6 +30,13 @@ enum ErrorCodes {
 
   """The entry was not found"""
   NOT_FOUND
+}
+
+"""An error that has happened when interacting with the API"""
+type InputErrors {
+  errorCode: ErrorCodes
+  input: String
+  message: String
 }
 
 type Mutation {
@@ -77,7 +77,7 @@ input ReportAbuseInput {
 Encapsulates return values of report mutations where input values could be incorrect
 """
 type ReportSubmitAbusePayload {
-  Error: [Error]
+  ReportInputError: [InputErrors]
   success: Boolean
 }
 
@@ -123,14 +123,14 @@ input UserAvailabilityInput {
 Encapsulates return values of user mutations where input fields could be incorrect
 """
 type UserCreateAccountPayload {
-  Error: [Error]
   User: User
+  UserInputError: [InputErrors]
 }
 
 """Payload from the userCreateToken mutation"""
 type UserCreateTokenPayload {
-  Error: [Error]
   UserAccessToken: UserAccessToken
+  UserInputError: [InputErrors]
 }
 
 """Possible Pairer disciplines"""
@@ -209,12 +209,12 @@ input UserProfileInput {
 
 """Payload from the userRecover mutation"""
 type UserRecoverPayload {
-  Error: [Error]
+  UserInputError: [InputErrors]
   success: Boolean
 }
 
 """Payload from the userUpdateAccount mutation"""
 type UserUpdateAccountPayload {
-  Error: [Error]
   UserAccessToken: UserAccessToken
+  UserInputError: [InputErrors]
 }

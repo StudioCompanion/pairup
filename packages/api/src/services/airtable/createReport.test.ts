@@ -21,7 +21,7 @@ describe('Create Airtable Record', () => {
 
     const { createReport: mockedCreateReport } = await require('./createReport')
 
-    const res = (await mockedCreateReport(
+    ;(await mockedCreateReport(
       {},
       {
         report: {
@@ -45,7 +45,5 @@ describe('Create Airtable Record', () => {
         'Is the abuser a Pairer?': false,
       })
     )
-
-    expect(res?.success).toBe(true)
   })
 })

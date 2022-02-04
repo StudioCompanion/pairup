@@ -1,22 +1,23 @@
 import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import Airtable from 'airtable'
+
 import { Logger } from '../../helpers/console'
 import { captureException, Scope } from '@sentry/node'
 
-type Dictionary = { [index: string]: string }
+import { NexusGenEnums } from 'src/graphql/nexus-types.generated'
+import { AbuseReportRow } from 'src/graphql/Reports/types'
 
-const SEVERITY_MAP: Dictionary = {
-  'Spam or harmful': 'MEDIUM',
-  'Harassment or bullying': 'HIGH',
-  'Pretending to be someone': 'HIGH',
-  'Something else': 'LOW',
+enum ReportSeverity {
+  HIGH = 'HIGH',
+  MEDIUM = 'MEDIUM',
+  LOW = 'LOW',
 }
-
-const severity = (abuseType: string) => {
-  for (const key in SEVERITY_MAP) {
-    if (abuseType === key) return SEVERITY_MAP[key]
-  }
+const SEVERITY_MAP: Record<NexusGenEnums['Abuse'], ReportSeverity> = {
+  ['Spam or harmful']: ReportSeverity.MEDIUM,
+  ['Harassment or bullying']: ReportSeverity.HIGH,
+  ['Pretending to be someone']: ReportSeverity.HIGH,
+  ['Something else']: ReportSeverity.LOW,
 }
 
 const abuseReportSchema = z.object({
@@ -64,18 +65,18 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
         apiKey: process.env.AIRTABLE_API_KEY,
       }).base('appt58t6XthcfoN5i')
 
-      await base('Reports').create({
+      await base<AbuseReportRow>('Reports').create({
         Name: name,
         Email: email,
         'Incident description': description,
         'Nature of the abuse': abuseType,
         'Is the abuser a Pairer?': isAbuserPairer,
         Status: 'New',
-        Severity: severity(abuseType),
+        Severity: SEVERITY_MAP[abuseType],
       })
       return {
         success: true,
-        ReportError: [],
+        ReportInputError: [],
       }
     } catch (err: unknown) {
       const errMsg = 'Failed to create report'
@@ -88,7 +89,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
          */
         return {
           success: false,
-          ReportError: err.issues.map((issue) => ({
+          ReportInputError: err.issues.map((issue) => ({
             errorCode: 'Invalid',
             input: issue.path[0].toString(),
             message: issue.message,
@@ -97,19 +98,15 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
       }
 
       captureException(
-        { errMsg, name, email, description, isAbuserPairer, abuseType },
+        args.report,
         new Scope().setExtras({
           err,
-          name,
-          email,
-          description,
-          isAbuserPairer,
-          abuseType,
+          report: args.report,
         })
       )
       return {
         success: false,
-        ReportError: [],
+        ReportInputError: [],
       }
     }
   }

@@ -7,10 +7,10 @@ describe('Reports Mutations', () => {
       mutation ReportsSubmitAbuse($report: ReportAbuseInput!) {
         reportsSubmitAbuse(report: $report) {
           success
-          Error {
+          UserInputError {
             message
             input
-            ErrorCodes
+            UserInputErrorCodes
           }
         }
       }
@@ -32,7 +32,7 @@ describe('Reports Mutations', () => {
         Object {
           "data": Object {
             "reportsSubmitAbuse": Object {
-              "Error": null,
+              "UserInputError": null,
               "success": true,
             },
           },

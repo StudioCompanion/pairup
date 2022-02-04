@@ -39,7 +39,7 @@ describe('service signup', () => {
     expect(res).toMatchInlineSnapshot(`
       Object {
         "User": null,
-        "Error": Array [
+        "UserInputError": Array [
           Object {
             "errorCode": "Invalid",
             "input": "email",
@@ -53,7 +53,7 @@ describe('service signup', () => {
         ],
       }
     `)
-    expect(res?.Error).toHaveLength(2)
+    expect(res?.UserInputError).toHaveLength(2)
     expect(res?.User).toBe(null)
   })
 
@@ -92,7 +92,7 @@ describe('service signup', () => {
     expect(res).toMatchInlineSnapshot(`
       Object {
         "User": null,
-        "Error": Array [
+        "UserInputError": Array [
           Object {
             "errorCode": "Invalid",
             "input": "firstName",
@@ -118,7 +118,7 @@ describe('service signup', () => {
     `)
 
     expect(res?.User).toBe(null)
-    expect(res?.Error).toHaveLength(4)
+    expect(res?.UserInputError).toHaveLength(4)
   })
 
   it('should use the sanity client to create a pairer profile', async () => {
