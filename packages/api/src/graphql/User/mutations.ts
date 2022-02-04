@@ -3,6 +3,7 @@ import { createAccessToken } from '../../services/tokens/createAccessToken'
 
 import { signup } from '../../services/accounts/signup'
 import { updateAccount } from '../../services/accounts/updateAccount'
+import { recoverAccount } from '../../services/accounts/recoverAccount'
 
 export const mutations = extendType({
   type: 'Mutation',
@@ -37,6 +38,16 @@ export const mutations = extendType({
         profile: 'UserProfileInput',
       },
       resolve: updateAccount,
+    })
+
+    t.nullable.field('userRecover', {
+      type: 'UserRecoverPayload',
+      description:
+        'Starts the recovery process for a user who has forgotten their password',
+      args: {
+        email: nonNull(stringArg()),
+      },
+      resolve: recoverAccount,
     })
   },
 })

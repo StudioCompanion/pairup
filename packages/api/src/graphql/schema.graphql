@@ -46,6 +46,11 @@ type Mutation {
   """Create an account for a new user"""
   userCreateAccount(email: String!, password: String!, profile: UserProfileInput!): UserCreateAccountPayload
 
+  """
+  Starts the recovery process for a user who has forgotten their password
+  """
+  userRecover(email: String!): UserRecoverPayload
+
   """Update an account for an existing user"""
   userUpdateAccount(email: String, password: String, profile: UserProfileInput): UserUpdateAccountPayload
 }
@@ -166,26 +171,29 @@ type UserError {
 
 """Possible error codes that can be returned from UserError"""
 enum UserErrorCodes {
+  """An invalid value has been passed"""
   INVALID
+
+  """The entry was not found"""
   NOT_FOUND
 }
 
 """A Pairer's profile that is submitted to the CMS"""
 input UserProfileInput {
   """Pairer's availability"""
-  availability: UserAvailabilityInput!
+  availability: UserAvailabilityInput
 
   """Pairer's biography"""
-  bio: String!
+  bio: String
 
   """Pairer's company url"""
   companyUrl: String
 
   """Pairer's disciplines"""
-  disciplines: [UserDisciplines]!
+  disciplines: [UserDisciplines]
 
   """Pairer's first name"""
-  firstName: String!
+  firstName: String
 
   """Pairer's github url"""
   github: String
@@ -194,10 +202,10 @@ input UserProfileInput {
   instagram: String
 
   """Pairer's job title"""
-  jobTitle: String!
+  jobTitle: String
 
   """Pairer's last name"""
-  lastName: String!
+  lastName: String
 
   """Pairer's linkedin url"""
   linkedin: String
@@ -206,10 +214,16 @@ input UserProfileInput {
   portfolioUrl: String
 
   """Pairer's timezeon"""
-  timezone: String!
+  timezone: String
 
   """Pairer's twitter url"""
   twitter: String
+}
+
+"""Payload from the userRecover mutation"""
+type UserRecoverPayload {
+  UserError: [UserError]
+  success: Boolean
 }
 
 """Payload from the userUpdateAccount mutation"""

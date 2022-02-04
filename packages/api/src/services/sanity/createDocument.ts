@@ -5,7 +5,7 @@ import { Logger } from '../../helpers/console'
 
 import { getSanityClientWrite } from '../../lib/sanity'
 
-export const createOrUpdateDocument = async (
+export const createDocument = async (
   document: IdentifiedSanityDocumentStub,
   createAsDraft = false
 ) => {
@@ -19,25 +19,8 @@ export const createOrUpdateDocument = async (
       _id: workingId,
     })
 
-    // Create new document / patch existing
-    await sanityClient
-      .transaction()
-      .createIfNotExists(workingDocument)
-      .patch(workingId, (patch) => patch.set(workingDocument))
-      .commit()
-
-    // Check for and patch draft document, if present
-    const draft = await sanityClient.getDocument(draftId)
-    if (!createAsDraft && draft) {
-      const documentDraft = Object.assign({}, document, {
-        _id: draftId,
-      })
-
-      await sanityClient
-        .transaction()
-        .patch(draftId, (patch) => patch.set(documentDraft))
-        .commit()
-    }
+    // Create new document
+    await sanityClient.transaction().createIfNotExists(workingDocument).commit()
   } catch (err) {
     const errMsg = 'Failed to create sanity profile after account creation'
     Logger.error(errMsg, err)

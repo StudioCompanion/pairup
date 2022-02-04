@@ -7,7 +7,7 @@ const FROM_EMAIL = process.env.POSTMARK_FROM_EMAIL
 
 export interface EmailData {
   email: string
-  name: string
+  name?: string
   templateModel: Record<string, string>
 }
 
