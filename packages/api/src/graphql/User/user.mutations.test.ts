@@ -1386,5 +1386,56 @@ describe('User Mutations', () => {
         }
       `)
     })
+
+    it('should not let me use the same code twice', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken,
+          },
+        })
+      ).toEqual({
+        data: {
+          userReset: {
+            User: {
+              email: testData.users[0].email,
+              role: 'PAIRER',
+              userId: expect.any(String),
+            },
+            UserAccessToken: {
+              accessToken: expect.any(String),
+              expiresAt: expect.any(String),
+            },
+            UserError: [],
+          },
+        },
+      })
+
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "resetToken",
+                  "message": "Invalid resetToken provided",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
   })
 })
