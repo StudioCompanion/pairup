@@ -43,7 +43,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
      * This will throw if _either_ the resetToken isn't legit
      * or if it wasn't made with our secret
      */
-    const payload = jwt.verify(resetToken, 'apple') as {
+    const payload = jwt.verify(resetToken, JWT_SECRET) as {
       resetUserId: string
     }
 
