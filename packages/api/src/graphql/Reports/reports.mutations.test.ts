@@ -1,4 +1,4 @@
-import { PairUp } from '@pairup/shared'
+import { PairUp } from '@pairup/shared/types'
 import { request, graphql } from 'test/request'
 
 describe('Reports Mutations', () => {
