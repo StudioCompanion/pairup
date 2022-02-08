@@ -153,3 +153,5 @@ dist
 .DS_Store
 
 storybook-static
+
+pairup-firebase.json

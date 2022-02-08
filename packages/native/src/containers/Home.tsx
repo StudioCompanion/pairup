@@ -10,7 +10,7 @@ import { Box } from 'native-base'
 
 import { Colors, Header } from 'react-native/Libraries/NewAppScreen'
 
-import { useGetCurrentUserQuery } from '../graphql/User/User.generated'
+import { useIsUserEmailUniqueQuery } from '../graphql/User/User.generated'
 
 export const Home = () => {
   const isDarkMode = useColorScheme() === 'dark'
@@ -19,7 +19,11 @@ export const Home = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   }
 
-  const [{ data }] = useGetCurrentUserQuery()
+  const [{ data }] = useIsUserEmailUniqueQuery({
+    variables: {
+      email: 'dev@companion.studio',
+    },
+  })
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -34,7 +38,9 @@ export const Home = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}
         >
-          <Text>current user: {data?.currentUser?.id}</Text>
+          <Text>
+            current user is unique: {JSON.stringify(data?.userIsEmailUnique)}
+          </Text>
         </Box>
       </ScrollView>
     </SafeAreaView>
