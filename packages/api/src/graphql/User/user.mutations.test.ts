@@ -1185,7 +1185,7 @@ describe('User Mutations', () => {
     let resetToken: string
 
     beforeEach(async () => {
-      const { userId, email } = testData.users[0]
+      const { userId, email, personalKey } = testData.users[0]
 
       /**
        * Create a valid reset token
@@ -1194,6 +1194,7 @@ describe('User Mutations', () => {
         {
           resetUserId: userId,
         },
+        personalKey,
         {
           expiresIn: '1d',
         }
@@ -1320,6 +1321,7 @@ describe('User Mutations', () => {
         {
           resetUserId: '123',
         },
+        'banana',
         {
           expiresIn: '7d',
         }
@@ -1356,6 +1358,7 @@ describe('User Mutations', () => {
         {
           resetUserId: testData.users[0].userId,
         },
+        testData.users[0].personalKey,
         {
           expiresIn: '7d',
         }
@@ -1422,18 +1425,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": Object {
-              "User": null,
-              "UserAccessToken": null,
-              "UserError": Array [
-                Object {
-                  "errorCode": "INVALID",
-                  "input": "resetToken",
-                  "message": "Invalid resetToken provided",
-                },
-              ],
-            },
+            "userReset": null,
           },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
         }
       `)
     })

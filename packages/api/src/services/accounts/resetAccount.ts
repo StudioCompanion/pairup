@@ -43,8 +43,12 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
      * This will throw if _either_ the resetToken isn't legit
      * or if it wasn't made with our secret
      */
-    const payload = jwt.verify(resetToken, JWT_SECRET) as {
+    const payload = jwt.decode(resetToken) as {
       resetUserId: string
+    }
+
+    if (!payload) {
+      throw new JsonWebTokenError('jwt malformed')
     }
 
     const user = await prisma.user.findUnique({
@@ -71,6 +75,8 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       }
     }
 
+    jwt.verify(resetToken, `${JWT_SECRET}${user.personalKey}`)
+
     /**
      * If the reset token doesn't match
      * the token in the DB then return an error,
@@ -95,6 +101,12 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    /**
+     * Void all access tokens by changing their personalKey
+     */
+
+    const personalKey = await bcrypt.genSalt(6)
+
     const updatedUser = await prisma.user.update({
       where: {
         userId: user.userId,
@@ -102,6 +114,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       data: {
         resetToken: '',
         password: hashedPassword,
+        personalKey,
       },
     })
 
@@ -109,6 +122,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       {
         userId: user.userId,
       },
+      updatedUser.personalKey,
       {
         expiresIn: '7d',
       }

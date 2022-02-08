@@ -15,28 +15,29 @@ const JWT_SECRET = process.env.JWT_SECRET
  *
  * Used to refresh a users token regardless of the expiry date.
  */
-export const refreshToken = (token: string, opts?: RefreshOptions) => {
-  try {
-    if (!JWT_SECRET) {
-      throw new Error('No JWT_SECRET set – cannot refresh tokens')
-    }
+// export const refreshToken = (token: string, opts?: RefreshOptions) => {
+//   try {
+//     if (!JWT_SECRET) {
+//       throw new Error('No JWT_SECRET set – cannot refresh tokens')
+//     }
 
-    const payload = jwt.verify(token, JWT_SECRET, opts?.verifyOptions)
-    return createToken(payload, opts?.signOptions)
-  } catch (err) {
-    const errMsg = 'Failed to refresh User Token'
-    Logger.error(errMsg, err)
-    captureException(
-      errMsg,
-      new Scope().setExtras({
-        err,
-      })
-    )
-  }
-}
+//     const payload = jwt.verify(token, JWT_SECRET, opts?.verifyOptions)
+//     return createToken(payload, opts?.signOptions)
+//   } catch (err) {
+//     const errMsg = 'Failed to refresh User Token'
+//     Logger.error(errMsg, err)
+//     captureException(
+//       errMsg,
+//       new Scope().setExtras({
+//         err,
+//       })
+//     )
+//   }
+// }
 
 export const createToken = (
   payload: jwt.JwtPayload | string,
+  personalKey: string,
   signOptions?: jwt.SignOptions
 ) => {
   try {
@@ -44,7 +45,7 @@ export const createToken = (
       throw new Error('No JWT_SECRET set – cannot refresh tokens')
     }
 
-    return jwt.sign(payload, JWT_SECRET, signOptions)
+    return jwt.sign(payload, `${JWT_SECRET}${personalKey}`, signOptions)
   } catch (err) {
     const errMsg = 'Failed to create User Token'
     Logger.error(errMsg, err)
