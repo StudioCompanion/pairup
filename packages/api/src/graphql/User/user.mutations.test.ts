@@ -1,6 +1,10 @@
 import { testData } from 'test/seed/data'
 import { request, graphql } from 'test/request'
 
+import { createToken } from '../../helpers/tokens'
+import { prisma } from '../../db/prisma'
+import { sign } from 'jsonwebtoken'
+
 describe('User Mutations', () => {
   describe('userCreateAccount', () => {
     const mutation = graphql`
@@ -1149,6 +1153,285 @@ describe('User Mutations', () => {
                 },
               ],
               "success": false,
+            },
+          },
+        }
+      `)
+    })
+  })
+
+  describe('userReset', () => {
+    const mutation = graphql`
+      mutation UserReset($password: String!, $resetToken: String!) {
+        userReset(password: $password, resetToken: $resetToken) {
+          User {
+            userId
+            email
+            role
+          }
+          UserAccessToken {
+            accessToken
+            expiresAt
+          }
+          UserError {
+            message
+            input
+            errorCode
+          }
+        }
+      }
+    `
+
+    let resetToken: string
+
+    beforeEach(async () => {
+      const { userId, email } = testData.users[0]
+
+      /**
+       * Create a valid reset token
+       */
+      resetToken = createToken(
+        {
+          resetUserId: userId,
+        },
+        {
+          expiresIn: '1d',
+        }
+      )
+
+      /**
+       * Append it to the user entry
+       */
+      await prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          resetToken,
+        },
+      })
+    })
+
+    it('should return the User, UserAccessToken and no UserError if successful', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken,
+          },
+        })
+      ).toEqual({
+        data: {
+          userReset: {
+            User: {
+              email: testData.users[0].email,
+              role: 'PAIRER',
+              userId: expect.any(String),
+            },
+            UserAccessToken: {
+              accessToken: expect.any(String),
+              expiresAt: expect.any(String),
+            },
+            UserError: [],
+          },
+        },
+      })
+    })
+
+    it('should throw if the token is not valid', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken: 'hello',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": null,
+          },
+          "errors": Array [
+            [GraphQLError: jwt malformed],
+          ],
+        }
+      `)
+    })
+
+    it('should throw if the token was not signed with our secret', async () => {
+      const token = sign(
+        {
+          resetUserId: testData.users[0].userId,
+        },
+        'SUPER_SECRET_KEY',
+        {
+          expiresIn: '7d',
+        }
+      )
+
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken: token,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": null,
+          },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
+        }
+      `)
+    })
+
+    it('should return an error if the password is not valid', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'apples',
+            resetToken,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "password",
+                  "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
+
+    it('should return an error if the user cannot be found', async () => {
+      const token = createToken(
+        {
+          resetUserId: '123',
+        },
+        {
+          expiresIn: '7d',
+        }
+      )
+
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken: token,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "resetToken",
+                  "message": "No user found using the reset token provided",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
+
+    it('should reutrn an error if the resetToken does not match that in the DB', async () => {
+      const token = createToken(
+        {
+          resetUserId: testData.users[0].userId,
+        },
+        {
+          expiresIn: '7d',
+        }
+      )
+
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken: token,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "resetToken",
+                  "message": "Invalid resetToken provided",
+                },
+              ],
+            },
+          },
+        }
+      `)
+    })
+
+    it('should not let me use the same code twice', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken,
+          },
+        })
+      ).toEqual({
+        data: {
+          userReset: {
+            User: {
+              email: testData.users[0].email,
+              role: 'PAIRER',
+              userId: expect.any(String),
+            },
+            UserAccessToken: {
+              accessToken: expect.any(String),
+              expiresAt: expect.any(String),
+            },
+            UserError: [],
+          },
+        },
+      })
+
+      expect(
+        await request(mutation, {
+          variables: {
+            password: 'J(dOKa98Kk>f]N($6Jq?',
+            resetToken,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "resetToken",
+                  "message": "Invalid resetToken provided",
+                },
+              ],
             },
           },
         }

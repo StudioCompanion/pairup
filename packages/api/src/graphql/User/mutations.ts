@@ -4,6 +4,7 @@ import { createAccessToken } from '../../services/tokens/createAccessToken'
 import { signup } from '../../services/accounts/signup'
 import { updateAccount } from '../../services/accounts/updateAccount'
 import { recoverAccount } from '../../services/accounts/recoverAccount'
+import { resetAccount } from '../../services/accounts/resetAccount'
 
 export const mutations = extendType({
   type: 'Mutation',
@@ -48,6 +49,16 @@ export const mutations = extendType({
         email: nonNull(stringArg()),
       },
       resolve: recoverAccount,
+    })
+
+    t.nullable.field('userReset', {
+      type: 'UserResetPayload',
+      description: 'Reset a users password by providing a resetToken',
+      args: {
+        password: nonNull(stringArg()),
+        resetToken: nonNull(stringArg()),
+      },
+      resolve: resetAccount,
     })
   },
 })

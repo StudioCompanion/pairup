@@ -6,7 +6,7 @@ import { cacheExchange } from '@urql/exchange-graphcache'
  */
 const getAPIURl = (): string => {
   // Finally, fallback to hard-coded URL in case nothing else works
-  if (!process.env.IS_PRODUCTION) return `http://localhost:3000/graphql`
+  if (!process.env.IS_PRODUCTION) return `http://192.168.1.2:3000/graphql`
 
   return process.env.GRAPHQL_ENDPOINT ?? ''
 }

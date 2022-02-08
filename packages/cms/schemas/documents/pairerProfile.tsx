@@ -254,10 +254,7 @@ export default {
         hasVerifiedAccount: boolean
         status: PAIRER_PROFILE_STATUS
       }) => {
-        if (
-          !hasVerifiedAccount ||
-          status !== PAIRER_PROFILE_STATUS.AWAITING_APPROVAL
-        ) {
+        if (!hasVerifiedAccount || status !== PAIRER_PROFILE_STATUS.APPROVED) {
           return "You cant approve a profile if they haven't verified their account"
         } else {
           return true

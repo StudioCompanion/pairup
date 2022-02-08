@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "684129731230",
+    "project_id": "pairup-10d3d",
+    "storage_bucket": "pairup-10d3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684129731230:android:24af963b3b351f2f3c718f",
+        "android_client_info": {
+          "package_name": "com.companionstudio.pairupapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684129731230-qdgqqumu48l503vsmi3255le4mbojlvi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA05XzLGVnKtHRgj87PN15bEHVDwc8Ilog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684129731230-qdgqqumu48l503vsmi3255le4mbojlvi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "684129731230-3pdae3l5j7ksjqo60u2b8k25hv84913c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.companionstudio.pairupapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,17 +3,24 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import express from 'express'
 import http from 'http'
 import * as Sentry from '@sentry/node'
+import { PrismaClient } from '@prisma/client'
+import * as admin from 'firebase-admin'
 
 import { schema } from '../graphql/schema'
+
 import { prisma } from '../db/prisma'
 
-import { applyMiddleware } from './middleware'
-import { handleNoRoute } from './404'
-import { PrismaClient } from '@prisma/client'
 import {
   AuthenticatedUser,
   verifyAuthToken,
 } from '../services/tokens/verifyAuthToken'
+
+import { pairerProfilePublished } from '../routes/webhooks/sanity/pairerProfilePublished'
+
+import { Logger } from '../helpers/console'
+
+import { applyMiddleware } from './middleware'
+import { handleNoRoute } from './404'
 
 const PORT = process.env.PORT || 3000
 const isProduction = process.env.ENV === 'production'
@@ -24,6 +31,26 @@ export interface GraphQLContext {
 }
 
 async function startApolloServer() {
+  /**
+   * this could be undefined if we don't
+   * have the keys in the ENV
+   */
+  try {
+    const serviceAccount = require('../../pairup-firebase.json')
+
+    admin.initializeApp(
+      {
+        credential: admin.credential.cert(serviceAccount),
+      },
+      'pairup'
+    )
+  } catch (err) {
+    const msg =
+      'No credentials found for firebase, cloud messenging will not work. \n'
+    Logger.warn(msg, err)
+    Sentry.captureException(msg)
+  }
+
   const app = express()
 
   if (isProduction) {
@@ -33,6 +60,8 @@ async function startApolloServer() {
   applyMiddleware(app)
 
   app.use(Sentry.Handlers.requestHandler())
+
+  app.post('/webhooks/sanity/pairer-profile-published', pairerProfilePublished)
 
   const httpServer = http.createServer(app)
 

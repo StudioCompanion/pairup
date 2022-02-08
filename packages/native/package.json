@@ -8,6 +8,10 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@react-native-firebase/analytics": "^14.3.1",
+    "@react-native-firebase/app": "^14.3.1",
+    "@react-native-firebase/crashlytics": "^14.3.1",
+    "@react-native-firebase/messaging": "^14.3.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@urql/exchange-graphcache": "^4.3.6",
