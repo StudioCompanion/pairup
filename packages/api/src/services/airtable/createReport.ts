@@ -61,9 +61,10 @@ const abuseReportSchema = z.object({
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
   async (_, args) => {
-    const { name, email, description, isAbuserPairer, abuseType } = args.report
-
     try {
+      const { name, email, description, isAbuserPairer, abuseType } =
+        args.report
+
       abuseReportSchema.parse({
         name,
         email,
