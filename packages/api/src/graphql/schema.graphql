@@ -54,19 +54,11 @@ type Mutation {
   """
   userRecover(email: String!): UserRecoverPayload
 
-  """
-  Reset a users password by providing a resetToken
-  """
+  """Reset a users password by providing a resetToken"""
   userReset(password: String!, resetToken: String!): UserResetPayload
 
-  """
-  Update an account for an existing user
-  """
-  userUpdateAccount(
-    email: String
-    password: String
-    profile: UserProfileInput
-  ): UserUpdateAccountPayload
+  """Update an account for an existing user"""
+  userUpdateAccount(email: String, password: String, profile: UserProfileInput): UserUpdateAccountPayload
 }
 
 type Query {
@@ -224,18 +216,14 @@ type UserRecoverPayload {
   success: Boolean
 }
 
-"""
-Payload from the userReset mutation
-"""
+"""Payload from the userReset mutation"""
 type UserResetPayload {
   User: User
   UserAccessToken: UserAccessToken
-  UserError: [UserError]
+  UserInputError: [InputErrors]
 }
 
-"""
-Payload from the userUpdateAccount mutation
-"""
+"""Payload from the userUpdateAccount mutation"""
 type UserUpdateAccountPayload {
   UserAccessToken: UserAccessToken
   UserInputError: [InputErrors]

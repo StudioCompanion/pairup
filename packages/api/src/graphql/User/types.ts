@@ -95,8 +95,8 @@ export const UserResetPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputErrors',
     })
   },
 })
