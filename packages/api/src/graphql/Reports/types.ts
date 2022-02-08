@@ -1,6 +1,5 @@
 import { inputObjectType, objectType } from 'nexus'
 import { AbuseType } from './enums'
-import { NexusGenEnums } from '../nexus-types.generated'
 
 export const ReportAbuseInputType = inputObjectType({
   name: 'ReportAbuseInput',
@@ -26,20 +25,3 @@ export const ReportSubmitAbusePayloadType = objectType({
     })
   },
 })
-
-export type AbuseReportRow = {
-  Name?: string
-  Email?: string
-  'Incident description'?: string
-  'Nature of the abuse'?: NexusGenEnums['Abuse']
-  'Is the abuser a Pairer?'?: boolean
-  Status?: string
-  Severity?: string
-}
-
-export const ABUSE_TYPE_OPTIONS = [
-  'Spam or harmful',
-  'Harassment or bullying',
-  'Pretending to be someone',
-  'Something else',
-] as const
