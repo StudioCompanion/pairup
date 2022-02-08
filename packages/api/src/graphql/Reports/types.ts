@@ -36,3 +36,10 @@ export type AbuseReportRow = {
   Status?: string
   Severity?: string
 }
+
+export const ABUSE_TYPE_OPTIONS = [
+  'Spam or harmful',
+  'Harassment or bullying',
+  'Pretending to be someone',
+  'Something else',
+] as const

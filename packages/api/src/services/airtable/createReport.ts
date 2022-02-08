@@ -5,8 +5,8 @@ import Airtable from 'airtable'
 import { Logger } from '../../helpers/console'
 import { captureException, Scope } from '@sentry/node'
 
-import { NexusGenEnums } from 'src/graphql/nexus-types.generated'
-import { AbuseReportRow } from 'src/graphql/Reports/types'
+import { NexusGenEnums } from '../../graphql/nexus-types.generated'
+import { AbuseReportRow, ABUSE_TYPE_OPTIONS } from '../../graphql/Reports/types'
 
 enum ReportSeverity {
   HIGH = 'HIGH',
@@ -40,12 +40,7 @@ const abuseReportSchema = z.object({
     required_error: 'isAbuserPairer is required',
     invalid_type_error: 'isActive must be a boolean',
   }),
-  abuseType: z.enum([
-    'Spam or harmful',
-    'Harassment or bullying',
-    'Pretending to be someone',
-    'Something else',
-  ]),
+  abuseType: z.enum(ABUSE_TYPE_OPTIONS),
 })
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
