@@ -63,15 +63,15 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
   async (_, args) => {
     const { name, email, description, isAbuserPairer, abuseType } = args.report
 
-    abuseReportSchema.parse({
-      name,
-      email,
-      description,
-      isAbuserPairer,
-      abuseType,
-    })
-
     try {
+      abuseReportSchema.parse({
+        name,
+        email,
+        description,
+        isAbuserPairer,
+        abuseType,
+      })
+
       const base = new Airtable({
         apiKey: process.env.AIRTABLE_API_KEY,
       }).base('appt58t6XthcfoN5i')
