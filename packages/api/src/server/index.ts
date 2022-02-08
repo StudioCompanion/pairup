@@ -3,17 +3,20 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import express from 'express'
 import http from 'http'
 import * as Sentry from '@sentry/node'
+import { PrismaClient } from '@prisma/client'
 
 import { schema } from '../graphql/schema'
 import { prisma } from '../db/prisma'
 
 import { applyMiddleware } from './middleware'
 import { handleNoRoute } from './404'
-import { PrismaClient } from '@prisma/client'
+
 import {
   AuthenticatedUser,
   verifyAuthToken,
 } from '../services/tokens/verifyAuthToken'
+
+import { pairerProfilePublished } from '../routes/webhooks/sanity/pairerProfilePublished'
 
 const PORT = process.env.PORT || 3000
 const isProduction = process.env.ENV === 'production'
@@ -33,6 +36,8 @@ async function startApolloServer() {
   applyMiddleware(app)
 
   app.use(Sentry.Handlers.requestHandler())
+
+  app.post('/webhooks/sanity/pairer-profile-published', pairerProfilePublished)
 
   const httpServer = http.createServer(app)
 
