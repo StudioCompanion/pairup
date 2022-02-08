@@ -56,30 +56,22 @@ describe('Reports Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "reportsSubmitAbuse": null,
+            "reportsSubmitAbuse": Object {
+              "ReportInputError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "email",
+                  "message": "Invalid email address provided",
+                },
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "email",
+                  "message": "Should be at least 1 characters",
+                },
+              ],
+              "success": false,
+            },
           },
-          "errors": Array [
-            [GraphQLError: [
-          {
-            "validation": "email",
-            "code": "invalid_string",
-            "message": "Invalid email address provided",
-            "path": [
-              "email"
-            ]
-          },
-          {
-            "code": "too_small",
-            "minimum": 1,
-            "type": "string",
-            "inclusive": true,
-            "message": "Should be at least 1 characters",
-            "path": [
-              "email"
-            ]
-          }
-        ]],
-          ],
         }
       `)
     })
