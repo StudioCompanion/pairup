@@ -58,7 +58,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       return {
         User: null,
         UserAccessToken: null,
-        UserError: [
+        UserInputError: [
           {
             errorCode: 'Invalid',
             input: 'resetToken',
@@ -107,7 +107,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
         accessToken: token,
         expiresAt,
       },
-      UserError: [],
+      UserInputError: [],
     }
   } catch (err) {
     const errMsg = 'Failed to reset user'
@@ -121,7 +121,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       return {
         User: null,
         UserAccessToken: null,
-        UserError: [
+        UserInputError: [
           {
             errorCode: 'NotFound',
             input: 'resetToken',
@@ -140,7 +140,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       return {
         User: null,
         UserAccessToken: null,
-        UserError: err.issues.map((issue) => ({
+        UserInputError: err.issues.map((issue) => ({
           errorCode: 'Invalid',
           input: issue.path.slice(-1)[0].toString(),
           message: issue.message,
@@ -160,7 +160,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
     return {
       User: null,
       UserAccessToken: null,
-      UserError: [],
+      UserInputError: [],
     }
   }
 }

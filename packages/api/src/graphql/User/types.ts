@@ -20,18 +20,6 @@ export const UserType = objectType({
   },
 })
 
-export const UserErrorType = objectType({
-  name: 'UserError',
-  description: 'An error the user has made when submitting a mutation',
-  definition: (t) => {
-    t.string('message')
-    t.string('input')
-    t.field('errorCode', {
-      type: 'UserErrorCodes',
-    })
-  },
-})
-
 export const UserCreateAccountPayloadType = objectType({
   name: 'UserCreateAccountPayload',
   description:
@@ -40,8 +28,8 @@ export const UserCreateAccountPayloadType = objectType({
     t.field('User', {
       type: 'User',
     })
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputError',
     })
   },
 })
@@ -67,8 +55,8 @@ export const UserCreateTokenPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputError',
     })
   },
 })
@@ -80,8 +68,8 @@ export const UserUpdateAccountPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputError',
     })
   },
 })
@@ -91,8 +79,8 @@ export const UserRecoverPayloadType = objectType({
   description: 'Payload from the userRecover mutation',
   definition: (t) => {
     t.boolean('success')
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputError',
     })
   },
 })
@@ -107,8 +95,8 @@ export const UserResetPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputError',
     })
   },
 })
@@ -120,8 +108,8 @@ export const UserRefreshAccessTokenPayloadType = objectType({
     t.field('UserAccessToken', {
       type: 'UserAccessToken',
     })
-    t.list.field('UserError', {
-      type: 'UserError',
+    t.list.field('UserInputError', {
+      type: 'InputError',
     })
   },
 })

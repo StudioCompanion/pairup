@@ -33,7 +33,7 @@ export const refreshAccessToken: FieldResolver<
         accessToken: newToken,
         expiresAt,
       },
-      UserError: [],
+      UserInputError: [],
     }
   } catch (err) {
     if (err instanceof JsonWebTokenError) {
@@ -44,7 +44,7 @@ export const refreshAccessToken: FieldResolver<
       return {
         User: null,
         UserAccessToken: null,
-        UserError: [
+        UserInputError: [
           {
             errorCode: 'NotFound',
             input: 'accessToken',
@@ -56,7 +56,7 @@ export const refreshAccessToken: FieldResolver<
 
     return {
       UserAccessToken: null,
-      UserError: [],
+      UserInputError: [],
     }
   }
 }

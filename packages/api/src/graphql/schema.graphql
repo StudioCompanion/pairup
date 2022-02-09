@@ -14,6 +14,30 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
+"""
+Possible error codes that can be returned
+"""
+enum ErrorCodes {
+  """
+  An invalid value has been passed
+  """
+  INVALID
+
+  """
+  The entry was not found
+  """
+  NOT_FOUND
+}
+
+"""
+An error that has happened when submitting an abuse report
+"""
+type InputError {
+  errorCode: ErrorCodes
+  input: String
+  message: String
+}
+
 type Mutation {
   """
   Create an access token for the current user
@@ -36,6 +60,10 @@ type Mutation {
   Starts the recovery process for a user who has forgotten their password
   """
   userRecover(email: String!): UserRecoverPayload
+
+  """
+  Refreshes tokens including expired ones assuming the personalKey has not changed
+  """
   userRefreshAccessToken(accessToken: String!): UserRefreshAccessTokenPayload
 
   """
@@ -121,7 +149,7 @@ Encapsulates return values of user mutations where input fields could be incorre
 """
 type UserCreateAccountPayload {
   User: User
-  UserError: [UserError]
+  UserInputError: [InputError]
 }
 
 """
@@ -129,7 +157,7 @@ Payload from the userCreateToken mutation
 """
 type UserCreateTokenPayload {
   UserAccessToken: UserAccessToken
-  UserError: [UserError]
+  UserInputError: [InputError]
 }
 
 """
@@ -164,30 +192,6 @@ enum UserDisciplines {
   UX
   VR
   WRITING
-}
-
-"""
-An error the user has made when submitting a mutation
-"""
-type UserError {
-  errorCode: UserErrorCodes
-  input: String
-  message: String
-}
-
-"""
-Possible error codes that can be returned from UserError
-"""
-enum UserErrorCodes {
-  """
-  An invalid value has been passed
-  """
-  INVALID
-
-  """
-  The entry was not found
-  """
-  NOT_FOUND
 }
 
 """
@@ -264,7 +268,7 @@ input UserProfileInput {
 Payload from the userRecover mutation
 """
 type UserRecoverPayload {
-  UserError: [UserError]
+  UserInputError: [InputError]
   success: Boolean
 }
 
@@ -273,7 +277,7 @@ Payload from the userRefreshAccessToken mutation
 """
 type UserRefreshAccessTokenPayload {
   UserAccessToken: UserAccessToken
-  UserError: [UserError]
+  UserInputError: [InputError]
 }
 
 """
@@ -282,7 +286,7 @@ Payload from the userReset mutation
 type UserResetPayload {
   User: User
   UserAccessToken: UserAccessToken
-  UserError: [UserError]
+  UserInputError: [InputError]
 }
 
 """
@@ -290,5 +294,5 @@ Payload from the userUpdateAccount mutation
 """
 type UserUpdateAccountPayload {
   UserAccessToken: UserAccessToken
-  UserError: [UserError]
+  UserInputError: [InputError]
 }

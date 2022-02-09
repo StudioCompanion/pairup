@@ -31,7 +31,7 @@ describe('service updateAccount', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "UserAccessToken": null,
-        "UserError": Array [
+        "UserInputError": Array [
           Object {
             "errorCode": "NotFound",
             "input": "email",
@@ -82,12 +82,12 @@ describe('service updateAccount', () => {
           accessToken: expect.any(String),
           expiresAt: expect.any(Date),
         },
-        UserError: [],
+        UserInputError: [],
       })
     )
   })
 
-  it('should update the email of the user in the database', async () => {
+  it.only('should update the email of the user in the database', async () => {
     const email = 'dev@companion.studio'
 
     /**
@@ -106,7 +106,7 @@ describe('service updateAccount', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "UserAccessToken": null,
-        "UserError": Array [
+        "UserInputError": Array [
           Object {
             "errorCode": "NotFound",
             "input": "email",
@@ -157,7 +157,7 @@ describe('service updateAccount', () => {
           accessToken: expect.any(String),
           expiresAt: expect.any(Date),
         },
-        UserError: [],
+        UserInputError: [],
       })
     )
   })
