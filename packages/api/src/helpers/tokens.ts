@@ -1,5 +1,5 @@
 import { captureException, Scope } from '@sentry/node'
-import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import jwt, { JsonWebTokenError, VerifyOptions } from 'jsonwebtoken'
 
 import { prisma } from '../db/prisma'
 
@@ -19,7 +19,10 @@ interface ResetPayload {
   resetUserId: string
 }
 
-export const verifyUserToken = async (token: string) => {
+export const verifyUserToken = async (
+  token: string,
+  verifyOptions?: VerifyOptions
+) => {
   if (!JWT_SECRET) {
     throw new Error('No JWT_SECRET set – cannot verify tokens')
   }
@@ -59,7 +62,9 @@ export const verifyUserToken = async (token: string) => {
     /**
      * Now we actually verify
      */
-    jwt.verify(token, `${JWT_SECRET}${personalKey}`) as AuthenticatedUser
+    jwt.verify(token, `${JWT_SECRET}${personalKey}`, {
+      ...verifyOptions,
+    }) as AuthenticatedUser
 
     return user
   } else {

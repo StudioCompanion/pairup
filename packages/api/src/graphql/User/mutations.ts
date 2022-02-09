@@ -5,6 +5,7 @@ import { signup } from '../../services/accounts/signup'
 import { updateAccount } from '../../services/accounts/updateAccount'
 import { recoverAccount } from '../../services/accounts/recoverAccount'
 import { resetAccount } from '../../services/accounts/resetAccount'
+import { refreshAccessToken } from '../../services/tokens/refreshAccessToken'
 
 export const mutations = extendType({
   type: 'Mutation',
@@ -59,6 +60,16 @@ export const mutations = extendType({
         resetToken: nonNull(stringArg()),
       },
       resolve: resetAccount,
+    })
+
+    t.nullable.field('userRefreshAccessToken', {
+      type: 'UserRefreshAccessTokenPayload',
+      description:
+        'Refreshes tokens including expired ones assuming the personalKey has not changed',
+      args: {
+        accessToken: nonNull(stringArg()),
+      },
+      resolve: refreshAccessToken,
     })
   },
 })

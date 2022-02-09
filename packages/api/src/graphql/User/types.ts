@@ -112,3 +112,16 @@ export const UserResetPayloadType = objectType({
     })
   },
 })
+
+export const UserRefreshAccessTokenPayloadType = objectType({
+  name: 'UserRefreshAccessTokenPayload',
+  description: 'Payload from the userRefreshAccessToken mutation',
+  definition: (t) => {
+    t.field('UserAccessToken', {
+      type: 'UserAccessToken',
+    })
+    t.list.field('UserError', {
+      type: 'UserError',
+    })
+  },
+})
