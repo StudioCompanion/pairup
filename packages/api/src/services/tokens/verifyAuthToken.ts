@@ -1,9 +1,9 @@
 import { Request } from 'express'
-import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import { JsonWebTokenError } from 'jsonwebtoken'
 
 import { Logger } from '../../helpers/console'
 
-import { prisma } from '../../db/prisma'
+import { verifyUserToken } from '../../helpers/tokens'
 
 export interface AuthenticatedUser {
   userId: string | null
@@ -31,28 +31,9 @@ export const verifyAuthToken = async (
       throw new Error('No token found')
     }
 
-    const payload = jwt.decode(token) as AuthenticatedUser
+    const user = await verifyUserToken(token)
 
-    if (payload.userId) {
-      const user = await prisma.user.findUnique({
-        where: {
-          userId: payload.userId,
-        },
-      })
-
-      if (!user) {
-        throw new Error('No user found from token')
-      }
-
-      const { personalKey } = user
-
-      return jwt.verify(
-        token,
-        `${JWT_SECRET}${personalKey}`
-      ) as AuthenticatedUser
-    } else {
-      throw new Error('No payload in token found')
-    }
+    return { userId: user.userId }
   } catch (err) {
     Logger.error(err)
 

@@ -1,12 +1,13 @@
 import { FieldResolver } from 'nexus'
-import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import { JsonWebTokenError } from 'jsonwebtoken'
 import { z, ZodError } from 'zod'
 import { captureException, Scope } from '@sentry/node'
 import bcrypt from 'bcrypt'
 import { add } from 'date-fns'
 
 import { Logger } from '../../helpers/console'
-import { createToken } from '../../helpers/tokens'
+import { createToken, verifyUserToken } from '../../helpers/tokens'
+import { NoUserError } from '../../helpers/errors'
 
 const resetSchema = z.object({
   resetToken: z.string({ required_error: 'ResetToken is required' }).nonempty(),
@@ -43,39 +44,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
      * This will throw if _either_ the resetToken isn't legit
      * or if it wasn't made with our secret
      */
-    const payload = jwt.decode(resetToken) as {
-      resetUserId: string
-    }
-
-    if (!payload) {
-      throw new JsonWebTokenError('jwt malformed')
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        userId: payload.resetUserId,
-      },
-    })
-
-    /**
-     * If there's no user just return nulls
-     * and an error about that
-     */
-    if (!user) {
-      return {
-        User: null,
-        UserAccessToken: null,
-        UserError: [
-          {
-            errorCode: 'NotFound',
-            input: 'resetToken',
-            message: 'No user found using the reset token provided',
-          },
-        ],
-      }
-    }
-
-    jwt.verify(resetToken, `${JWT_SECRET}${user.personalKey}`)
+    const user = await verifyUserToken(resetToken)
 
     /**
      * If the reset token doesn't match
@@ -146,6 +115,20 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
 
     if (err instanceof JsonWebTokenError) {
       throw err
+    }
+
+    if (err instanceof NoUserError) {
+      return {
+        User: null,
+        UserAccessToken: null,
+        UserError: [
+          {
+            errorCode: 'NotFound',
+            input: 'resetToken',
+            message: 'No user found using the reset token provided',
+          },
+        ],
+      }
     }
 
     if (err instanceof ZodError) {
