@@ -1437,7 +1437,7 @@ describe('User Mutations', () => {
     })
   })
 
-  describe.only('userRefreshAccessToken', () => {
+  describe('userRefreshAccessToken', () => {
     const mutation = graphql`
       mutation UserRefreshAccessToken($accessToken: String!) {
         userRefreshAccessToken(accessToken: $accessToken) {
