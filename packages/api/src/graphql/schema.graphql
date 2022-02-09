@@ -40,6 +40,14 @@ type InputError {
 
 type Mutation {
   """
+  create a session with a pairer
+  """
+  sessionCreate(
+    paireeDetails: SessionCreatePaireeInput!
+    pairerDetails: SessionCreatePairerInput!
+  ): SessionCreatePayload
+
+  """
   Create an access token for the current user
   """
   userCreateAccessToken(
@@ -94,6 +102,68 @@ Possible roles a user can have within the database
 enum Role {
   PAIREE
   PAIRER
+}
+
+"""
+A session created between a pairer and a pairee
+"""
+type Session {
+  """
+  Timestamp of when the appointment starts and finishes
+  """
+  appointment: String!
+
+  """
+  First name of the pairee
+  """
+  firstName: String!
+
+  """
+  Id for the session
+  """
+  id: ID!
+
+  """
+  Job title of the pairee
+  """
+  jobTitle: String!
+
+  """
+  Last name of the pairee
+  """
+  lastName: String!
+
+  """
+  Portfolio of the pairee
+  """
+  portfolio: String!
+
+  """
+  Subjects the pairee want to talk to the pairer about
+  """
+  subjects: [String!]!
+}
+
+"""
+Pairee details and information for creating a session
+"""
+input SessionCreatePaireeInput {
+  isTrue: Boolean
+}
+
+"""
+Pairee details and information for creating a session
+"""
+input SessionCreatePairerInput {
+  isTrue: Boolean
+}
+
+"""
+Payload from the sessionCreate mutation
+"""
+type SessionCreatePayload {
+  Session: Session
+  SessionInputError: [InputError]
 }
 
 """
