@@ -28,6 +28,8 @@ model User {
   verificationTimeout String
   // Recovery
   resetToken          String  @default("")
+  // Used to rotate JWTs on a user level
+  personalKey         String  @unique
 }
 
 enum Role {

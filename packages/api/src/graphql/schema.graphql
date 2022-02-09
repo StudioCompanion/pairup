@@ -36,6 +36,7 @@ type Mutation {
   Starts the recovery process for a user who has forgotten their password
   """
   userRecover(email: String!): UserRecoverPayload
+  userRefreshAccessToken(accessToken: String!): UserRefreshAccessTokenPayload
 
   """
   Reset a users password by providing a resetToken
@@ -265,6 +266,14 @@ Payload from the userRecover mutation
 type UserRecoverPayload {
   UserError: [UserError]
   success: Boolean
+}
+
+"""
+Payload from the userRefreshAccessToken mutation
+"""
+type UserRefreshAccessTokenPayload {
+  UserAccessToken: UserAccessToken
+  UserError: [UserError]
 }
 
 """

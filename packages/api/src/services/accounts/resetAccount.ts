@@ -1,12 +1,13 @@
 import { FieldResolver } from 'nexus'
-import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import { JsonWebTokenError } from 'jsonwebtoken'
 import { z, ZodError } from 'zod'
 import { captureException, Scope } from '@sentry/node'
 import bcrypt from 'bcrypt'
 import { add } from 'date-fns'
 
 import { Logger } from '../../helpers/console'
-import { createToken } from '../../helpers/tokens'
+import { createToken, verifyUserToken } from '../../helpers/tokens'
+import { NoUserError } from '../../helpers/errors'
 
 const resetSchema = z.object({
   resetToken: z.string({ required_error: 'ResetToken is required' }).nonempty(),
@@ -43,33 +44,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
      * This will throw if _either_ the resetToken isn't legit
      * or if it wasn't made with our secret
      */
-    const payload = jwt.verify(resetToken, JWT_SECRET) as {
-      resetUserId: string
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        userId: payload.resetUserId,
-      },
-    })
-
-    /**
-     * If there's no user just return nulls
-     * and an error about that
-     */
-    if (!user) {
-      return {
-        User: null,
-        UserAccessToken: null,
-        UserError: [
-          {
-            errorCode: 'NotFound',
-            input: 'resetToken',
-            message: 'No user found using the reset token provided',
-          },
-        ],
-      }
-    }
+    const user = await verifyUserToken(resetToken)
 
     /**
      * If the reset token doesn't match
@@ -95,6 +70,12 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    /**
+     * Void all access tokens by changing their personalKey
+     */
+
+    const personalKey = await bcrypt.genSalt(6)
+
     const updatedUser = await prisma.user.update({
       where: {
         userId: user.userId,
@@ -102,6 +83,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       data: {
         resetToken: '',
         password: hashedPassword,
+        personalKey,
       },
     })
 
@@ -109,6 +91,7 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
       {
         userId: user.userId,
       },
+      updatedUser.personalKey,
       {
         expiresIn: '7d',
       }
@@ -132,6 +115,20 @@ export const resetAccount: FieldResolver<'Mutation', 'userReset'> = async (
 
     if (err instanceof JsonWebTokenError) {
       throw err
+    }
+
+    if (err instanceof NoUserError) {
+      return {
+        User: null,
+        UserAccessToken: null,
+        UserError: [
+          {
+            errorCode: 'NotFound',
+            input: 'resetToken',
+            message: 'No user found using the reset token provided',
+          },
+        ],
+      }
     }
 
     if (err instanceof ZodError) {

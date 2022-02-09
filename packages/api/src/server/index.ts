@@ -67,9 +67,9 @@ async function startApolloServer() {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }): GraphQLContext => ({
+    context: async ({ req }): Promise<GraphQLContext> => ({
       prisma,
-      user: verifyAuthToken(req),
+      user: await verifyAuthToken(req),
     }),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   })

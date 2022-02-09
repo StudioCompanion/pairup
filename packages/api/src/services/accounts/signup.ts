@@ -141,6 +141,8 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       })
     )
 
+    const personalKey = await bcrypt.genSalt(6)
+
     /**
      * Create our user
      */
@@ -150,6 +152,7 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
         password: hashedPassword,
         verificationCode,
         verificationTimeout,
+        personalKey,
       },
     })
 
