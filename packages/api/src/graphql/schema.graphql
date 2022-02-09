@@ -54,6 +54,11 @@ type Mutation {
   """
   userRecover(email: String!): UserRecoverPayload
 
+  """
+  Refreshes tokens including expired ones assuming the personalKey has not changed
+  """
+  userRefreshAccessToken(accessToken: String!): UserRefreshAccessTokenPayload
+
   """Reset a users password by providing a resetToken"""
   userReset(password: String!, resetToken: String!): UserResetPayload
 
@@ -214,6 +219,12 @@ input UserProfileInput {
 type UserRecoverPayload {
   UserInputError: [InputErrors]
   success: Boolean
+}
+
+"""Payload from the userRefreshAccessToken mutation"""
+type UserRefreshAccessTokenPayload {
+  UserAccessToken: UserAccessToken
+  UserInputError: [InputErrors]
 }
 
 """Payload from the userReset mutation"""

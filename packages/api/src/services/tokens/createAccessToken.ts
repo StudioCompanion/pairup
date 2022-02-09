@@ -82,6 +82,7 @@ export const createAccessToken: FieldResolver<
       {
         userId: user.userId,
       },
+      user.personalKey,
       {
         expiresIn: '7d',
       }

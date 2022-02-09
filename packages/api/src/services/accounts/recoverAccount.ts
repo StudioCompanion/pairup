@@ -38,7 +38,7 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
     })
 
     if (user) {
-      const { userId } = user
+      const { userId, personalKey } = user
 
       /**
        * Create a reset token,
@@ -50,6 +50,7 @@ export const recoverAccount: FieldResolver<'Mutation', 'userRecover'> = async (
         {
           resetUserId: userId,
         },
+        personalKey,
         {
           expiresIn: '1d',
         }

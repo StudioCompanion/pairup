@@ -1,9 +1,11 @@
+import { sign } from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
+
 import { testData } from 'test/seed/data'
 import { request, graphql } from 'test/request'
 
 import { createToken } from '../../helpers/tokens'
 import { prisma } from '../../db/prisma'
-import { sign } from 'jsonwebtoken'
 
 describe('User Mutations', () => {
   describe('userCreateAccount', () => {
@@ -1173,7 +1175,7 @@ describe('User Mutations', () => {
             accessToken
             expiresAt
           }
-          UserError {
+          UserInputError {
             message
             input
             errorCode
@@ -1185,7 +1187,7 @@ describe('User Mutations', () => {
     let resetToken: string
 
     beforeEach(async () => {
-      const { userId, email } = testData.users[0]
+      const { userId, email, personalKey } = testData.users[0]
 
       /**
        * Create a valid reset token
@@ -1194,6 +1196,7 @@ describe('User Mutations', () => {
         {
           resetUserId: userId,
         },
+        personalKey,
         {
           expiresIn: '1d',
         }
@@ -1232,7 +1235,7 @@ describe('User Mutations', () => {
               accessToken: expect.any(String),
               expiresAt: expect.any(String),
             },
-            UserError: [],
+            UserInputError: [],
           },
         },
       })
@@ -1302,7 +1305,7 @@ describe('User Mutations', () => {
             "userReset": Object {
               "User": null,
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "password",
@@ -1320,6 +1323,7 @@ describe('User Mutations', () => {
         {
           resetUserId: '123',
         },
+        'banana',
         {
           expiresIn: '7d',
         }
@@ -1338,7 +1342,7 @@ describe('User Mutations', () => {
             "userReset": Object {
               "User": null,
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "NOT_FOUND",
                   "input": "resetToken",
@@ -1356,6 +1360,7 @@ describe('User Mutations', () => {
         {
           resetUserId: testData.users[0].userId,
         },
+        testData.users[0].personalKey,
         {
           expiresIn: '7d',
         }
@@ -1374,7 +1379,7 @@ describe('User Mutations', () => {
             "userReset": Object {
               "User": null,
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "resetToken",
@@ -1407,7 +1412,7 @@ describe('User Mutations', () => {
               accessToken: expect.any(String),
               expiresAt: expect.any(String),
             },
-            UserError: [],
+            UserInputError: [],
           },
         },
       })
@@ -1422,18 +1427,216 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": Object {
-              "User": null,
-              "UserAccessToken": null,
-              "UserError": Array [
-                Object {
-                  "errorCode": "INVALID",
-                  "input": "resetToken",
-                  "message": "Invalid resetToken provided",
-                },
-              ],
+            "userReset": null,
+          },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
+        }
+      `)
+    })
+  })
+
+  describe('userRefreshAccessToken', () => {
+    const mutation = graphql`
+      mutation UserRefreshAccessToken($accessToken: String!) {
+        userRefreshAccessToken(accessToken: $accessToken) {
+          UserAccessToken {
+            accessToken
+            expiresAt
+          }
+          UserInputError {
+            message
+            input
+            errorCode
+          }
+        }
+      }
+    `
+
+    it('should return a new token if the current token has not expired', async () => {
+      const token = createToken(
+        {
+          userId: testData.users[0].userId,
+        },
+        testData.users[0].personalKey,
+        {
+          expiresIn: '7d',
+        }
+      )
+
+      const res = await request(mutation, {
+        variables: {
+          accessToken: token,
+        },
+      })
+
+      expect(res).toEqual(
+        expect.objectContaining({
+          data: {
+            userRefreshAccessToken: {
+              UserAccessToken: {
+                accessToken: expect.any(String),
+                expiresAt: expect.any(String),
+              },
+              UserInputError: [],
             },
           },
+        })
+      )
+    })
+
+    it('should return a new token if the current token has expired', async () => {
+      const token = createToken(
+        {
+          userId: testData.users[0].userId,
+          iat: Math.floor(Date.now() / 1000) - 4,
+        },
+        testData.users[0].personalKey,
+        {
+          expiresIn: '3000',
+        }
+      )
+
+      const res = await request(mutation, {
+        variables: {
+          accessToken: token,
+        },
+      })
+
+      expect(res).toEqual(
+        expect.objectContaining({
+          data: {
+            userRefreshAccessToken: {
+              UserAccessToken: {
+                accessToken: expect.any(String),
+                expiresAt: expect.any(String),
+              },
+              UserInputError: [],
+            },
+          },
+        })
+      )
+    })
+
+    it('should not reutrn a new token if the current token is not valid', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            accessToken: 'hello',
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userRefreshAccessToken": null,
+          },
+          "errors": Array [
+            [GraphQLError: jwt malformed],
+          ],
+        }
+      `)
+    })
+
+    it('should not return a new token if the current token was not signed by our app', async () => {
+      const token = sign(
+        {
+          userId: testData.users[0].userId,
+        },
+        'apples',
+        {
+          expiresIn: '7d',
+        }
+      )
+      expect(
+        await request(mutation, {
+          variables: {
+            accessToken: token,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userRefreshAccessToken": null,
+            },
+            "errors": Array [
+              [GraphQLError: invalid signature],
+            ],
+          }
+        `)
+    })
+
+    it('should not return a new token if the current token does not contain a valid user', async () => {
+      const token = sign(
+        {
+          userId: '1234',
+        },
+        testData.users[0].personalKey,
+        {
+          expiresIn: '7d',
+        }
+      )
+
+      expect(
+        await request(mutation, {
+          variables: {
+            accessToken: token,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+          Object {
+            "data": Object {
+              "userRefreshAccessToken": Object {
+                "UserAccessToken": null,
+                "UserInputError": Array [
+                  Object {
+                    "errorCode": "NOT_FOUND",
+                    "input": "accessToken",
+                    "message": "No user found using the token provided",
+                  },
+                ],
+              },
+            },
+          }
+        `)
+    })
+
+    it('should not return a new token if the user has changed their personal key', async () => {
+      const token = sign(
+        {
+          userId: testData.users[0].userId,
+        },
+        testData.users[0].personalKey,
+        {
+          expiresIn: '7d',
+        }
+      )
+
+      const personalKey = await bcrypt.genSalt(6)
+
+      await prisma.user.update({
+        where: {
+          userId: testData.users[0].userId,
+        },
+        data: {
+          personalKey,
+        },
+      })
+
+      expect(
+        await request(mutation, {
+          variables: {
+            accessToken: token,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userRefreshAccessToken": null,
+          },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
         }
       `)
     })

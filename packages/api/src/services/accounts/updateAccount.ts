@@ -131,16 +131,16 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
        */
       const parsedProfile = profileSchema.parse(profile)
 
+      const user = (await prisma.user.findUnique({
+        where: {
+          userId,
+        },
+      }))!
+
       /**
        * Prisma entry handling
        */
       if (password || email) {
-        const user = (await prisma.user.findUnique({
-          where: {
-            userId,
-          },
-        }))!
-
         let dbUpdates = {}
 
         if (password) {
@@ -285,6 +285,7 @@ export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
         {
           userId,
         },
+        user.personalKey,
         {
           expiresIn: '7d',
         }

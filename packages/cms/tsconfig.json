@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "jsx": "react",
-    "paths": {
-      "@types": ["../client/types/index.ts"]
-    }
+    "jsx": "react"
   },
   "include": [
     "./node_modules/@sanity/base/types/**/*.ts",

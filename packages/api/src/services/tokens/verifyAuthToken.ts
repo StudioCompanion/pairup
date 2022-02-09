@@ -1,13 +1,17 @@
 import { Request } from 'express'
-import jwt, { JsonWebTokenError } from 'jsonwebtoken'
+import { JsonWebTokenError } from 'jsonwebtoken'
 
 import { Logger } from '../../helpers/console'
+
+import { verifyUserToken } from '../../helpers/tokens'
 
 export interface AuthenticatedUser {
   userId: string | null
 }
 
-export const verifyAuthToken = (req: Request): AuthenticatedUser => {
+export const verifyAuthToken = async (
+  req: Request
+): Promise<AuthenticatedUser> => {
   try {
     const JWT_SECRET = process.env.JWT_SECRET
 
@@ -18,16 +22,18 @@ export const verifyAuthToken = (req: Request): AuthenticatedUser => {
     const { authorization } = req.headers
 
     if (!authorization) {
-      return { userId: null }
+      throw new Error('No Authorization header found')
     }
 
     const token = authorization.replace('Bearer ', '')
 
     if (!token) {
-      return { userId: null }
+      throw new Error('No token found')
     }
 
-    return jwt.verify(token, JWT_SECRET) as AuthenticatedUser
+    const user = await verifyUserToken(token)
+
+    return { userId: user.userId }
   } catch (err) {
     Logger.error(err)
 
