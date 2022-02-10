@@ -33,7 +33,7 @@ const schema = z.object({
 })
 
 const NO_MATCH_MSG = 'Email and Password combination does not match records'
-const NO_MATCH_ERROR: Array<NexusGenRootTypes['InputError']> = [
+const NO_MATCH_ERROR: Array<NexusGenRootTypes['InputErrors']> = [
   {
     errorCode: 'NotFound',
     input: 'email',

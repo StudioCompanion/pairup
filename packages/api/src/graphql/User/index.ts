@@ -1,6 +1,5 @@
 import {
   UserType,
-  // UserErrorType,
   UserCreateAccountPayloadType,
   UserCreateTokenPayloadType,
   UserAccessTokenType,
@@ -9,7 +8,6 @@ import {
   UserResetPayloadType,
   UserRefreshAccessTokenPayloadType,
 } from './types'
-import { ErrorType } from '../types'
 import {
   UserAvailabilityInputType,
   UserProfileInputType,
@@ -21,8 +19,6 @@ import { queries } from './queries'
 
 export default [
   UserType,
-  // UserErrorType,
-  // UserErrorCodesType,
   UserRoleType,
   UserCreateAccountPayloadType,
   UserCreateTokenPayloadType,
@@ -37,5 +33,4 @@ export default [
   UserRefreshAccessTokenPayloadType,
   mutations,
   queries,
-  ErrorType,
 ]

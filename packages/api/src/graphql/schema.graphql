@@ -2,6 +2,16 @@
 ### Do not make changes to this file directly
 
 """
+The type of abuse
+"""
+enum Abuse {
+  HARASSMENT_OR_BULLYING
+  PRETENDING_TO_BE_SOMEONE
+  SOMETHING_ELSE
+  SPAM_OR_HARMFUL
+}
+
+"""
 Defines a start & end time for a section of a Parier's availability during a day
 """
 input AvailabilityTimeInput {
@@ -30,15 +40,20 @@ enum ErrorCodes {
 }
 
 """
-An error that has happened when submitting an abuse report
+An error that has happened when interacting with the API
 """
-type InputError {
+type InputErrors {
   errorCode: ErrorCodes
   input: String
   message: String
 }
 
 type Mutation {
+  """
+  Create an abuse report
+  """
+  reportsSubmitAbuse(report: ReportAbuseInput!): ReportSubmitAbusePayload
+
   """
   create a session with a pairer
   """
@@ -94,6 +109,22 @@ type Query {
   Check if the email address submitted by a user or persepctive user has already been used before
   """
   userIsEmailUnique(email: String!): Boolean
+}
+
+input ReportAbuseInput {
+  abuseType: Abuse!
+  description: String!
+  email: String!
+  isAbuserPairer: Boolean!
+  name: String!
+}
+
+"""
+Encapsulates return values of report mutations where input values could be incorrect
+"""
+type ReportSubmitAbusePayload {
+  ReportInputError: [InputErrors]
+  success: Boolean
 }
 
 """
@@ -164,7 +195,7 @@ Payload from the sessionCreate mutation
 """
 type SessionCreatePayload {
   Session: Session
-  SessionInputError: [InputError]
+  SessionInputError: [InputErrors]
 }
 
 """
@@ -220,7 +251,7 @@ Encapsulates return values of user mutations where input fields could be incorre
 """
 type UserCreateAccountPayload {
   User: User
-  UserInputError: [InputError]
+  UserInputError: [InputErrors]
 }
 
 """
@@ -228,7 +259,7 @@ Payload from the userCreateToken mutation
 """
 type UserCreateTokenPayload {
   UserAccessToken: UserAccessToken
-  UserInputError: [InputError]
+  UserInputError: [InputErrors]
 }
 
 """
@@ -339,7 +370,7 @@ input UserProfileInput {
 Payload from the userRecover mutation
 """
 type UserRecoverPayload {
-  UserInputError: [InputError]
+  UserInputError: [InputErrors]
   success: Boolean
 }
 
@@ -348,7 +379,7 @@ Payload from the userRefreshAccessToken mutation
 """
 type UserRefreshAccessTokenPayload {
   UserAccessToken: UserAccessToken
-  UserInputError: [InputError]
+  UserInputError: [InputErrors]
 }
 
 """
@@ -357,7 +388,7 @@ Payload from the userReset mutation
 type UserResetPayload {
   User: User
   UserAccessToken: UserAccessToken
-  UserInputError: [InputError]
+  UserInputError: [InputErrors]
 }
 
 """
@@ -365,5 +396,5 @@ Payload from the userUpdateAccount mutation
 """
 type UserUpdateAccountPayload {
   UserAccessToken: UserAccessToken
-  UserInputError: [InputError]
+  UserInputError: [InputErrors]
 }

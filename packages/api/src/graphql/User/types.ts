@@ -29,7 +29,7 @@ export const UserCreateAccountPayloadType = objectType({
       type: 'User',
     })
     t.list.field('UserInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
@@ -56,7 +56,7 @@ export const UserCreateTokenPayloadType = objectType({
       type: 'UserAccessToken',
     })
     t.list.field('UserInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
@@ -69,7 +69,7 @@ export const UserUpdateAccountPayloadType = objectType({
       type: 'UserAccessToken',
     })
     t.list.field('UserInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
@@ -80,7 +80,7 @@ export const UserRecoverPayloadType = objectType({
   definition: (t) => {
     t.boolean('success')
     t.list.field('UserInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
@@ -96,7 +96,7 @@ export const UserResetPayloadType = objectType({
       type: 'UserAccessToken',
     })
     t.list.field('UserInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
@@ -109,7 +109,7 @@ export const UserRefreshAccessTokenPayloadType = objectType({
       type: 'UserAccessToken',
     })
     t.list.field('UserInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
