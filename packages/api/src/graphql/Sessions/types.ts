@@ -44,7 +44,7 @@ export const SessionCreatePayloadType = objectType({
       type: 'Session',
     })
     t.list.field('SessionInputError', {
-      type: 'InputError',
+      type: 'InputErrors',
     })
   },
 })
