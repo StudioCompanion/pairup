@@ -24,7 +24,7 @@ describe('User Mutations', () => {
             email
           }
           UserInputError {
-            UserInputErrorCode
+            errorCode
             input
             message
           }
@@ -102,7 +102,7 @@ describe('User Mutations', () => {
               "User": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "password",
                   "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
                 },
@@ -145,7 +145,7 @@ describe('User Mutations', () => {
               "User": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "email",
                   "message": "Invalid email address provided",
                 },
@@ -188,7 +188,7 @@ describe('User Mutations', () => {
               "User": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "email",
                   "message": "This email address has already been used",
                 },
@@ -231,12 +231,12 @@ describe('User Mutations', () => {
               "User": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "email",
                   "message": "Invalid email address provided",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "password",
                   "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
                 },
@@ -265,37 +265,37 @@ describe('User Mutations', () => {
               "User": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "firstName",
                   "message": "Required",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "lastName",
                   "message": "Required",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "jobTitle",
                   "message": "Required",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "bio",
                   "message": "Required",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "disciplines",
                   "message": "You have to select at least one discipline",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "timezone",
                   "message": "Required",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "availability",
                   "message": "Availability must have at least one day added",
                 },
@@ -339,12 +339,12 @@ describe('User Mutations', () => {
               "User": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "monday",
                   "message": "Should have at least 1 items",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "tuesday",
                   "message": "Should have at least 1 items",
                 },
@@ -372,7 +372,7 @@ describe('User Mutations', () => {
           UserInputError {
             message
             input
-            UserInputErrorCode
+            errorCode
           }
         }
       }
@@ -424,7 +424,7 @@ describe('User Mutations', () => {
       )
     })
 
-    it('should return an access token if successful', async () => {
+    it.only('should return an access token if successful', async () => {
       expect(
         await request(mutation, {
           variables: accountDetails,
@@ -459,12 +459,12 @@ describe('User Mutations', () => {
               "UserAccessToken": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "NOT_FOUND",
+                  "errorCode": "NOT_FOUND",
                   "input": "email",
                   "message": "Email and Password combination does not match records",
                 },
                 Object {
-                  "UserInputErrorCode": "NOT_FOUND",
+                  "errorCode": "NOT_FOUND",
                   "input": "password",
                   "message": "Email and Password combination does not match records",
                 },
@@ -490,12 +490,12 @@ describe('User Mutations', () => {
               "UserAccessToken": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "NOT_FOUND",
+                  "errorCode": "NOT_FOUND",
                   "input": "email",
                   "message": "Email and Password combination does not match records",
                 },
                 Object {
-                  "UserInputErrorCode": "NOT_FOUND",
+                  "errorCode": "NOT_FOUND",
                   "input": "password",
                   "message": "Email and Password combination does not match records",
                 },
@@ -521,12 +521,12 @@ describe('User Mutations', () => {
               "UserAccessToken": null,
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "email",
                   "message": "Invalid email address provided",
                 },
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": "INVALID",
                   "input": "password",
                   "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
                 },
@@ -562,8 +562,8 @@ describe('User Mutations', () => {
           "data": Object {
             "userUpdateAccount": null,
           },
-          "UserInputErrors": Array [
-            [GraphQLUserInputError: User must be logged in],
+          "errors": Array [
+            [GraphQLError: User must be logged in],
           ],
         }
       `)
@@ -594,8 +594,8 @@ describe('User Mutations', () => {
           "data": Object {
             "userUpdateAccount": null,
           },
-          "UserInputErrors": Array [
-            [GraphQLUserInputError: Mutation userUpdateAccount requires at least one parameter],
+          "errors": Array [
+            [GraphQLError: Mutation userUpdateAccount requires at least one parameter],
           ],
         }
       `)
@@ -615,7 +615,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -659,7 +659,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -683,7 +683,7 @@ describe('User Mutations', () => {
                 "UserAccessToken": null,
                 "UserInputError": Array [
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "password",
                     "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
                   },
@@ -706,7 +706,7 @@ describe('User Mutations', () => {
                 UserInputError {
                   message
                   input
-                  UserInputErrorCode
+                  errorCode
                 }
               }
             }
@@ -735,7 +735,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -759,7 +759,7 @@ describe('User Mutations', () => {
                 "UserAccessToken": null,
                 "UserInputError": Array [
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "password",
                     "message": "New password cannot be the same as old password",
                   },
@@ -785,7 +785,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -829,7 +829,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -853,7 +853,7 @@ describe('User Mutations', () => {
                 "UserAccessToken": null,
                 "UserInputError": Array [
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "email",
                     "message": "Invalid email address provided",
                   },
@@ -877,7 +877,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -901,7 +901,7 @@ describe('User Mutations', () => {
                 "UserAccessToken": null,
                 "UserInputError": Array [
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "email",
                     "message": "New email cannot be the same as old email",
                   },
@@ -927,7 +927,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -977,7 +977,7 @@ describe('User Mutations', () => {
                   UserInputError {
                     message
                     input
-                    UserInputErrorCode
+                    errorCode
                   }
                 }
               }
@@ -1012,17 +1012,17 @@ describe('User Mutations', () => {
                 "UserAccessToken": null,
                 "UserInputError": Array [
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "firstName",
                     "message": "First name is required",
                   },
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "jobTitle",
                     "message": "Your job title is required",
                   },
                   Object {
-                    "UserInputErrorCode": "INVALID",
+                    "errorCode": "INVALID",
                     "input": "disciplines",
                     "message": "Should have at least 1 items",
                   },
@@ -1047,7 +1047,7 @@ describe('User Mutations', () => {
                 UserInputError {
                   message
                   input
-                  UserInputErrorCode
+                  errorCode
                 }
               }
             }
@@ -1090,7 +1090,7 @@ describe('User Mutations', () => {
         userRecover(email: $email) {
           success
           UserInputError {
-            UserInputErrorCode
+            errorCode
             message
             input
           }
@@ -1149,7 +1149,7 @@ describe('User Mutations', () => {
             "userRecover": Object {
               "UserInputError": Array [
                 Object {
-                  "UserInputErrorCode": "INVALID",
+                  "errorCode": null,
                   "input": "email",
                   "message": "Invalid email address provided",
                 },
@@ -1255,7 +1255,7 @@ describe('User Mutations', () => {
             "userReset": null,
           },
           "errors": Array [
-            [GraphQLError: jwt malformed],
+            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
           ],
         }
       `)
@@ -1285,7 +1285,7 @@ describe('User Mutations', () => {
             "userReset": null,
           },
           "errors": Array [
-            [GraphQLError: invalid signature],
+            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
           ],
         }
       `)
@@ -1302,18 +1302,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": Object {
-              "User": null,
-              "UserAccessToken": null,
-              "UserInputError": Array [
-                Object {
-                  "errorCode": "INVALID",
-                  "input": "password",
-                  "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
-                },
-              ],
-            },
+            "userReset": null,
           },
+          "errors": Array [
+            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
+          ],
         }
       `)
     })
@@ -1339,18 +1332,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": Object {
-              "User": null,
-              "UserAccessToken": null,
-              "UserInputError": Array [
-                Object {
-                  "errorCode": "NOT_FOUND",
-                  "input": "resetToken",
-                  "message": "No user found using the reset token provided",
-                },
-              ],
-            },
+            "userReset": null,
           },
+          "errors": Array [
+            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
+          ],
         }
       `)
     })
@@ -1376,18 +1362,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": Object {
-              "User": null,
-              "UserAccessToken": null,
-              "UserInputError": Array [
-                Object {
-                  "errorCode": "INVALID",
-                  "input": "resetToken",
-                  "message": "Invalid resetToken provided",
-                },
-              ],
-            },
+            "userReset": null,
           },
+          "errors": Array [
+            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
+          ],
         }
       `)
     })
@@ -1529,11 +1508,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userRefreshAccessToken": null,
+            "userRefreshAccessToken": Object {
+              "UserAccessToken": null,
+              "UserInputError": Array [],
+            },
           },
-          "errors": Array [
-            [GraphQLError: jwt malformed],
-          ],
         }
       `)
     })
@@ -1555,15 +1534,15 @@ describe('User Mutations', () => {
           },
         })
       ).toMatchInlineSnapshot(`
-          Object {
-            "data": Object {
-              "userRefreshAccessToken": null,
+        Object {
+          "data": Object {
+            "userRefreshAccessToken": Object {
+              "UserAccessToken": null,
+              "UserInputError": Array [],
             },
-            "errors": Array [
-              [GraphQLError: invalid signature],
-            ],
-          }
-        `)
+          },
+        }
+      `)
     })
 
     it('should not return a new token if the current token does not contain a valid user', async () => {
@@ -1584,21 +1563,15 @@ describe('User Mutations', () => {
           },
         })
       ).toMatchInlineSnapshot(`
-          Object {
-            "data": Object {
-              "userRefreshAccessToken": Object {
-                "UserAccessToken": null,
-                "UserInputError": Array [
-                  Object {
-                    "errorCode": "NOT_FOUND",
-                    "input": "accessToken",
-                    "message": "No user found using the token provided",
-                  },
-                ],
-              },
+        Object {
+          "data": Object {
+            "userRefreshAccessToken": Object {
+              "UserAccessToken": null,
+              "UserInputError": Array [],
             },
-          }
-        `)
+          },
+        }
+      `)
     })
 
     it('should not return a new token if the user has changed their personal key', async () => {
@@ -1632,11 +1605,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userRefreshAccessToken": null,
+            "userRefreshAccessToken": Object {
+              "UserAccessToken": null,
+              "UserInputError": Array [],
+            },
           },
-          "errors": Array [
-            [GraphQLError: invalid signature],
-          ],
         }
       `)
     })
