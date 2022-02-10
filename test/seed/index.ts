@@ -14,9 +14,9 @@ async function emptyDatabase() {
     (model) => model.dbName || model.name
   )
 
-  await Promise.all(
-    tables.map((table) => prisma.$executeRawUnsafe(`DELETE FROM "${table}";`))
-  )
+  for (const index in tables) {
+    await prisma.$executeRawUnsafe(`DELETE FROM "${tables[index]}";`)
+  }
 }
 
 async function seedDatabase({ users }: SeedData) {
