@@ -25,9 +25,8 @@ export const SessionType = objectType({
       ...Session.portfolio,
       description: 'Portfolio of the pairee',
     })
-    t.list.field({
+    t.field({
       ...Session.subjects,
-      type: 'UserDisciplines',
       description: 'Subjects the pairee want to talk to the pairer about',
     })
     t.field({

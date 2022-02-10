@@ -1,9 +1,11 @@
 import { FieldResolver } from 'nexus'
 import { add } from 'date-fns'
 import { JsonWebTokenError } from 'jsonwebtoken'
+import { captureException, Scope } from '@sentry/node'
 
 import { verifyUserToken, createToken } from '../../helpers/tokens'
 import { NoUserError } from '../../helpers/errors'
+import { Logger } from '../../helpers/console'
 
 export const refreshAccessToken: FieldResolver<
   'Mutation',
@@ -36,6 +38,9 @@ export const refreshAccessToken: FieldResolver<
       UserInputError: [],
     }
   } catch (err) {
+    const errMsg = 'Failed to refresh token'
+    Logger.error(errMsg, err)
+
     if (err instanceof JsonWebTokenError) {
       throw err
     }
@@ -54,6 +59,12 @@ export const refreshAccessToken: FieldResolver<
       }
     }
 
+    captureException(
+      errMsg,
+      new Scope().setExtras({
+        err,
+      })
+    )
     return {
       UserAccessToken: null,
       UserInputError: [],

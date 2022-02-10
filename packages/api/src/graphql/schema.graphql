@@ -44,7 +44,7 @@ type Mutation {
   """
   sessionCreate(
     paireeDetails: SessionCreatePaireeInput!
-    pairerDetails: SessionCreatePairerInput!
+    pairerId: ID!
   ): SessionCreatePayload
 
   """
@@ -148,14 +148,15 @@ type Session {
 Pairee details and information for creating a session
 """
 input SessionCreatePaireeInput {
-  isTrue: Boolean
-}
-
-"""
-Pairee details and information for creating a session
-"""
-input SessionCreatePairerInput {
-  isTrue: Boolean
+  appointment: String!
+  email: String!
+  firstName: String!
+  jobTitle: String
+  lastName: String
+  message: String!
+  portfolio: String
+  subjects: [UserDisciplines]
+  timezone: String!
 }
 
 """

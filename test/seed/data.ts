@@ -11,6 +11,7 @@ export const testData: SeedData = {
       verificationTimeout: '2022-02-01T10:53:51Z',
       verified: false,
       personalKey: 'apples',
+      createdAt: new Date(),
     },
   ],
 }

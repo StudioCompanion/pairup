@@ -15,6 +15,7 @@ generator nexusPrisma {
 model User {
   // Default entry stuff
   id                  String    @id @default(cuid())
+  createdAt           DateTime  @default(now())
   // Account details
   email               String    @unique
   password            String    @unique
@@ -37,16 +38,16 @@ model User {
 model Session {
   // default entry stuff
   id          String   @id @default(cuid())
-  createdAt   DateTime
+  createdAt   DateTime @default(now())
   // Pairer
   pairer      User     @relation(fields: [pairerId], references: [userId])
   pairerId    String
   // Pairee
   firstName   String
-  lastName    String
+  lastName    String   @default("")
   email       String
-  jobTitle    String
-  portfolio   String
+  jobTitle    String   @default("")
+  portfolio   String   @default("")
   timezone    String
   appointment String
   subjects    String[]
