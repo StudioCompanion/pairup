@@ -23,7 +23,7 @@ describe('User Mutations', () => {
           User {
             email
           }
-          UserError {
+          UserInputError {
             errorCode
             input
             message
@@ -63,14 +63,14 @@ describe('User Mutations', () => {
               "User": Object {
                 "email": "josh@gmail.com",
               },
-              "UserError": null,
+              "UserInputError": null,
             },
           },
         }
       `)
     })
 
-    it('should return a UserErrors list if the password is not strong enough', async () => {
+    it('should return a UserInputErrors list if the password is not strong enough', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -100,7 +100,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccount": Object {
               "User": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "password",
@@ -113,7 +113,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return a UserErrors list if the email is not an email', async () => {
+    it('should return an UserInputErrors list if the email is not an email', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -143,7 +143,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccount": Object {
               "User": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "email",
@@ -156,7 +156,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return a UserErrors list if the email has already been used', async () => {
+    it('should return an UserInputErrors list if the email has already been used', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -186,7 +186,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccount": Object {
               "User": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "email",
@@ -199,7 +199,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return a UserErrors list with both inputs listed if neither are correct & and profile is missing', async () => {
+    it('should return an UserInputErrors list with both inputs listed if neither are correct & and profile is missing', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -229,7 +229,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccount": Object {
               "User": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "email",
@@ -247,7 +247,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return a UserError if vital information is missing from the profile', async () => {
+    it('should return an UserInputError if vital information is missing from the profile', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -263,7 +263,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccount": Object {
               "User": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "firstName",
@@ -306,7 +306,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return a UserError if days are specified in availability yet include no times', async () => {
+    it('should return an UserInputError if days are specified in availability yet include no times', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -337,7 +337,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccount": Object {
               "User": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "monday",
@@ -369,7 +369,7 @@ describe('User Mutations', () => {
             accessToken
             expiresAt
           }
-          UserError {
+          UserInputError {
             message
             input
             errorCode
@@ -437,14 +437,14 @@ describe('User Mutations', () => {
                 accessToken: expect.any(String),
                 expiresAt: expect.any(String),
               },
-              UserError: [],
+              UserInputError: [],
             },
           },
         })
       )
     })
 
-    it('should return an error if the password doesnt match', async () => {
+    it('should return an UserInputError if the password doesnt match', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -457,7 +457,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccessToken": Object {
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "NOT_FOUND",
                   "input": "email",
@@ -475,7 +475,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return an error if the email doesnt match', async () => {
+    it('should return an UserInputError if the email doesnt match', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -488,7 +488,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccessToken": Object {
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "NOT_FOUND",
                   "input": "email",
@@ -506,7 +506,7 @@ describe('User Mutations', () => {
       `)
     })
 
-    it('should return an error if the email or password do not pass validation', async () => {
+    it('should return an UserInputError if the email or password do not pass validation', async () => {
       expect(
         await request(mutation, {
           variables: {
@@ -519,7 +519,7 @@ describe('User Mutations', () => {
           "data": Object {
             "userCreateAccessToken": Object {
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "email",
@@ -612,7 +612,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -639,14 +639,14 @@ describe('User Mutations', () => {
                   accessToken: expect.any(String),
                   expiresAt: expect.any(String),
                 },
-                UserError: [],
+                UserInputError: [],
               },
             },
           })
         )
       })
 
-      it('should return UserError if the password does not meet requirements', async () => {
+      it('should return UserInputError if the password does not meet requirements', async () => {
         expect(
           await request(
             graphql`
@@ -656,7 +656,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -681,7 +681,7 @@ describe('User Mutations', () => {
             "data": Object {
               "userUpdateAccount": Object {
                 "UserAccessToken": null,
-                "UserError": Array [
+                "UserInputError": Array [
                   Object {
                     "errorCode": "INVALID",
                     "input": "password",
@@ -694,7 +694,7 @@ describe('User Mutations', () => {
         `)
       })
 
-      it('should return UserError if the new password is the same as the old password', async () => {
+      it('should return UserInputError if the new password is the same as the old password', async () => {
         await request(
           graphql`
             mutation UserUpdateAccount($password: String) {
@@ -703,7 +703,7 @@ describe('User Mutations', () => {
                   accessToken
                   expiresAt
                 }
-                UserError {
+                UserInputError {
                   message
                   input
                   errorCode
@@ -732,7 +732,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -757,7 +757,7 @@ describe('User Mutations', () => {
             "data": Object {
               "userUpdateAccount": Object {
                 "UserAccessToken": null,
-                "UserError": Array [
+                "UserInputError": Array [
                   Object {
                     "errorCode": "INVALID",
                     "input": "password",
@@ -782,7 +782,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -809,14 +809,14 @@ describe('User Mutations', () => {
                   accessToken: expect.any(String),
                   expiresAt: expect.any(String),
                 },
-                UserError: [],
+                UserInputError: [],
               },
             },
           })
         )
       })
 
-      it('should return UserError if the email does not meet requirements', async () => {
+      it('should return UserInputError if the email does not meet requirements', async () => {
         expect(
           await request(
             graphql`
@@ -826,7 +826,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -851,7 +851,7 @@ describe('User Mutations', () => {
             "data": Object {
               "userUpdateAccount": Object {
                 "UserAccessToken": null,
-                "UserError": Array [
+                "UserInputError": Array [
                   Object {
                     "errorCode": "INVALID",
                     "input": "email",
@@ -864,7 +864,7 @@ describe('User Mutations', () => {
         `)
       })
 
-      it('should return UserError if the new email is the same as the old email', async () => {
+      it('should return UserInputError if the new email is the same as the old email', async () => {
         expect(
           await request(
             graphql`
@@ -874,7 +874,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -899,7 +899,7 @@ describe('User Mutations', () => {
             "data": Object {
               "userUpdateAccount": Object {
                 "UserAccessToken": null,
-                "UserError": Array [
+                "UserInputError": Array [
                   Object {
                     "errorCode": "INVALID",
                     "input": "email",
@@ -924,7 +924,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -957,14 +957,14 @@ describe('User Mutations', () => {
                   accessToken: expect.any(String),
                   expiresAt: expect.any(String),
                 },
-                UserError: [],
+                UserInputError: [],
               },
             },
           })
         )
       })
 
-      it('should return UserError when fields are not correct', async () => {
+      it('should return UserInputError when fields are not correct', async () => {
         expect(
           await request(
             graphql`
@@ -974,7 +974,7 @@ describe('User Mutations', () => {
                     accessToken
                     expiresAt
                   }
-                  UserError {
+                  UserInputError {
                     message
                     input
                     errorCode
@@ -1010,7 +1010,7 @@ describe('User Mutations', () => {
             "data": Object {
               "userUpdateAccount": Object {
                 "UserAccessToken": null,
-                "UserError": Array [
+                "UserInputError": Array [
                   Object {
                     "errorCode": "INVALID",
                     "input": "firstName",
@@ -1044,7 +1044,7 @@ describe('User Mutations', () => {
                   accessToken
                   expiresAt
                 }
-                UserError {
+                UserInputError {
                   message
                   input
                   errorCode
@@ -1076,7 +1076,7 @@ describe('User Mutations', () => {
                 accessToken: expect.any(String),
                 expiresAt: expect.any(String),
               },
-              UserError: [],
+              UserInputError: [],
             },
           },
         })
@@ -1089,7 +1089,7 @@ describe('User Mutations', () => {
       mutation UserRecover($email: String!) {
         userRecover(email: $email) {
           success
-          UserError {
+          UserInputError {
             errorCode
             message
             input
@@ -1109,7 +1109,7 @@ describe('User Mutations', () => {
         Object {
           "data": Object {
             "userRecover": Object {
-              "UserError": Array [],
+              "UserInputError": Array [],
               "success": true,
             },
           },
@@ -1128,7 +1128,7 @@ describe('User Mutations', () => {
         Object {
           "data": Object {
             "userRecover": Object {
-              "UserError": Array [],
+              "UserInputError": Array [],
               "success": true,
             },
           },
@@ -1147,9 +1147,9 @@ describe('User Mutations', () => {
         Object {
           "data": Object {
             "userRecover": Object {
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
-                  "errorCode": "INVALID",
+                  "errorCode": null,
                   "input": "email",
                   "message": "Invalid email address provided",
                 },
@@ -1175,7 +1175,7 @@ describe('User Mutations', () => {
             accessToken
             expiresAt
           }
-          UserError {
+          UserInputError {
             message
             input
             errorCode
@@ -1235,7 +1235,7 @@ describe('User Mutations', () => {
               accessToken: expect.any(String),
               expiresAt: expect.any(String),
             },
-            UserError: [],
+            UserInputError: [],
           },
         },
       })
@@ -1305,7 +1305,7 @@ describe('User Mutations', () => {
             "userReset": Object {
               "User": null,
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "password",
@@ -1342,7 +1342,7 @@ describe('User Mutations', () => {
             "userReset": Object {
               "User": null,
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "NOT_FOUND",
                   "input": "resetToken",
@@ -1379,7 +1379,7 @@ describe('User Mutations', () => {
             "userReset": Object {
               "User": null,
               "UserAccessToken": null,
-              "UserError": Array [
+              "UserInputError": Array [
                 Object {
                   "errorCode": "INVALID",
                   "input": "resetToken",
@@ -1412,7 +1412,7 @@ describe('User Mutations', () => {
               accessToken: expect.any(String),
               expiresAt: expect.any(String),
             },
-            UserError: [],
+            UserInputError: [],
           },
         },
       })
@@ -1445,7 +1445,7 @@ describe('User Mutations', () => {
             accessToken
             expiresAt
           }
-          UserError {
+          UserInputError {
             message
             input
             errorCode
@@ -1479,7 +1479,7 @@ describe('User Mutations', () => {
                 accessToken: expect.any(String),
                 expiresAt: expect.any(String),
               },
-              UserError: [],
+              UserInputError: [],
             },
           },
         })
@@ -1512,7 +1512,7 @@ describe('User Mutations', () => {
                 accessToken: expect.any(String),
                 expiresAt: expect.any(String),
               },
-              UserError: [],
+              UserInputError: [],
             },
           },
         })
@@ -1555,15 +1555,15 @@ describe('User Mutations', () => {
           },
         })
       ).toMatchInlineSnapshot(`
-          Object {
-            "data": Object {
-              "userRefreshAccessToken": null,
-            },
-            "errors": Array [
-              [GraphQLError: invalid signature],
-            ],
-          }
-        `)
+        Object {
+          "data": Object {
+            "userRefreshAccessToken": null,
+          },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
+        }
+      `)
     })
 
     it('should not return a new token if the current token does not contain a valid user', async () => {
@@ -1584,21 +1584,21 @@ describe('User Mutations', () => {
           },
         })
       ).toMatchInlineSnapshot(`
-          Object {
-            "data": Object {
-              "userRefreshAccessToken": Object {
-                "UserAccessToken": null,
-                "UserError": Array [
-                  Object {
-                    "errorCode": "NOT_FOUND",
-                    "input": "accessToken",
-                    "message": "No user found using the token provided",
-                  },
-                ],
-              },
+        Object {
+          "data": Object {
+            "userRefreshAccessToken": Object {
+              "UserAccessToken": null,
+              "UserInputError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "accessToken",
+                  "message": "No user found using the token provided",
+                },
+              ],
             },
-          }
-        `)
+          },
+        }
+      `)
     })
 
     it('should not return a new token if the user has changed their personal key', async () => {

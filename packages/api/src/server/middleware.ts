@@ -21,6 +21,7 @@ export const applyMiddleware = (app: Express) => {
   /**
    * Helmet
    */
+
   app.use(
     helmet({
       contentSecurityPolicy:

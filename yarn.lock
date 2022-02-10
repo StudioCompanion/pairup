@@ -5905,6 +5905,7 @@ __metadata:
     "@sentry/node": ^6.17.1
     "@types/bcrypt": ^5.0.0
     "@types/compression": ^1.7.2
+    airtable: ^0.11.1
     apollo-server-core: ^3.6.2
     apollo-server-express: ^3.6.2
     bcrypt: ^5.0.1
@@ -9422,6 +9423,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:>=8.0.0 <15":
+  version: 14.18.10
+  resolution: "@types/node@npm:14.18.10"
+  checksum: e722eec37be85dd7dddc4cfd26c501c66f1f2a7e0f603f57ff925348e65a5db603b06363fa27489cbecff44f0ae59812f22509923c4c45ffa5958604cc002401
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^10.1.0":
   version: 10.17.60
   resolution: "@types/node@npm:10.17.60"
@@ -10179,6 +10187,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"abortcontroller-polyfill@npm:^1.4.0":
+  version: 1.7.3
+  resolution: "abortcontroller-polyfill@npm:1.7.3"
+  checksum: 55739d7f0c9bd6afa2aabb3148778967c4dd4dcff91f6b9259df38da34f9882d3f7730b0954e9767a19cc16a8dd9a58915da4e8a50220300d45af3817d7557b1
+  languageName: node
+  linkType: hard
+
 "absolute-path@npm:^0.0.0":
   version: 0.0.0
   resolution: "absolute-path@npm:0.0.0"
@@ -10361,6 +10376,19 @@ __metadata:
     clean-stack: ^2.0.0
     indent-string: ^4.0.0
   checksum: 1101a33f21baa27a2fa8e04b698271e64616b886795fd43c31068c07533c7b3facfcaf4e9e0cab3624bd88f729a592f1c901a1a229c9e490eafce411a8644b79
+  languageName: node
+  linkType: hard
+
+"airtable@npm:^0.11.1":
+  version: 0.11.1
+  resolution: "airtable@npm:0.11.1"
+  dependencies:
+    "@types/node": ">=8.0.0 <15"
+    abort-controller: ^3.0.0
+    abortcontroller-polyfill: ^1.4.0
+    lodash: ^4.17.21
+    node-fetch: ^2.6.1
+  checksum: dfeddbd0ff79c321e15fb0b4d260dbc52155999aae1bc3be624dd98903f31b1317baa94af811dcbe14c18acf96797e1a4e91a9943cfecb21c8b3839976b04988
   languageName: node
   linkType: hard
 
