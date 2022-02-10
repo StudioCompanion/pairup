@@ -35,18 +35,18 @@ describe('session mutations', () => {
             },
           },
         })
-      ).toMatchInlineSnapshot(`
-        Object {
-          "data": Object {
-            "sessionCreate": Object {
-              "Session": Object {
-                "id": "ckzfwhdiq001010t70nzg7w54",
+      ).toEqual(
+        expect.objectContaining({
+          data: {
+            sessionCreate: {
+              Session: {
+                id: expect.any(String),
               },
-              "SessionInputError": Array [],
+              SessionInputError: [],
             },
           },
-        }
-      `)
+        })
+      )
     })
 
     it('should return validation errors if the data structure is not correct', async () => {
