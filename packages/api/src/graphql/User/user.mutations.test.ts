@@ -424,7 +424,7 @@ describe('User Mutations', () => {
       )
     })
 
-    it.only('should return an access token if successful', async () => {
+    it('should return an access token if successful', async () => {
       expect(
         await request(mutation, {
           variables: accountDetails,
@@ -1255,7 +1255,7 @@ describe('User Mutations', () => {
             "userReset": null,
           },
           "errors": Array [
-            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
+            [GraphQLError: jwt malformed],
           ],
         }
       `)
@@ -1285,7 +1285,7 @@ describe('User Mutations', () => {
             "userReset": null,
           },
           "errors": Array [
-            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
+            [GraphQLError: invalid signature],
           ],
         }
       `)
@@ -1302,11 +1302,18 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": null,
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserInputError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "password",
+                  "message": "Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter",
+                },
+              ],
+            },
           },
-          "errors": Array [
-            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
-          ],
         }
       `)
     })
@@ -1332,11 +1339,18 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": null,
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserInputError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "resetToken",
+                  "message": "No user found using the reset token provided",
+                },
+              ],
+            },
           },
-          "errors": Array [
-            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
-          ],
         }
       `)
     })
@@ -1362,11 +1376,18 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userReset": null,
+            "userReset": Object {
+              "User": null,
+              "UserAccessToken": null,
+              "UserInputError": Array [
+                Object {
+                  "errorCode": "INVALID",
+                  "input": "resetToken",
+                  "message": "Invalid resetToken provided",
+                },
+              ],
+            },
           },
-          "errors": Array [
-            [GraphQLError: No JWT_SECRET – cannot verify any tokens],
-          ],
         }
       `)
     })
@@ -1508,11 +1529,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userRefreshAccessToken": Object {
-              "UserAccessToken": null,
-              "UserInputError": Array [],
-            },
+            "userRefreshAccessToken": null,
           },
+          "errors": Array [
+            [GraphQLError: jwt malformed],
+          ],
         }
       `)
     })
@@ -1536,11 +1557,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userRefreshAccessToken": Object {
-              "UserAccessToken": null,
-              "UserInputError": Array [],
-            },
+            "userRefreshAccessToken": null,
           },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
         }
       `)
     })
@@ -1567,7 +1588,13 @@ describe('User Mutations', () => {
           "data": Object {
             "userRefreshAccessToken": Object {
               "UserAccessToken": null,
-              "UserInputError": Array [],
+              "UserInputError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "accessToken",
+                  "message": "No user found using the token provided",
+                },
+              ],
             },
           },
         }
@@ -1605,11 +1632,11 @@ describe('User Mutations', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
-            "userRefreshAccessToken": Object {
-              "UserAccessToken": null,
-              "UserInputError": Array [],
-            },
+            "userRefreshAccessToken": null,
           },
+          "errors": Array [
+            [GraphQLError: invalid signature],
+          ],
         }
       `)
     })
