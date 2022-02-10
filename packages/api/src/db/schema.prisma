@@ -14,22 +14,44 @@ generator nexusPrisma {
 
 model User {
   // Default entry stuff
-  id                  String  @id @default(cuid())
+  id                  String    @id @default(cuid())
+  createdAt           DateTime  @default(now())
   // Account details
-  email               String  @unique
-  password            String  @unique
+  email               String    @unique
+  password            String    @unique
   // what's their role? Probably a pairer
-  role                Role    @default(PAIRER)
+  role                Role      @default(PAIRER)
   // Unique user ID
-  userId              String  @unique @default(uuid())
+  userId              String    @unique @default(uuid())
   // Verification
-  verified            Boolean @default(false)
+  verified            Boolean   @default(false)
   verificationCode    String
   verificationTimeout String
   // Recovery
-  resetToken          String  @default("")
+  resetToken          String    @default("")
   // Used to rotate JWTs on a user level
-  personalKey         String  @unique
+  personalKey         String    @unique
+  // Sessions related to the pairer
+  sessions            Session[]
+}
+
+model Session {
+  // default entry stuff
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  // Pairer
+  pairer      User     @relation(fields: [pairerId], references: [userId])
+  pairerId    String
+  // Pairee
+  firstName   String
+  lastName    String   @default("")
+  email       String
+  jobTitle    String   @default("")
+  portfolio   String   @default("")
+  timezone    String
+  appointment String
+  subjects    String[]
+  message     String
 }
 
 enum Role {

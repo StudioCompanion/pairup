@@ -1149,7 +1149,7 @@ describe('User Mutations', () => {
             "userRecover": Object {
               "UserInputError": Array [
                 Object {
-                  "errorCode": null,
+                  "errorCode": "INVALID",
                   "input": "email",
                   "message": "Invalid email address provided",
                 },

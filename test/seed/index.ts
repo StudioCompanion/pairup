@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client'
+import { User } from '@prisma/client'
 
 import { prisma } from '@pairup/api/src/db/prisma'
 
@@ -10,13 +10,12 @@ export interface SeedData {
 
 // Inspired by prisma/docs#451
 async function emptyDatabase() {
-  const tables = Prisma.dmmf.datamodel.models.map(
-    (model) => model.dbName || model.name
-  )
+  // delete them in order otherwise it throws a fit
+  const tables = ['Session', 'User']
 
-  await Promise.all(
-    tables.map((table) => prisma.$executeRawUnsafe(`DELETE FROM "${table}";`))
-  )
+  for (const index in tables) {
+    await prisma.$executeRawUnsafe(`DELETE FROM "${tables[index]}";`)
+  }
 }
 
 async function seedDatabase({ users }: SeedData) {
