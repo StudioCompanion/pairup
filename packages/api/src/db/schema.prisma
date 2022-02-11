@@ -18,7 +18,7 @@ model User {
   createdAt           DateTime  @default(now())
   // Account details
   email               String    @unique
-  password            String    @unique
+  password            String
   // what's their role? Probably a pairer
   role                Role      @default(PAIRER)
   // Unique user ID
@@ -30,28 +30,35 @@ model User {
   // Recovery
   resetToken          String    @default("")
   // Used to rotate JWTs on a user level
-  personalKey         String    @unique
+  personalKey         String
   // Sessions related to the pairer
   sessions            Session[]
 }
 
 model Session {
   // default entry stuff
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
   // Pairer
-  pairer      User     @relation(fields: [pairerId], references: [userId])
+  pairer      User          @relation(fields: [pairerId], references: [userId])
   pairerId    String
   // Pairee
   firstName   String
-  lastName    String   @default("")
+  lastName    String        @default("")
   email       String
-  jobTitle    String   @default("")
-  portfolio   String   @default("")
+  jobTitle    String        @default("")
+  portfolio   String        @default("")
   timezone    String
   appointment String
   subjects    String[]
   message     String
+  status      SessionStatus @default(ACTIVE)
+}
+
+enum SessionStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETE
 }
 
 enum Role {

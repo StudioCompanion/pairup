@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { User, Session } from '@prisma/client'
 
 import { prisma } from '@pairup/api/src/db/prisma'
 
@@ -6,6 +6,7 @@ import { testData } from './data'
 
 export interface SeedData {
   users: Array<Omit<User, 'id' | 'resetToken'>>
+  sessions: Array<Session>
 }
 
 // Inspired by prisma/docs#451
@@ -18,12 +19,20 @@ async function emptyDatabase() {
   }
 }
 
-async function seedDatabase({ users }: SeedData) {
+async function seedDatabase({ users, sessions }: SeedData) {
   // Insert users
   await Promise.all(
     users.map((user) =>
       prisma.user.create({
         data: user,
+      })
+    )
+  )
+
+  await Promise.all(
+    sessions.map((sess) =>
+      prisma.session.create({
+        data: sess,
       })
     )
   )
