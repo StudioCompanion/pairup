@@ -48,3 +48,14 @@ export const SessionCreatePayloadType = objectType({
     })
   },
 })
+
+export const SessionCancelPayloadType = objectType({
+  name: 'SessionCancelPayload',
+  description: 'Payload from the sessionCancel mutation',
+  definition: (t) => {
+    t.id('sessionId')
+    t.list.field('SessionInputError', {
+      type: 'InputErrors',
+    })
+  },
+})

@@ -101,4 +101,154 @@ describe('session mutations', () => {
       `)
     })
   })
+
+  describe('session cancel', () => {
+    const mutation = graphql`
+      mutation CancelSession($sessionId: ID!) {
+        sessionCancel(sessionId: $sessionId) {
+          sessionId
+          SessionInputError {
+            message
+            errorCode
+            input
+          }
+        }
+      }
+    `
+    it('should return the cancelled sesion id if successful', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            sessionId: testData.sessions[0].id,
+          },
+          context: {
+            user: {
+              userId: testData.users[1].userId,
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "sessionCancel": Object {
+              "SessionInputError": Array [],
+              "sessionId": "123",
+            },
+          },
+        }
+      `)
+    })
+
+    it('should throw if the user is not authenticated', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            sessionId: testData.sessions[0].id,
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "sessionCancel": null,
+          },
+          "errors": Array [
+            [GraphQLError: User must be logged in],
+          ],
+        }
+      `)
+    })
+
+    it('should return an error if the user does not have this session attached to them', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            sessionId: 'abc',
+          },
+
+          context: {
+            user: {
+              userId: testData.users[1].userId,
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "sessionCancel": Object {
+              "SessionInputError": Array [
+                Object {
+                  "errorCode": "NOT_FOUND",
+                  "input": "sessionId",
+                  "message": "Session not found with provided id",
+                },
+              ],
+              "sessionId": "",
+            },
+          },
+        }
+      `)
+    })
+
+    it('should return an error if the session has already been cancelled', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            sessionId: testData.sessions[2].id,
+          },
+
+          context: {
+            user: {
+              userId: testData.users[1].userId,
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "sessionCancel": Object {
+              "SessionInputError": Array [
+                Object {
+                  "errorCode": "PAST_EVENT",
+                  "input": "sessionId",
+                  "message": "Session not found with provided id in User",
+                },
+              ],
+              "sessionId": "",
+            },
+          },
+        }
+      `)
+    })
+
+    it('should return an error if the session has already been completed', async () => {
+      expect(
+        await request(mutation, {
+          variables: {
+            sessionId: testData.sessions[3].id,
+          },
+
+          context: {
+            user: {
+              userId: testData.users[1].userId,
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "sessionCancel": Object {
+              "SessionInputError": Array [
+                Object {
+                  "errorCode": "PAST_EVENT",
+                  "input": "sessionId",
+                  "message": "Session not found with provided id in User",
+                },
+              ],
+              "sessionId": "",
+            },
+          },
+        }
+      `)
+    })
+  })
 })
