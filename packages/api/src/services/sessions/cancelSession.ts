@@ -2,6 +2,7 @@ import { captureException, Scope } from '@sentry/node'
 import { FieldResolver } from 'nexus'
 
 import { Logger } from '../../helpers/console'
+import { sendCancelledSessionEmail } from '../emails/sendCancelledSessionEmail'
 
 export const cancelSession: FieldResolver<'Mutation', 'sessionCancel'> = async (
   _,
@@ -59,6 +60,8 @@ export const cancelSession: FieldResolver<'Mutation', 'sessionCancel'> = async (
         status: 'CANCELLED',
       },
     })
+
+    await sendCancelledSessionEmail(updatedSession.email)
 
     return {
       sessionId: updatedSession.id,

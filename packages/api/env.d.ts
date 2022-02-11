@@ -18,6 +18,7 @@ declare namespace NodeJS {
     POSTMARK_TEMPLATE_NEW_USER?: string
     POSTMARK_TEMPLATE_ID_LIVE_PROFILE?: string
     POSTMARK_TEMPLATE_ID_NEW_SESSION?: string
+    POSTMARK_TEMPLATE_ID_CANCELLED_SESSION?: string
     // JWT
     JWT_SECRET?: string
   }
