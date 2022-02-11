@@ -90,6 +90,11 @@ type Mutation {
   ): UserCreateAccountPayload
 
   """
+  Deletes the users account permanently, cancelling and deleting all their sessions and messages.
+  """
+  userDeleteAccount: UserDeleteAccountPayload
+
+  """
   Starts the recovery process for a user who has forgotten their password
   """
   userRecover(email: String!): UserRecoverPayload
@@ -287,6 +292,13 @@ Payload from the userCreateToken mutation
 type UserCreateTokenPayload {
   UserAccessToken: UserAccessToken
   UserInputError: [InputErrors]
+}
+
+"""
+Payload from the userDeleteAccount mutation
+"""
+type UserDeleteAccountPayload {
+  success: Boolean
 }
 
 """

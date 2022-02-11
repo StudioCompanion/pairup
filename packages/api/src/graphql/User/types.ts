@@ -113,3 +113,11 @@ export const UserRefreshAccessTokenPayloadType = objectType({
     })
   },
 })
+
+export const UserDeleteAccountPayloadType = objectType({
+  name: 'UserDeleteAccountPayload',
+  description: 'Payload from the userDeleteAccount mutation',
+  definition: (t) => {
+    t.boolean('success')
+  },
+})

@@ -1,11 +1,13 @@
 import { extendType, nonNull, stringArg } from 'nexus'
-import { createAccessToken } from '../../services/tokens/createAccessToken'
 
+import { createAccessToken } from '../../services/tokens/createAccessToken'
+import { refreshAccessToken } from '../../services/tokens/refreshAccessToken'
+
+import { deleteAccount } from '../../services/accounts/deleteAccount'
 import { signup } from '../../services/accounts/signup'
 import { updateAccount } from '../../services/accounts/updateAccount'
 import { recoverAccount } from '../../services/accounts/recoverAccount'
 import { resetAccount } from '../../services/accounts/resetAccount'
-import { refreshAccessToken } from '../../services/tokens/refreshAccessToken'
 
 export const mutations = extendType({
   type: 'Mutation',
@@ -70,6 +72,13 @@ export const mutations = extendType({
         accessToken: nonNull(stringArg()),
       },
       resolve: refreshAccessToken,
+    })
+
+    t.nullable.field('userDeleteAccount', {
+      type: 'UserDeleteAccountPayload',
+      description:
+        'Deletes the users account permanently, cancelling and deleting all their sessions and messages.',
+      resolve: deleteAccount,
     })
   },
 })

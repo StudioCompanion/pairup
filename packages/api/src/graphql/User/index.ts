@@ -7,6 +7,7 @@ import {
   UserRecoverPayloadType,
   UserResetPayloadType,
   UserRefreshAccessTokenPayloadType,
+  UserDeleteAccountPayloadType,
 } from './types'
 import {
   UserAvailabilityInputType,
@@ -31,6 +32,7 @@ export default [
   UserRecoverPayloadType,
   UserResetPayloadType,
   UserRefreshAccessTokenPayloadType,
+  UserDeleteAccountPayloadType,
   mutations,
   queries,
 ]
