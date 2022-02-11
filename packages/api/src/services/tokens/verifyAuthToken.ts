@@ -33,7 +33,7 @@ export const verifyAuthToken = async (
 
     const user = await verifyUserToken(token)
 
-    return { userId: user.userId }
+    return user
   } catch (err) {
     Logger.error(err)
 

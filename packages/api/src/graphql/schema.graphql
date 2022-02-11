@@ -37,6 +37,11 @@ enum ErrorCodes {
   The entry was not found
   """
   NOT_FOUND
+
+  """
+  The entry being mutated has already happened
+  """
+  PAST_EVENT
 }
 
 """
@@ -53,6 +58,11 @@ type Mutation {
   Create an abuse report
   """
   reportsSubmitAbuse(report: ReportAbuseInput!): ReportSubmitAbusePayload
+
+  """
+  delete a session with a pairer
+  """
+  sessionCancel(sessionId: ID!): SessionCancelPayload
 
   """
   create a session with a pairer
@@ -176,6 +186,14 @@ type Session {
 }
 
 """
+Payload from the sessionCancel mutation
+"""
+type SessionCancelPayload {
+  SessionInputError: [InputErrors]
+  sessionId: ID
+}
+
+"""
 Pairee details and information for creating a session
 """
 input SessionCreatePaireeInput {
@@ -196,6 +214,15 @@ Payload from the sessionCreate mutation
 type SessionCreatePayload {
   Session: Session
   SessionInputError: [InputErrors]
+}
+
+"""
+Possible status a session can have within the database
+"""
+enum SessionStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETE
 }
 
 """

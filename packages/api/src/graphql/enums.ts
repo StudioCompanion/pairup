@@ -14,5 +14,10 @@ export const ErrorCodesType = enumType({
       name: 'NOT_FOUND',
       description: 'The entry was not found',
     },
+    {
+      value: 'PastEvent',
+      name: 'PAST_EVENT',
+      description: 'The entry being mutated has already happened',
+    },
   ],
 })
