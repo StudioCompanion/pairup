@@ -1,4 +1,5 @@
 import { captureException, Scope } from '@sentry/node'
+import { permittedCrossDomainPolicies } from 'helmet'
 import { Logger } from '../../helpers/console'
 
 import { API_TOKEN, client } from './client'

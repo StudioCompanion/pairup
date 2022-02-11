@@ -49,4 +49,61 @@ describe('service createSession', () => {
       user?.sessions.some((sesh) => sesh.id === res?.Session?.id)
     ).toBeTruthy()
   })
+
+  it('should send an email to the pairee and pairer about their new session', async () => {
+    const sendEmailWithTemplateMock = jest.fn()
+    jest.resetModules()
+    jest.unmock('postmark')
+
+    jest.doMock('postmark', () => ({
+      ServerClient: () => ({
+        sendEmailWithTemplate: sendEmailWithTemplateMock,
+      }),
+    }))
+
+    const { createSession: mockedCreateSession } = require('./createSession')
+
+    const paireeEmail = 'john@john.com'
+
+    await mockedCreateSession(
+      {},
+      {
+        pairerId: testData.users[0].userId,
+        paireeDetails: {
+          firstName: 'John',
+          email: paireeEmail,
+          timezone: 'GMT +1',
+          appointment: 'NOW-NOW',
+          message: 'Hello I want to pair pls',
+        },
+      },
+      {
+        prisma,
+        user: {
+          userId: null,
+        },
+      },
+      null as unknown as GraphQLResolveInfo
+    )
+
+    expect(sendEmailWithTemplateMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        To: testData.users[0].email,
+        From: process.env.POSTMARK_FROM_EMAIL,
+        TemplateId: Number(process.env.POSTMARK_TEMPLATE_ID_NEW_SESSION),
+        TemplateModel: expect.any(Object),
+      })
+    )
+
+    expect(sendEmailWithTemplateMock).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        To: paireeEmail,
+        From: process.env.POSTMARK_FROM_EMAIL,
+        TemplateId: Number(process.env.POSTMARK_TEMPLATE_ID_NEW_SESSION),
+        TemplateModel: expect.any(Object),
+      })
+    )
+  })
 })

@@ -1,9 +1,9 @@
 import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 import Airtable from 'airtable'
+import { captureException, Scope } from '@sentry/node'
 
 import { Logger } from '../../helpers/console'
-import { captureException, Scope } from '@sentry/node'
 
 import { NexusGenEnums } from '../../graphql/nexus-types.generated'
 
@@ -17,7 +17,7 @@ type AbuseReportRow = {
   Severity?: string
 }
 
-export const ABUSE_TYPE_OPTIONS = [
+const ABUSE_TYPE_OPTIONS = [
   'Spam or harmful',
   'Harassment or bullying',
   'Pretending to be someone',
@@ -29,11 +29,12 @@ enum ReportSeverity {
   MEDIUM = 'MEDIUM',
   LOW = 'LOW',
 }
+
 const SEVERITY_MAP: Record<NexusGenEnums['Abuse'], ReportSeverity> = {
-  ['Spam or harmful']: ReportSeverity.MEDIUM,
-  ['Harassment or bullying']: ReportSeverity.HIGH,
-  ['Pretending to be someone']: ReportSeverity.HIGH,
-  ['Something else']: ReportSeverity.LOW,
+  [ABUSE_TYPE_OPTIONS[0]]: ReportSeverity.MEDIUM,
+  [ABUSE_TYPE_OPTIONS[1]]: ReportSeverity.HIGH,
+  [ABUSE_TYPE_OPTIONS[2]]: ReportSeverity.HIGH,
+  [ABUSE_TYPE_OPTIONS[3]]: ReportSeverity.LOW,
 }
 
 const abuseReportSchema = z.object({

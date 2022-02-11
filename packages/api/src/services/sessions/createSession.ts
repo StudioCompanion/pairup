@@ -3,6 +3,7 @@ import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 
 import { Logger } from '../../helpers/console'
+import { sendNewSessionEmail } from '../emails/sendNewSessionEmail'
 
 const paireeDetailsSchema = z.object({
   firstName: z
@@ -85,12 +86,22 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
       }
     }
 
+    /**
+     * Create the DB session and
+     * add the pairer ID to make the relation
+     */
     const createdSession = await ctx.prisma.session.create({
       data: {
         ...parsedDetails,
-        pairerId,
+        pairerId: pairer.userId,
       },
     })
+
+    /**
+     * Send new emails to both
+     * pairer and pairee
+     */
+    await sendNewSessionEmail(pairer.email, parsedDetails.email)
 
     return {
       Session: {
