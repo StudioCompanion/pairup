@@ -41,6 +41,16 @@ export const deleteAccount: FieldResolver<'Mutation', 'userDeleteAccount'> =
         },
       })
 
+      /**
+       * Email those pairees about
+       * their cancelled sessions
+       */
+      await Promise.all(
+        user.sessions
+          .filter((sesh) => sesh.status === 'ACTIVE')
+          .map((sesh) => sendCancelledSessionEmail(sesh.email))
+      )
+
       return {
         success: true,
       }
