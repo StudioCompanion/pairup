@@ -1641,4 +1641,68 @@ describe('User Mutations', () => {
       `)
     })
   })
+
+  describe('userDeleteAccount', () => {
+    const mutation = graphql`
+      mutation DeleteAccount {
+        userDeleteAccount {
+          success
+        }
+      }
+    `
+
+    it('should return successfully if the user is logged in', async () => {
+      expect(
+        await request(mutation, {
+          context: {
+            user: {
+              userId: testData.users[0].userId,
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userDeleteAccount": Object {
+              "success": true,
+            },
+          },
+        }
+      `)
+    })
+
+    it('should throw if the user is not logged in', async () => {
+      expect(await request(mutation)).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userDeleteAccount": null,
+          },
+          "errors": Array [
+            [GraphQLError: User must be logged in],
+          ],
+        }
+      `)
+    })
+
+    it('should fail if the user is not a valid user in the database', async () => {
+      expect(
+        await request(mutation, {
+          context: {
+            user: {
+              userId: 'asjdskbferhbkwherbghbew',
+            },
+          },
+        })
+      ).toMatchInlineSnapshot(`
+        Object {
+          "data": Object {
+            "userDeleteAccount": null,
+          },
+          "errors": Array [
+            [GraphQLError: User must be logged in],
+          ],
+        }
+      `)
+    })
+  })
 })
