@@ -2,6 +2,7 @@ import { captureException, Scope } from '@sentry/node'
 import { FieldResolver } from 'nexus'
 
 import { Logger } from '../../helpers/console'
+import { sendCancelledSessionEmail } from '../emails/sendCancelledSessionEmail'
 
 export const deleteAccount: FieldResolver<'Mutation', 'userDeleteAccount'> =
   async (_, _args, ctx) => {
@@ -14,19 +15,23 @@ export const deleteAccount: FieldResolver<'Mutation', 'userDeleteAccount'> =
       throw new Error('User must be logged in')
     }
 
-    try {
-      /**
-       * Get sessions for user
-       */
-      const { sessions } = (await prisma.user.findUnique({
-        where: {
-          userId,
-        },
-        include: {
-          sessions: true,
-        },
-      }))!
+    /**
+     * Get sessions for user
+     */
+    const user = await prisma.user.findUnique({
+      where: {
+        userId,
+      },
+      include: {
+        sessions: true,
+      },
+    })
 
+    if (!user) {
+      throw new Error('User must be logged in')
+    }
+
+    try {
       /**
        * Delete sessions for user
        */
