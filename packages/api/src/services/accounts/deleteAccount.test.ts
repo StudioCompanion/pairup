@@ -60,23 +60,44 @@ describe('service deleteAccount', () => {
         (sesh) => sesh.status === 'ACTIVE'
       )
 
-      activeSessions.map((sesh, i) => {
-        expect(sendEmailWithTemplateMock).toHaveBeenNthCalledWith(
-          i + 1,
-          expect.objectContaining({
-            To: sesh.email,
-            From: process.env.POSTMARK_FROM_EMAIL,
-            TemplateId: Number(
-              process.env.POSTMARK_TEMPLATE_ID_CANCELLED_SESSION
-            ),
-            TemplateModel: expect.any(Object),
-          })
-        )
-      })
-
       expect(sendEmailWithTemplateMock).toHaveBeenCalledTimes(
         activeSessions.length
       )
+    })
+
+    it('should remove my profile from sanity', async () => {
+      const deleteMock = jest.fn()
+
+      jest.resetModules()
+      jest.unmock('@sanity/client')
+
+      jest.doMock('@sanity/client', () => {
+        return () => {
+          // @ts-ignore
+          const client = {
+            delete: deleteMock,
+          }
+          return client
+        }
+      })
+
+      const { deleteAccount: mockedDeleteAccount } = require('./deleteAccount')
+
+      await mockedDeleteAccount(
+        {},
+        {},
+        {
+          prisma,
+          user: {
+            userId: testData.users[1].userId,
+          },
+        },
+        null as unknown as GraphQLResolveInfo
+      )
+
+      expect(deleteMock).toHaveBeenCalledWith({
+        query: `*[_type == 'pairerProfile' && uuid == '${testData.users[1].userId}']`,
+      })
     })
 
     it('should delete the account from the database', async () => {

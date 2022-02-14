@@ -3,6 +3,7 @@ import { FieldResolver } from 'nexus'
 
 import { Logger } from '../../helpers/console'
 import { sendCancelledSessionEmail } from '../emails/sendCancelledSessionEmail'
+import { deleteDocument } from '../sanity/deleteDocument'
 
 export const deleteAccount: FieldResolver<'Mutation', 'userDeleteAccount'> =
   async (_, _args, ctx) => {
@@ -50,6 +51,14 @@ export const deleteAccount: FieldResolver<'Mutation', 'userDeleteAccount'> =
           .filter((sesh) => sesh.status === 'ACTIVE')
           .map((sesh) => sendCancelledSessionEmail(sesh.email))
       )
+
+      await deleteDocument(userId)
+
+      await prisma.user.delete({
+        where: {
+          userId,
+        },
+      })
 
       return {
         success: true,
