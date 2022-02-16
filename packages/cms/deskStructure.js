@@ -1,6 +1,6 @@
 import S from '@sanity/desk-tool/structure-builder'
 
-import { UserList } from 'phosphor-react'
+import { UserList, UserCircleMinus } from 'phosphor-react'
 
 export default () => {
   // prettier-ignore
@@ -8,7 +8,7 @@ export default () => {
     S.list()
       .title('Menu')
       .items([
-        // Parier Profiles
+        // Pairer Profiles
         S.listItem()
           .title('Pairer Profiles')
           .icon(UserList)
@@ -16,6 +16,14 @@ export default () => {
           .child(
               S.documentTypeList('pairerProfile')
           ),
+        // Blacklisted Emails
+        S.listItem()
+        .title('Blacklisted Emails')
+        .icon(UserCircleMinus)
+        .schemaType('blacklistedEmails')
+        .child(
+          S.documentTypeList('blacklistedEmails')
+        ),
       ])
   )
 }
