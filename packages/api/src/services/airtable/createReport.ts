@@ -6,8 +6,9 @@ import { captureException, Scope } from '@sentry/node'
 import { Logger } from '../../helpers/console'
 
 import { NexusGenEnums } from '../../graphql/nexus-types.generated'
+import { sendNewAbuseReportedEmail } from '../emails/sendNewAbuseReportedEmail'
 
-type AbuseReportRow = {
+export type AbuseReportRow = {
   Name?: string
   Email?: string
   'Incident description'?: string
@@ -67,7 +68,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
         args.report
 
       if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_REPORTS_ID) {
-        throw new Error('Unable to submit report, no API key or Table ID')
+        throw new Error('Unable to submit report, no API key or Base ID')
       }
 
       abuseReportSchema.parse({
@@ -82,7 +83,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
         apiKey: process.env.AIRTABLE_API_KEY,
       }).base(process.env.AIRTABLE_REPORTS_ID)
 
-      await base<AbuseReportRow>('Reports').create({
+      const reportRecord = await base<AbuseReportRow>('Reports').create({
         Name: name,
         Email: email,
         'Incident description': description,
@@ -91,6 +92,8 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
         Status: 'New',
         Severity: SEVERITY_MAP[abuseType],
       })
+
+      await sendNewAbuseReportedEmail(reportRecord)
 
       return {
         success: true,
