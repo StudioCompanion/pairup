@@ -64,7 +64,7 @@ async function startApolloServer() {
 
   app.post('/webhooks/sanity/pairer-profile-published', pairerProfilePublished)
 
-  app.post('/blacklisted-email', blacklistedEmail)
+  app.post('/webhooks/sanity/blacklisted-email', blacklistedEmail)
 
   const httpServer = http.createServer(app)
 

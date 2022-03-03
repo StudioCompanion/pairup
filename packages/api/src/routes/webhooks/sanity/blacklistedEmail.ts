@@ -1,8 +1,8 @@
-import { GraphQLResolveInfo } from 'graphql'
-import { prisma } from '../../../db/prisma'
-
 import { captureException, Scope } from '@sentry/node'
 import { RequestHandler } from 'express'
+
+import { GraphQLResolveInfo } from 'graphql'
+import { prisma } from '../../../db/prisma'
 
 import { deleteAccount } from '../../../services/accounts/deleteAccount'
 
@@ -33,7 +33,7 @@ export const blacklistedEmail: RequestHandler<
         {
           prisma,
           user: {
-            userId: prismaUser?.userId,
+            userId: prismaUser.userId,
           },
         },
         null as unknown as GraphQLResolveInfo

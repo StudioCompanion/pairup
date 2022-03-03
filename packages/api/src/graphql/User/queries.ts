@@ -3,6 +3,7 @@ import { extendType, nonNull, stringArg } from 'nexus'
 import { prisma } from '../../db/prisma'
 
 import { getSanityClientRead } from '../../lib/sanity'
+import groq from 'groq'
 
 export const queries = extendType({
   type: 'Query',
@@ -23,13 +24,13 @@ export const queries = extendType({
 
         const sanityClient = getSanityClientRead()
 
-        const query = /* groq */ `*[_type == 'blacklistedEmails' && email == $email]{email}`
+        const query = groq`*[_type == 'blacklistedEmails' && email == $email][0]`
 
         const sanityUser = await sanityClient.fetch(query, {
           email: email,
         })
 
-        return prismaUser === null && sanityUser.length === 0
+        return prismaUser && sanityUser === null
       },
     })
   },

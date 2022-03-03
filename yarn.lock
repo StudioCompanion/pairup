@@ -5917,6 +5917,7 @@ __metadata:
     firebase-admin: ^10.0.2
     graphql: 15.8.0
     graphql-iso-date: ^3.6.1
+    groq: ^2.15.0
     helmet: ^5.0.2
     jsonwebtoken: ^8.5.1
     nanoid: ^3.2.0
@@ -18285,6 +18286,13 @@ __metadata:
   version: 0.2.0
   resolution: "groq-js@npm:0.2.0"
   checksum: 310d271006ae12626fd9d7cc5e20a5872f10b5aa807de524fe8c0c9b059e042a08f40e91101e2b2db4ca8c99f20e9b3e823b2fb347b2fb1203b5080e6b7dfd11
+  languageName: node
+  linkType: hard
+
+"groq@npm:^2.15.0":
+  version: 2.15.0
+  resolution: "groq@npm:2.15.0"
+  checksum: b410f600387ac81ba86747108d7bfd8a9d906a664b11604f46cf8ffb8f74f7175cbd528746b1e6931763a44641b2c58be6d9bb682ec989cb9238d667edc2f975
   languageName: node
   linkType: hard
 

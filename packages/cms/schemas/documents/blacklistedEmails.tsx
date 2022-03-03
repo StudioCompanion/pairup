@@ -11,22 +11,15 @@ export default {
       title: 'Email',
       type: 'string',
     },
-    {
-      name: 'pairer',
-      title: 'Pairer',
-      type: 'boolean',
-    },
   ],
   preview: {
     select: {
       title: 'email',
-      subtitle: 'pairer',
     },
-    prepare({ title, subtitle }) {
+    prepare({ title }) {
       return {
         media: () => <At />,
         title: title,
-        subtitle: subtitle ? 'Pairer' : 'Pairee',
       }
     },
   },
