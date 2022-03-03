@@ -18,9 +18,6 @@ export const blacklistedEmail: RequestHandler<
   BlacklistedEmailResponse,
   BlacklistedEmailRequestBody
 > = async (req, res) => {
-  // log
-  console.log('🍐🍐🍐🍐🍐🍐🍐🍐🍐🍐🍐🍐🍐🍐🍐 req.body is: ', req.body)
-
   try {
     const { email } = req.body
     const prismaUser = await prisma.user.findFirst({
