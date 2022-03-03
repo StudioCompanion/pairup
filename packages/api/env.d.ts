@@ -21,5 +21,8 @@ declare namespace NodeJS {
     POSTMARK_TEMPLATE_ID_CANCELLED_SESSION?: string
     // JWT
     JWT_SECRET?: string
+    // AIRTABLE
+    AIRTABLE_API_KEY?: string
+    AIRTABLE_REPORTS_ID?: string
   }
 }
