@@ -16,6 +16,7 @@ import {
 } from '../services/tokens/verifyAuthToken'
 
 import { pairerProfilePublished } from '../routes/webhooks/sanity/pairerProfilePublished'
+import { blacklistedEmail } from '../routes/webhooks/sanity/blacklistedEmail'
 
 import { Logger } from '../helpers/console'
 
@@ -62,6 +63,8 @@ async function startApolloServer() {
   app.use(Sentry.Handlers.requestHandler())
 
   app.post('/webhooks/sanity/pairer-profile-published', pairerProfilePublished)
+
+  app.post('/blacklisted-email', blacklistedEmail)
 
   const httpServer = http.createServer(app)
 
