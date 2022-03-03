@@ -35,6 +35,8 @@ jobs:
       POSTMARK_TEMPLATE_ID_NEW_SESSION: '{{ secrets.POSTMARK_TEMPLATE_ID_NEW_SESSION }}'
       POSTMARK_TEMPLATE_ID_CANCELLED_SESSION: '{{ secrets.POSTMARK_TEMPLATE_ID_CANCELLED_SESSION }}'
       JWT_SECRET: '{{ secrets.JWT_SECRET }}'
+      AIRTABLE_API_KEY: '{{ secrets.AIRTABLE_API_KEY }}'
+      AIRTABLE_REPORTS_ID: '{{ secrets.AIRTABLE_REPORTS_ID }}'
 
     steps:
       - name: Cancel Previous Runs
