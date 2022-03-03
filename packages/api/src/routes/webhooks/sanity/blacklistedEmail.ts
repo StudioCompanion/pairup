@@ -40,7 +40,7 @@ export const blacklistedEmail: RequestHandler<
       )
       res.status(200).end()
     } else {
-      throw new Error('Failed to retrieve prismaUser')
+      throw new Error('No user found with the provided email address')
     }
   } catch (err) {
     const msg = 'Failed to delete user account'
@@ -50,7 +50,7 @@ export const blacklistedEmail: RequestHandler<
       msg,
       new Scope().setExtras({
         err,
-        data: req.body,
+        data: res.status(400).end()
       })
     )
   }

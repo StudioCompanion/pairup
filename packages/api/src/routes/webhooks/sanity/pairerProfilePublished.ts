@@ -32,7 +32,7 @@ export const pairerProfilePublished: RequestHandler<
       msg,
       new Scope().setExtras({
         err,
-        data: req.body,
+        data: res.status(400).end(),
       })
     )
   }
