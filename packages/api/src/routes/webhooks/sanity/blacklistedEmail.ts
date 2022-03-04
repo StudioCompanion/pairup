@@ -50,8 +50,9 @@ export const blacklistedEmail: RequestHandler<
       msg,
       new Scope().setExtras({
         err,
-        data: res.status(400).end()
+        data: req.body,
       })
     )
+    res.status(400).end()
   }
 }

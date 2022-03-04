@@ -6,9 +6,9 @@ import defaultResolve, {
   DeleteAction,
 } from 'part:@sanity/base/document-actions'
 
-import { BlacklistEmailAction } from './documentActions/BlacklistEmailAction'
+import { BlacklistEmailAction } from './BlacklistEmailAction'
 
-import { LOCKED_DOCUMENT_TYPES, LOCKED_DOCUMENT_IDS } from './constants'
+import { LOCKED_DOCUMENT_TYPES, LOCKED_DOCUMENT_IDS } from '../constants'
 
 const lockedDocs = [...LOCKED_DOCUMENT_TYPES, ...LOCKED_DOCUMENT_IDS]
 

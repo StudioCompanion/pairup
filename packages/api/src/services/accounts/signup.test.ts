@@ -138,6 +138,9 @@ describe('service signup', () => {
           commit() {
             return client
           },
+          fetch() {
+            return client
+          },
         }
         return client
       }

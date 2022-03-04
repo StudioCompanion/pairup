@@ -1,6 +1,7 @@
 // Global setup for Jest, will run once per test file
 import { reseedDatabase } from './seed'
 import { prisma } from '@pairup/api/src/db/prisma'
+import { server } from './msw/server'
 
 /**
  * Our mocks are written here so we can override them
@@ -8,7 +9,7 @@ import { prisma } from '@pairup/api/src/db/prisma'
  * various things.
  * e.g. Sanity Client actually patches a document
  */
-jest.mock('@sanity/client', () => jest.fn())
+// jest.mock('@sanity/client', () => jest.fn())
 jest.mock('postmark', () => ({
   ServerClient: jest.fn(),
 }))
@@ -24,10 +25,16 @@ jest.mock('airtable', () => {
 
 beforeEach(async () => {
   await reseedDatabase()
+  server.listen()
+})
+
+afterEach(() => {
+  server.resetHandlers()
 })
 
 afterAll(() => {
   // Disconnect Prisma from the database after all tests are complete
   // to avoid open handles stopping Jest from exiting
   prisma.$disconnect()
+  server.close()
 })
