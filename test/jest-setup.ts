@@ -16,7 +16,10 @@ jest.mock('airtable', () => {
   return class MockedAirtableClass {
     base() {
       return () => ({
-        create: jest.fn(),
+        create: jest.fn().mockImplementation((report) => ({
+          ...report,
+          getId: jest.fn(),
+        })),
       })
     }
   }
