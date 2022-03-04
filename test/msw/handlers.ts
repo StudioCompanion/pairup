@@ -5,7 +5,13 @@ export const handlers = [
   rest.get(
     `https://${process.env.SANITY_PROJECT_ID}.apicdn.sanity.io/v2022-01-25/data/query/${process.env.SANITY_DATASET}`,
     (req, res, ctx) => {
-      return res(ctx.status(200), ctx.json({ result: {} }))
+      const search = req.url.searchParams.get('$email')
+      //if we do not find the email in sanity
+      if (search == '"test@testing.com"') {
+        return res(ctx.status(200), ctx.json({ result: null }))
+      } else {
+        return res(ctx.status(200), ctx.json(testData.users[0].email))
+      }
     }
   ),
 ]
