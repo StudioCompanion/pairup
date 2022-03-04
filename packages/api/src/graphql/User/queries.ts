@@ -30,6 +30,9 @@ export const queries = extendType({
           email: email,
         })
 
+        console.log('sanityUser', sanityUser)
+        console.log('prismaUser', prismaUser)
+
         return prismaUser && sanityUser === null
       },
     })
