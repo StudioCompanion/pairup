@@ -5,7 +5,7 @@ import { sendEmail } from '../postmark/sendEmail'
 
 import type { AbuseReportRow } from '../airtable/createReport'
 
-const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_CANCELLED_SESSION
+const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_NEW_REPORT
 const ADMIN_EMAIL_ADDRESS = process.env.POSTMARK_ADMIN_EMAIL
 
 export const sendNewAbuseReportedEmail = async (
