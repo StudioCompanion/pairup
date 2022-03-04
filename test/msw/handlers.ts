@@ -3,13 +3,9 @@ import { testData } from '../seed/data'
 
 export const handlers = [
   rest.get(
-    'https://uso4acwf.api.sanity.io/v2021-10-21/data/query/staging',
+    `https://${process.env.SANITY_PROJECT_ID}.apicdn.sanity.io/v2022-01-25/data/query/${process.env.SANITY_DATASET}`,
     (req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({ result: {} })
-        // ctx.json(testData.users[0].email)
-      )
+      return res(ctx.status(200), ctx.json({ result: {} }))
     }
   ),
 ]
