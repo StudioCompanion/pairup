@@ -49,6 +49,7 @@ export default {
       title: 'Profile Status',
       type: 'string',
       codegen: { required: true },
+      readOnly: true,
       validation: (rule: Rule) => rule.required(),
       options: {
         list: Object.values(PAIRER_PROFILE_STATUS).filter((val) =>
@@ -246,21 +247,13 @@ export default {
     })),
   ],
   validation: (rule: Rule) =>
-    rule.custom(
-      ({
-        hasVerifiedAccount,
-        status,
-      }: {
-        hasVerifiedAccount: boolean
-        status: PAIRER_PROFILE_STATUS
-      }) => {
-        if (!hasVerifiedAccount || status !== PAIRER_PROFILE_STATUS.APPROVED) {
-          return "You cant approve a profile if they haven't verified their account"
-        } else {
-          return true
-        }
+    rule.custom(({ hasVerifiedAccount }: { hasVerifiedAccount: boolean }) => {
+      if (!hasVerifiedAccount) {
+        return "You cant approve a profile if they haven't verified their account"
+      } else {
+        return true
       }
-    ),
+    }),
   preview: {
     select: {
       title: 'title',
