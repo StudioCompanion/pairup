@@ -4,6 +4,14 @@
   --black: #191919;
 
   --font-family-base: 'Inter';
+  --brand-secondary: #f03e2f;
+
+  --state-success-color: #3ab667;
+  --state-info-color: #666666;
+  --state-warning-color: #ee744c;
+  --state-danger-color: #f03e2f;
+
+  --main-navigation-color: var(--black);
 }
 
 *[data-testid='group-tab-all-fields'] {

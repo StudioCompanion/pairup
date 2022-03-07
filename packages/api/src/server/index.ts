@@ -14,8 +14,11 @@ import {
   AuthenticatedUser,
   verifyAuthToken,
 } from '../services/tokens/verifyAuthToken'
+import { verifySanityToken } from '../services/sanity/verifySanityToken'
 
 import { pairerProfilePublished } from '../routes/webhooks/sanity/pairerProfilePublished'
+import { profileFeedback } from '../routes/send/profileFeedback'
+import { rejectProfile } from '../routes/send/rejectProfile'
 
 import { Logger } from '../helpers/console'
 
@@ -62,6 +65,9 @@ async function startApolloServer() {
   app.use(Sentry.Handlers.requestHandler())
 
   app.post('/webhooks/sanity/pairer-profile-published', pairerProfilePublished)
+
+  app.post('/send/profileFeedback', verifySanityToken, profileFeedback)
+  app.post('/send/rejectProfile', verifySanityToken, rejectProfile)
 
   const httpServer = http.createServer(app)
 

@@ -17,6 +17,7 @@ export enum TIMEZONES {
 export enum PAIRER_PROFILE_STATUS {
   APPROVED = 'approved',
   AWAITING_APPROVAL = 'awaiting approval',
+  REJECTED = 'rejected',
 }
 
 export enum SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES {

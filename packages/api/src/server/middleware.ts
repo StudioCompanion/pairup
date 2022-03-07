@@ -3,6 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import compression from 'compression'
+import { requireSignedRequest } from '@sanity/webhook'
 
 export const applyMiddleware = (app: Express) => {
   /**
@@ -34,4 +35,9 @@ export const applyMiddleware = (app: Express) => {
    * Compression
    */
   app.use(compression())
+
+  app.use(
+    '/webhooks/sanity/*',
+    requireSignedRequest({ secret: process.env.SANITY_SECRET ?? '' })
+  )
 }

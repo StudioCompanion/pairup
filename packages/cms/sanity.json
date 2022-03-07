@@ -30,7 +30,7 @@
     },
     {
       "implements": "part:@sanity/base/document-actions/resolver",
-      "path": "./resolveDocumentActions.js"
+      "path": "./documentActions/resolveDocumentActions.js"
     },
     {
       "name": "part:@sanity/desk-tool/structure",
@@ -39,6 +39,10 @@
     {
       "implements": "part:@sanity/base/theme/variables/override-style",
       "path": "./styles/overide.css"
+    },
+    {
+      "implements": "part:@sanity/base/document-badges/resolver",
+      "path": "./documentBadges/resolveDocumentBadges.js"
     }
   ]
 }
