@@ -8,6 +8,7 @@ declare namespace NodeJS {
     SANITY_DATASET?: string
     SANITY_PROJECT_ID?: string
     SANITY_API_KEY?: string
+    SANITY_SECRET?: string
     // SENTRY
     SENTRY_DNS?: string
     // POSTMARK
@@ -20,6 +21,8 @@ declare namespace NodeJS {
     POSTMARK_TEMPLATE_ID_NEW_SESSION?: string
     POSTMARK_TEMPLATE_ID_CANCELLED_SESSION?: string
     POSTMARK_TEMPLATE_ID_NEW_REPORT?: string
+    POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK?: string
+    POSTMARK_TEMPLATE_ID_REJECT_PROFILE?: string
     // JWT
     JWT_SECRET?: string
     // AIRTABLE

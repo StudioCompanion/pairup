@@ -1,5 +1,5 @@
 import { captureException, Scope } from '@sentry/node'
-import e, { RequestHandler } from 'express'
+import { RequestHandler } from 'express'
 
 import { sendProfileLiveEmail } from '../../../services/emails/sendProfileLiveEmail'
 
@@ -23,7 +23,7 @@ export const pairerProfilePublished: RequestHandler<
       await sendProfileLiveEmail(email)
       res.status(200).end()
     } else {
-      throw new Error('No email provided')
+      res.status(400).send('No email provided')
     }
   } catch (err) {
     const msg = 'Failed to send email to user about live profile'
@@ -35,6 +35,6 @@ export const pairerProfilePublished: RequestHandler<
         data: req.body,
       })
     )
-    res.status(400).end()
+    res.status(500).json(JSON.stringify(err))
   }
 }
