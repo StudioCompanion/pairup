@@ -125,7 +125,6 @@ describe('service signup', () => {
     const createMock = jest.fn()
 
     jest.resetModules()
-    jest.unmock('@sanity/client')
 
     jest.doMock('@sanity/client', () => {
       return () => {

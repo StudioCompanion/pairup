@@ -9,6 +9,7 @@ import { server } from './msw/server'
  * various things.
  * e.g. Sanity Client actually patches a document
  */
+jest.mock('@sanity/client', () => jest.fn())
 jest.mock('postmark', () => ({
   ServerClient: jest.fn(),
 }))
@@ -34,9 +35,9 @@ afterEach(() => {
   server.resetHandlers()
 })
 
-afterAll(() => {
+afterAll(async () => {
   // Disconnect Prisma from the database after all tests are complete
   // to avoid open handles stopping Jest from exiting
-  prisma.$disconnect()
   server.close()
+  await prisma.$disconnect()
 })

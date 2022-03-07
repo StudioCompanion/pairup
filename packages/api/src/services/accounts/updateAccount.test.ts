@@ -167,7 +167,6 @@ describe('service updateAccount', () => {
     const setMock = jest.fn()
 
     jest.resetModules()
-    jest.unmock('@sanity/client')
 
     jest.doMock('@sanity/client', () => {
       return () => {
@@ -231,7 +230,6 @@ describe('service updateAccount', () => {
     const setMock = jest.fn()
 
     jest.resetModules()
-    jest.unmock('@sanity/client')
 
     jest.doMock('@sanity/client', () => {
       return () => {
