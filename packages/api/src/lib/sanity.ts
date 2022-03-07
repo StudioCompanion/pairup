@@ -9,18 +9,11 @@ export const getSanityClientWrite = () =>
     useCdn: false,
   })
 
-export const getSanityClientRead = () => {
-  console.log('DEBUG >>>>>>>', {
-    dataset: process.env.SANITY_DATASET,
-    projectId: process.env.SANITY_PROJECT_ID,
-    token: process.env.SANITY_API_KEY,
-  })
-
-  return client({
+export const getSanityClientRead = () =>
+  client({
     apiVersion: '2022-01-25',
     dataset: process.env.SANITY_DATASET,
     projectId: process.env.SANITY_PROJECT_ID,
     token: process.env.SANITY_API_KEY, // admin token has write access
     useCdn: true,
   })
-}

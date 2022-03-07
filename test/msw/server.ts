@@ -1,4 +1,5 @@
 import { setupServer } from 'msw/node'
-import { handlers } from './handlers'
 
-export const server = setupServer(...handlers)
+import { sanityHandlers } from './handlers/sanity'
+
+export const server = setupServer(...sanityHandlers)

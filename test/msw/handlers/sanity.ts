@@ -1,6 +1,12 @@
 import { rest } from 'msw'
 
-export const handlers = [
+export const sanityHandlers = [
+  rest.get(
+    `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v2022-01-25/data/doc/${process.env.SANITY_DATASET}/0c802d2c-a791-44d2-affb-82cc4181bb9c`,
+    (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ result: true }))
+    }
+  ),
   rest.get(
     `https://${process.env.SANITY_PROJECT_ID}.apicdn.sanity.io/v2022-01-25/data/query/${process.env.SANITY_DATASET}`,
     (req, res, ctx) => {
