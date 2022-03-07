@@ -8,6 +8,7 @@ declare namespace NodeJS {
     SANITY_DATASET?: string
     SANITY_PROJECT_ID?: string
     SANITY_API_KEY?: string
+    SANITY_SECRET?: string
     // SENTRY
     SENTRY_DNS?: string
     // POSTMARK
