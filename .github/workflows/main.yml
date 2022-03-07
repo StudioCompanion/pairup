@@ -35,7 +35,7 @@ jobs:
       POSTMARK_TEMPLATE_ID_NEW_SESSION: '{{ secrets.POSTMARK_TEMPLATE_ID_NEW_SESSION }}'
       POSTMARK_TEMPLATE_ID_CANCELLED_SESSION: '{{ secrets.POSTMARK_TEMPLATE_ID_CANCELLED_SESSION }}'
       JWT_SECRET: '{{ secrets.JWT_SECRET }}'
-      SANITY_PROJECT_ID: '{{secrets.SANITY_PROJECT_ID}}'
+      SANITY_PROJECT_ID: '{{ secrets.SANITY_PROJECT_ID }}'
 
     steps:
       - name: Cancel Previous Runs
