@@ -26,14 +26,11 @@ export const queries = extendType({
 
         const query = groq`*[_type == 'blacklistedEmails' && email == $email][0]`
 
-        const sanityUser = await sanityClient.fetch(query, {
+        const blacklistEntry = await sanityClient.fetch(query, {
           email: email,
         })
 
-        console.log('sanityUser', sanityUser)
-        console.log('prismaUser', prismaUser)
-
-        return prismaUser && sanityUser === null
+        return !prismaUser && !blacklistEntry
       },
     })
   },

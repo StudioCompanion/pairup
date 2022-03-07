@@ -9,7 +9,6 @@ import { server } from './msw/server'
  * various things.
  * e.g. Sanity Client actually patches a document
  */
-// jest.mock('@sanity/client', () => jest.fn())
 jest.mock('postmark', () => ({
   ServerClient: jest.fn(),
 }))
