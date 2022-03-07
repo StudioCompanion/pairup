@@ -9,6 +9,7 @@ import defaultResolve, {
 import { LOCKED_DOCUMENT_TYPES, LOCKED_DOCUMENT_IDS } from '../constants'
 
 import { ApproveProfile } from './approveProfile'
+import { SendFeedbackOnProfile } from './sendFeedbackOnProfile'
 
 const lockedDocs = [...LOCKED_DOCUMENT_TYPES, ...LOCKED_DOCUMENT_IDS]
 
@@ -18,6 +19,7 @@ const getDefaults = (props) => {
   if (type === 'pairerProfile') {
     return [
       ApproveProfile,
+      SendFeedbackOnProfile,
       ...defaultResolve(props).filter(
         (action) => action === UnpublishAction || action === DeleteAction
       ),
