@@ -19,7 +19,11 @@ declare namespace NodeJS {
     POSTMARK_TEMPLATE_ID_LIVE_PROFILE?: string
     POSTMARK_TEMPLATE_ID_NEW_SESSION?: string
     POSTMARK_TEMPLATE_ID_CANCELLED_SESSION?: string
+    POSTMARK_TEMPLATE_ID_NEW_REPORT?: string
     // JWT
     JWT_SECRET?: string
+    // AIRTABLE
+    AIRTABLE_API_KEY?: string
+    AIRTABLE_REPORTS_ID?: string
   }
 }
