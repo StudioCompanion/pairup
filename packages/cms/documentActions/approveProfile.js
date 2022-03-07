@@ -49,16 +49,14 @@ export const ApproveProfile = (props) => {
     disabled: publish.disabled || (document && !document.hasVerifiedAccount),
     label: isPublishing ? 'Publishing Profile...' : 'Approve Profile',
     icon: CheckCircle,
-    dialog:
-      profileIsRejected && popoverVisisble
-        ? {
-            type: 'confirm',
-            onCancel: props.onComplete,
-            message:
-              'This profile has previously been rejected, are you sure you want to approve it?',
-            onConfim: handleConfirm,
-          }
-        : null,
+    dialog: profileIsRejected &&
+      popoverVisisble && {
+        type: 'confirm',
+        onCancel: props.onComplete,
+        message:
+          'This profile has previously been rejected, are you sure you want to approve it?',
+        onConfirm: handleConfirm,
+      },
     title:
       document && !document.hasVerifiedAccount
         ? 'A user must verify their account before it can be approved'

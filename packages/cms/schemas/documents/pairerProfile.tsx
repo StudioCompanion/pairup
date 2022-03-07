@@ -273,7 +273,9 @@ export default {
         media: () => <User />,
         description: `${jobTitle}`,
         subtitle:
-          status === PAIRER_PROFILE_STATUS.APPROVED && hasVerifiedAccount
+          status === PAIRER_PROFILE_STATUS.REJECTED
+            ? 'Rejected'
+            : status === PAIRER_PROFILE_STATUS.APPROVED && hasVerifiedAccount
             ? 'Approved Account'
             : 'Requires Approval',
         title,
