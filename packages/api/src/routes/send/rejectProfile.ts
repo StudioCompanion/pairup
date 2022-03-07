@@ -2,9 +2,9 @@ import { captureException, Scope } from '@sentry/node'
 import { RequestHandler } from 'express'
 import { z, ZodError } from 'zod'
 
-import { sendProfileFeedbackEmail } from '../../services/emails/sendProfileFeedbackEmail'
+import { sendProfileRejectionEmail } from '../../services/emails/sendProfileRejectionEmail'
 
-export interface ProfileFeedbackRequestBody {
+export interface ProfileRejectRequestBody {
   userProfile?: {
     firstName?: string
     email?: string
@@ -12,7 +12,7 @@ export interface ProfileFeedbackRequestBody {
   feedback?: string
 }
 
-type ProfileFeedbackResponseBody = string
+type ProfileRejectResponseBody = string
 
 const requestBodySchema = z.object({
   userProfile: z.object({
@@ -22,15 +22,15 @@ const requestBodySchema = z.object({
   feedback: z.string(),
 })
 
-export const profileFeedback: RequestHandler<
+export const rejectProfile: RequestHandler<
   null,
-  ProfileFeedbackResponseBody,
-  ProfileFeedbackRequestBody
+  ProfileRejectResponseBody,
+  ProfileRejectRequestBody
 > = async (req, res) => {
   try {
     const { userProfile, feedback } = requestBodySchema.parse(req.body)
 
-    await sendProfileFeedbackEmail(
+    await sendProfileRejectionEmail(
       userProfile.name,
       userProfile.email,
       feedback
@@ -42,7 +42,7 @@ export const profileFeedback: RequestHandler<
       res.status(400).send(JSON.stringify(err))
     }
 
-    const msg = 'Failed to send email to user about profile feedback'
+    const msg = 'Failed to send email to user about profile rejection'
     console.error(msg, err)
     captureException(
       msg,

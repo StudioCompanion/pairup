@@ -1,13 +1,30 @@
 import React, { useState } from 'react'
-import { Pencil } from 'phosphor-react'
+import { Prohibit } from 'phosphor-react'
 import { Button, TextArea, Heading, useToast } from '@sanity/ui'
+import { useDocumentOperation } from '@sanity/react-hooks'
 
 import { createToken } from '../helpers/tokens'
+import { PAIRER_PROFILE_STATUS } from '@pairup/shared'
 
-export const SendFeedbackOnProfile = (props) => {
+export const RejectProfile = (props) => {
   const [isSendingFeedback, setIsSendingFeedback] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [content, setContent] = useState('')
+
+  const { unpublish, publish, patch } = useDocumentOperation(
+    props.id,
+    props.type
+  ) as {
+    unpublish: {
+      execute: () => void
+    }
+    publish: {
+      execute: () => void
+    }
+    patch: {
+      execute: (args: unknown) => void
+    }
+  }
 
   const document = props.draft || props.published
 
@@ -37,7 +54,7 @@ export const SendFeedbackOnProfile = (props) => {
       const token = await createToken(stringifiedBody)
 
       const res = await fetch(
-        `${process.env.SANITY_STUDIO_SERVER_ENDPOINT}/send/profileFeedback`,
+        `${process.env.SANITY_STUDIO_SERVER_ENDPOINT}/send/rejectProfile`,
         {
           method: 'POST',
           headers: {
@@ -50,9 +67,15 @@ export const SendFeedbackOnProfile = (props) => {
 
       if (res.success) {
         toast.push({
-          title: 'Successfully sent feedback!',
+          title: 'Successfully rejected this profile!',
           status: 'success',
         })
+
+        patch.execute([{ set: { status: PAIRER_PROFILE_STATUS.REJECTED } }])
+
+        publish.execute()
+
+        unpublish.execute()
       } else {
         throw Error(res)
       }
@@ -63,7 +86,8 @@ export const SendFeedbackOnProfile = (props) => {
     } catch (err) {
       console.error(err)
       toast.push({
-        title: 'There was an error submitting your feedback, please try again.',
+        title:
+          'There was an error submitting your rejection, please try again.',
         status: 'error',
       })
     } finally {
@@ -76,13 +100,11 @@ export const SendFeedbackOnProfile = (props) => {
   }
 
   return {
-    disabled: props.draft === null,
-    title:
-      props.draft === null
-        ? 'You can only feedback on an un-approved profile'
-        : '',
-    label: isSendingFeedback ? 'Sending Feedback...' : 'Feedback',
-    icon: Pencil,
+    color: 'warning',
+    disabled: document && document.status === PAIRER_PROFILE_STATUS.REJECTED,
+    title: 'Reject a users profile, this will unpublish at the same time.',
+    label: isSendingFeedback ? 'Rejecting Profile...' : 'Reject Profile',
+    icon: Prohibit,
     onHandle: () => {
       setDialogOpen(true)
     },
@@ -91,10 +113,13 @@ export const SendFeedbackOnProfile = (props) => {
       onClose: props.onComplete,
       content: (
         <div>
-          <Heading as="h2">Send Feedback</Heading>
-          <p>Remember, feedback should be constructive & actionable.</p>
+          <Heading as="h2">Reject Profile</Heading>
+          <p>
+            Have you tried giving feedback first? Please provide a reason why
+            this profile has been rejected. This will be sent to the Pairer.
+          </p>
           <TextArea
-            placeholder="Hi there!"
+            placeholder="We're sorry..."
             onChange={handleTextAreaChange}
             value={content}
             rows={8}
@@ -102,7 +127,7 @@ export const SendFeedbackOnProfile = (props) => {
           <Button
             onClick={handleClick}
             text={isSendingFeedback ? 'Submitting...' : 'Submit'}
-            tone="primary"
+            tone="caution"
             disabled={isSendingFeedback}
             style={{ marginTop: 20 }}
           />

@@ -1,9 +1,9 @@
 import { Logger } from '../../helpers/console'
 import { sendEmail } from '../postmark/sendEmail'
 
-const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK
+const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_REJECT_PROFILE
 
-export const sendProfileFeedbackEmail = async (
+export const sendProfileRejectionEmail = async (
   name: string,
   email: string,
   feedback: string
