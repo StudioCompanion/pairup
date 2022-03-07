@@ -1,5 +1,4 @@
 import { rest } from 'msw'
-import { testData } from '../seed/data'
 
 export const handlers = [
   rest.get(
