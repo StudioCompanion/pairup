@@ -37,7 +37,6 @@ jobs:
       POSTMARK_TEMPLATE_ID_NEW_REPORT: '{{ secrets.POSTMARK_TEMPLATE_ID_NEW_REPORT }}'
       JWT_SECRET: '{{ secrets.JWT_SECRET }}'
       SANITY_PROJECT_ID: '{{ secrets.SANITY_PROJECT_ID }}'
-      SANITY_API_KEY: '{{ secrets.SANITY_API_KEY }}'
       AIRTABLE_API_KEY: '{{ secrets.AIRTABLE_API_KEY }}'
       AIRTABLE_REPORTS_ID: '{{ secrets.AIRTABLE_REPORTS_ID }}'
 
