@@ -87,7 +87,7 @@ describe('service updateAccount', () => {
     )
   })
 
-  it.only('should update the email of the user in the database', async () => {
+  it('should update the email of the user in the database', async () => {
     const email = 'dev@companion.studio'
 
     /**
