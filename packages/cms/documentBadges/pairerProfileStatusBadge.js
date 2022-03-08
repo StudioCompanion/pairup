@@ -20,6 +20,12 @@ export const PairerProfileBadge = (props) => {
       color: 'danger',
       title: 'This profile has been rejected.',
     }
+  } else if (draft && draft.status === PAIRER_PROFILE_STATUS.LOCKED) {
+    return {
+      label: 'Locked',
+      color: 'warning',
+      title: 'Profile is locked & has been unpublished!',
+    }
   } else {
     return {
       label: 'Approved',

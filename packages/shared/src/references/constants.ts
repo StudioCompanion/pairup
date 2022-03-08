@@ -18,6 +18,7 @@ export enum PAIRER_PROFILE_STATUS {
   APPROVED = 'approved',
   AWAITING_APPROVAL = 'awaiting approval',
   REJECTED = 'rejected',
+  LOCKED = 'locked',
 }
 
 export enum SIGNUP_ACCOUNT_DETAIL_FIELD_NAMES {
