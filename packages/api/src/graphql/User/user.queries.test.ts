@@ -8,6 +8,7 @@ describe('User Queries', () => {
         userIsEmailUnique(email: $email)
       }
     `
+
     it('should return false if the email exists', async () => {
       expect(
         await request(query, {

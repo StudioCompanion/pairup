@@ -212,14 +212,14 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      * with the verification code in the DB we'll
      * have to fetch it out there
      */
-    sendVerificationEmail(user.email, verificationCode, {
+    await sendVerificationEmail(user.email, verificationCode, {
       name: restProfile.firstName,
     })
 
     /**
      * Send email to super user so they can approve the profile.
      */
-    sendUserNewOrUpdateEmail(user.userId)
+    await sendUserNewOrUpdateEmail(user.userId)
 
     return {
       User: user,

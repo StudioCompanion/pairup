@@ -125,7 +125,6 @@ describe('service signup', () => {
     const createMock = jest.fn()
 
     jest.resetModules()
-    jest.unmock('@sanity/client')
 
     jest.doMock('@sanity/client', () => {
       return () => {
@@ -136,6 +135,9 @@ describe('service signup', () => {
           },
           createIfNotExists: createMock,
           commit() {
+            return client
+          },
+          fetch() {
             return client
           },
         }

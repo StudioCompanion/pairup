@@ -69,8 +69,6 @@ describe('service deleteAccount', () => {
       const deleteMock = jest.fn()
 
       jest.resetModules()
-      jest.unmock('@sanity/client')
-
       jest.doMock('@sanity/client', () => {
         return () => {
           // @ts-ignore

@@ -121,7 +121,7 @@ type Mutation {
 
 type Query {
   """
-  Check if the email address submitted by a user or persepctive user has already been used before
+  Check if the email address submitted by a user or persepctive user has already been used before or is blacklisted
   """
   userIsEmailUnique(email: String!): Boolean
 }
