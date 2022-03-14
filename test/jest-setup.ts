@@ -10,25 +10,24 @@ import { server } from './msw/server'
  * e.g. Sanity Client actually patches a document
  */
 jest.mock('postmark', () => ({
-  ServerClient: jest.fn(),
+  ServerClient: () => ({
+    sendEmailWithTemplate: async () =>
+      new Promise((res) => res({ data: null })),
+  }),
 }))
-jest.mock('airtable', () => {
-  return class MockedAirtableClass {
-    base() {
-      return () => ({
-        create: jest.fn().mockImplementation((report) => ({
-          ...report,
-          getId: jest.fn(),
-        })),
-      })
-    }
-  }
+
+beforeAll(() => {
+  server.listen({
+    onUnhandledRequest: 'error',
+  })
+  server.printHandlers()
 })
 
 beforeEach(async () => {
   await reseedDatabase()
-  server.listen()
 })
+
+afterEach(() => server.resetHandlers())
 
 afterAll(async () => {
   // Disconnect Prisma from the database after all tests are complete

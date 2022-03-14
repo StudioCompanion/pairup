@@ -24,7 +24,7 @@ class ApiError extends Error {
 }
 
 export const handleNoRoute = (app: Express) => {
-  const isProduction = process.env.NODE_ENV === 'production'
+  const isProduction = process.env.ENV === 'production'
 
   app.use((req, res) => {
     const err = new ApiError(404, `Route ${req.path} was not found.`)
