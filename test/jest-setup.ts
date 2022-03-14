@@ -17,10 +17,7 @@ jest.mock('postmark', () => ({
 }))
 
 beforeAll(() => {
-  server.listen({
-    onUnhandledRequest: 'error',
-  })
-  server.printHandlers()
+  server.listen()
 })
 
 beforeEach(async () => {
