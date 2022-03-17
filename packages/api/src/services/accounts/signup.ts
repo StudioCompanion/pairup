@@ -39,7 +39,8 @@ const signupSchema = z.object({
     .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, {
       message:
         'Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter',
-    }),
+    })
+    .nonempty(),
 })
 
 /**
