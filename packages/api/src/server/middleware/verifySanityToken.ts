@@ -2,6 +2,8 @@ import { captureException, Scope } from '@sentry/node'
 import { createHmac } from 'crypto'
 import { RequestHandler } from 'express'
 
+import { Logger } from '../../helpers/console'
+
 import { ProfileFeedbackRequestBody } from '../../routes/send/profileFeedback'
 
 const SANITY_TOKEN_HEADER = 'X-Sanity-Secret-Token'
@@ -33,7 +35,7 @@ export const verifySanityToken: RequestHandler<
     next()
   } catch (err) {
     const msg = 'Failed to verify Sanity Token'
-    console.error(msg, err)
+    Logger.error(msg, err)
     captureException(
       msg,
       new Scope().setExtras({

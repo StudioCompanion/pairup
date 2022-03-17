@@ -4,6 +4,7 @@ declare namespace NodeJS {
     PORT?: string
     DATABASE_URL?: string
     ENV?: string
+    GRAPHQL_API_SECRET?: string
     // SANITY
     SANITY_DATASET?: string
     SANITY_PROJECT_ID?: string

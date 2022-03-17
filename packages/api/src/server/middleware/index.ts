@@ -5,6 +5,10 @@ import helmet from 'helmet'
 import compression from 'compression'
 import { requireSignedRequest } from '@sanity/webhook'
 
+import { GRAPHQL_PATH } from '../../constants'
+import { verifySanityToken } from './verifySanityToken'
+import { verifyApiKey } from './verifyApiKey'
+
 export const applyMiddleware = (app: Express) => {
   /**
    * BodyParser
@@ -40,4 +44,11 @@ export const applyMiddleware = (app: Express) => {
     '/webhooks/sanity/*',
     requireSignedRequest({ secret: process.env.SANITY_SECRET ?? '' })
   )
+
+  app.use('/send/:route', verifySanityToken)
+
+  /**
+   * TODO: add some CORS to this route
+   */
+  app.use(GRAPHQL_PATH, verifyApiKey)
 }
