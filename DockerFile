@@ -1,0 +1,13 @@
+FROM node:16 as base
+
+WORKDIR /home/node/api
+
+COPY .yarnrc.yml .
+COPY .yarn/ ./.yarn/
+COPY package.json .
+COPY yarn.lock .
+COPY packages/shared ./packages/shared
+COPY packages/api ./packages/api
+
+RUN ls -a
+RUN yarn install
