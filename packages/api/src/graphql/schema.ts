@@ -16,7 +16,9 @@ const shouldGenerateArtifacts =
 
 const CONTEXT_PATH =
   process.env.ENV !== 'test'
-    ? path.join(process.cwd(), './src/server/index.ts')
+    ? process.env.ENV === 'production'
+      ? path.join(process.cwd(), './dist/server/index.js')
+      : path.join(process.cwd(), './src/server/index.ts')
     : path.join(process.cwd(), './packages/api/src/server/index.ts')
 
 export const schema = makeSchema({

@@ -1,9 +1,11 @@
 version: '3.8'
 services:
   pairup-api:
-    command: yarn api:dev
     depends_on:
       - postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
   # Postgres
   postgres:
     image: postgres:latest

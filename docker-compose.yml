@@ -1,13 +1,12 @@
 version: '3'
 services:
   pairup-api:
-    container_name: pairup-api
+    container_name: pairup-prod
     restart: always
     env_file:
       - packages/api/.env
     build:
       context: .
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
-    command: yarn api:build && yarn api:start
