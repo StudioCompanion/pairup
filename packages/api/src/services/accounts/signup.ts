@@ -39,7 +39,8 @@ const signupSchema = z.object({
     .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, {
       message:
         'Password must be at least 8 characters long, contain 1 special character, 1 number, 1 capital and 1 lowercase letter',
-    }),
+    })
+    .nonempty(),
 })
 
 /**
@@ -212,14 +213,14 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
      * with the verification code in the DB we'll
      * have to fetch it out there
      */
-    sendVerificationEmail(user.email, verificationCode, {
+    await sendVerificationEmail(user.email, verificationCode, {
       name: restProfile.firstName,
     })
 
     /**
      * Send email to super user so they can approve the profile.
      */
-    sendUserNewOrUpdateEmail(user.userId)
+    await sendUserNewOrUpdateEmail(user.userId)
 
     return {
       User: user,

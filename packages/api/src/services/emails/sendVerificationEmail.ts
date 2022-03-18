@@ -16,7 +16,7 @@ const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_VERIFY
  * })
  * ```
  */
-export const sendVerificationEmail = (
+export const sendVerificationEmail = async (
   email: string,
   verificationCode: string,
   { name }: Pick<EmailData, 'name'>
@@ -39,7 +39,7 @@ export const sendVerificationEmail = (
     return
   }
 
-  sendEmail(TEMPLATE_ID, { name, email, templateModel }, () => {
+  await sendEmail(TEMPLATE_ID, { name, email, templateModel }, () => {
     // only printed in development
     Logger.log(`sent verification email with code: ${verificationCode}`)
   })

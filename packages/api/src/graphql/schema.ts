@@ -12,13 +12,18 @@ import Reports from './Reports'
 // Only generate in development or when the yarn run generate:nexus command is run
 // This fixes deployment on Netlify, otherwise you'll run into an EROFS error during building
 const shouldGenerateArtifacts =
-  process.env.NODE_ENV === 'development' || !!process.env.GENERATE
+  process.env.ENV === 'development' || !!process.env.GENERATE
+
+const CONTEXT_PATH =
+  process.env.ENV !== 'test'
+    ? path.join(process.cwd(), './src/server/index.ts')
+    : path.join(process.cwd(), './packages/api/src/server/index.ts')
 
 export const schema = makeSchema({
   types: [User, Reports, Sessions, DateTime, [InputErrorsType, ErrorCodesType]],
   // Type the GraphQL context when used in Nexus resolvers
   contextType: {
-    module: path.join(process.cwd(), './src/server/index.ts'),
+    module: CONTEXT_PATH,
     export: 'GraphQLContext',
   },
   // Generate the files

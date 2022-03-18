@@ -87,7 +87,7 @@ describe('service updateAccount', () => {
     )
   })
 
-  it.only('should update the email of the user in the database', async () => {
+  it('should update the email of the user in the database', async () => {
     const email = 'dev@companion.studio'
 
     /**
@@ -167,7 +167,6 @@ describe('service updateAccount', () => {
     const setMock = jest.fn()
 
     jest.resetModules()
-    jest.unmock('@sanity/client')
 
     jest.doMock('@sanity/client', () => {
       return () => {
@@ -231,7 +230,6 @@ describe('service updateAccount', () => {
     const setMock = jest.fn()
 
     jest.resetModules()
-    jest.unmock('@sanity/client')
 
     jest.doMock('@sanity/client', () => {
       return () => {

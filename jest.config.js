@@ -10,8 +10,11 @@ module.exports = {
   setupFiles: ['dotenv/config'],
   setupFilesAfterEnv: ['./test/jest-setup.ts'],
   moduleNameMapper,
-  testEnvironment: 'jsdom',
-  testPathIgnorePatterns: ['<rootDir>/packages/native/'],
+  // testEnvironment: 'jsdom',
+  testPathIgnorePatterns: [
+    '<rootDir>/packages/native/',
+    '<rootDir>/node_modules/',
+  ],
   coveragePathIgnorePatterns: [
     '<rootDir>/packages/shared/',
     '<rootDir>/packages/cms/',

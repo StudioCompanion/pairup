@@ -14,7 +14,7 @@ import { User } from 'phosphor-react'
 
 export default {
   name: 'pairerProfile',
-  title: 'Parier Profile',
+  title: 'Pairer Profile',
   type: 'document',
   groups: [
     {

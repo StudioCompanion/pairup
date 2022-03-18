@@ -14,13 +14,15 @@ import {
   AuthenticatedUser,
   verifyAuthToken,
 } from '../services/tokens/verifyAuthToken'
-import { verifySanityToken } from '../services/sanity/verifySanityToken'
 
 import { pairerProfilePublished } from '../routes/webhooks/sanity/pairerProfilePublished'
+import { blacklistedEmail } from '../routes/webhooks/sanity/blacklistedEmail'
 import { profileFeedback } from '../routes/send/profileFeedback'
 import { rejectProfile } from '../routes/send/rejectProfile'
 
 import { Logger } from '../helpers/console'
+
+import { GRAPHQL_PATH } from '../constants'
 
 import { applyMiddleware } from './middleware'
 import { handleNoRoute } from './404'
@@ -65,9 +67,10 @@ async function startApolloServer() {
   app.use(Sentry.Handlers.requestHandler())
 
   app.post('/webhooks/sanity/pairer-profile-published', pairerProfilePublished)
+  app.post('/webhooks/sanity/blacklisted-email', blacklistedEmail)
 
-  app.post('/send/profileFeedback', verifySanityToken, profileFeedback)
-  app.post('/send/rejectProfile', verifySanityToken, rejectProfile)
+  app.post('/send/profileFeedback', profileFeedback)
+  app.post('/send/rejectProfile', rejectProfile)
 
   const httpServer = http.createServer(app)
 
@@ -82,7 +85,7 @@ async function startApolloServer() {
 
   await server.start()
 
-  server.applyMiddleware({ app })
+  server.applyMiddleware({ app, path: GRAPHQL_PATH })
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: PORT }, resolve)
