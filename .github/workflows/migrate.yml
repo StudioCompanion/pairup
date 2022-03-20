@@ -23,6 +23,6 @@ jobs:
         run: yarn install
 
       - name: Run migrations
-        run: yarn prisma migrate deploy --preview-feature
+        run: cd ./packages/api && yarn prisma migrate deploy --preview-feature
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
