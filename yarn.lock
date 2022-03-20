@@ -5923,6 +5923,7 @@ __metadata:
     nexus-prisma: ^0.35.0
     postmark: ^2.8.1
     prisma: ^3.8.1
+    sanity-codegen: ^0.9.8
     ts-node-dev: ^1.1.8
     zod: ^3.11.6
   languageName: unknown
