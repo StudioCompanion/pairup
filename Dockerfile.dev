@@ -12,4 +12,4 @@ COPY packages/api ./packages/api
 RUN ls -a
 RUN yarn install
 
-CMD ["yarn": "api:dev"]
+CMD ["yarn", "api:dev"]
