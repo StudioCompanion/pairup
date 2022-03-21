@@ -49,7 +49,7 @@ export default {
       title: 'Profile Status',
       type: 'string',
       codegen: { required: true },
-      // readOnly: true,
+      readOnly: true,
       validation: (rule: Rule) => rule.required(),
       options: {
         list: Object.values(PAIRER_PROFILE_STATUS).filter((val) =>
@@ -66,7 +66,7 @@ export default {
       codegen: { required: true },
       validation: (rule: Rule) => rule.required(),
       initialValue: false,
-      // readOnly: true,
+      readOnly: true,
       group: 'admin',
     },
     {

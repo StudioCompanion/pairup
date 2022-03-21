@@ -6,6 +6,10 @@ import { Logger } from '../../helpers/console'
 const PAIRUP_TOKEN_HEADER = 'X-Pairup-Secret-Token'
 
 export const verifyApiKey: RequestHandler = (req, res, next) => {
+  if (process.env.ENV !== 'production') {
+    return next()
+  } 
+
   try {
     const apiKey = process.env.GRAPHQL_API_SECRET
 

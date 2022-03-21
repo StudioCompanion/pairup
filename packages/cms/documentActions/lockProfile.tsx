@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { LockKey } from 'phosphor-react'
-import { Button, TextArea, Heading, useToast } from '@sanity/ui'
+import { Button, TextArea, Heading, useToast, Card, Text } from '@sanity/ui'
 import { useDocumentOperation } from '@sanity/react-hooks'
 
 import { createToken } from '../helpers/tokens'
@@ -114,9 +114,22 @@ export const LockProfile = (props) => {
         <div>
           <Heading as="h2">Lock Profile</Heading>
           <p>
-            Have you tried giving feedback first? Please provide a reason why
-            this profile has to be locked. This will be sent to the Pairer.
+            Please provide a reason why this profile has to be locked. This will
+            be sent to the Pairer.
           </p>
+          <Card
+            padding={[3, 3, 4]}
+            marginBottom={3}
+            radius={2}
+            shadow={1}
+            tone="critical"
+          >
+            <Text align="center" size={[1, 1, 1]}>
+              ⚠️ If you unpublish this document, it will no longer be available
+              to the public. However, it will not be deleted and can be
+              published again later.
+            </Text>
+          </Card>
           <TextArea
             placeholder="We're sorry..."
             onChange={handleTextAreaChange}
@@ -124,7 +137,10 @@ export const LockProfile = (props) => {
             rows={8}
           />
           <Button
-            onClick={handleClick}
+            onClick={async () => {
+              await handleClick()
+              unpublish.execute()
+            }}
             text={isSendingFeedback ? 'Submitting...' : 'Submit'}
             tone="caution"
             disabled={isSendingFeedback}
