@@ -11,7 +11,7 @@
     "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node-dev --require dotenv/config --transpile-only -P nexus.tsconfig.json ./src/graphql/schema.ts",
     "predev": "yarn run generate",
     "prebuild": "yarn run generate",
-    "prisma:migrate": "DATABASE_URL='postgres://postgres:postgres@localhost:5432/pairup' yarn prisma migrate dev --preview-feature",
+    "prisma:migrate": "yarn prisma migrate dev --preview-feature",
     "prisma:studio": "prisma studio",
     "test:ts": "tsc --noEmit"
   },
