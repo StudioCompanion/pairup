@@ -26,6 +26,7 @@ env:
   SANITY_API_KEY: ${{ secrets.SANITY_API_KEY }}
   AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
   AIRTABLE_REPORTS_ID: ${{ secrets.AIRTABLE_REPORTS_ID }}
+
 jobs:
   generic:
     name: Lint & typecheck
@@ -41,7 +42,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       # Cache node_modules for faster CI runs if the yarn.lock doesn't change change
       - name: Get yarn cache directory path
@@ -76,7 +77,7 @@ jobs:
   api:
     name: Test API
     runs-on: ubuntu-18.04
-    needs: [generic]
+    # if: ${{ github.event_name != 'push' }}
 
     # Start a Postgres instance, which is used during tests
     services:
@@ -100,7 +101,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       # Cache node_modules for faster CI runs if the yarn.lock doesn't change change
       - name: Get yarn cache directory path
@@ -119,6 +120,12 @@ jobs:
       # Throw an error if the yarn.lock file doesn't match the installed dependencies (rather than updating it in-place, which it does by default locally)
       - name: Install
         run: yarn install --immutable --silent
+
+      - name: Copy example env
+        run: cp ./packages/api/.env.example ./packages/api/.env
+
+      - name: Generate
+        run: yarn generate
 
       - name: Migrate the CI database
         run: yarn api:migrate
