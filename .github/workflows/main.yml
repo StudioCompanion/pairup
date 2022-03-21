@@ -6,43 +6,30 @@ name: CI
   pull_request:
     branches:
       - main
+env:
+  # This needs to match the POSTGRES_* env variables set in the Postgres service above
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+  POSTMARK_ADMIN_EMAIL: ${{ secrets.POSTMARK_ADMIN_EMAIL }}
+  POSTMARK_API_TOKEN: ${{ secrets.POSTMARK_API_TOKEN }}
+  POSTMARK_FROM_EMAIL: ${{ secrets.POSTMARK_FROM_EMAIL }}
+  POSTMARK_TEMPLATE_ID_VERIFY: ${{ secrets.POSTMARK_TEMPLATE_ID_VERIFY }}
+  POSTMARK_TEMPLATE_NEW_USER: ${{ secrets.POSTMARK_TEMPLATE_NEW_USER }}
+  POSTMARK_TEMPLATE_ID_RECOVER: ${{ secrets.POSTMARK_TEMPLATE_ID_RECOVER }}
+  POSTMARK_TEMPLATE_ID_NEW_SESSION: ${{ secrets.POSTMARK_TEMPLATE_ID_NEW_SESSION }}
+  POSTMARK_TEMPLATE_ID_CANCELLED_SESSION: ${{ secrets.POSTMARK_TEMPLATE_ID_CANCELLED_SESSION }}
+  POSTMARK_TEMPLATE_ID_NEW_REPORT: ${{ secrets.POSTMARK_TEMPLATE_ID_NEW_REPORT }}
+  POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK: ${{ secrets.POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK }}
+  POSTMARK_TEMPLATE_ID_REJECT_PROFILE: ${{ secrets.POSTMARK_TEMPLATE_ID_REJECT_PROFILE }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+  SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
+  SANITY_API_KEY: ${{ secrets.SANITY_API_KEY }}
+  AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+  AIRTABLE_REPORTS_ID: ${{ secrets.AIRTABLE_REPORTS_ID }}
 jobs:
-  test:
-    name: Lint, typecheck & test
+  generic:
+    name: Lint & typecheck
     runs-on: ubuntu-18.04
-
-    # Start a Postgres instance, which is used during tests
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    env:
-      # This needs to match the POSTGRES_* env variables set in the Postgres service above
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-      POSTMARK_ADMIN_EMAIL: ${{ secrets.POSTMARK_ADMIN_EMAIL }}
-      POSTMARK_API_TOKEN: ${{ secrets.POSTMARK_API_TOKEN }}
-      POSTMARK_FROM_EMAIL: ${{ secrets.POSTMARK_FROM_EMAIL }}
-      POSTMARK_TEMPLATE_ID_VERIFY: ${{ secrets.POSTMARK_TEMPLATE_ID_VERIFY }}
-      POSTMARK_TEMPLATE_NEW_USER: ${{ secrets.POSTMARK_TEMPLATE_NEW_USER }}
-      POSTMARK_TEMPLATE_ID_RECOVER: ${{ secrets.POSTMARK_TEMPLATE_ID_RECOVER }}
-      POSTMARK_TEMPLATE_ID_NEW_SESSION: ${{ secrets.POSTMARK_TEMPLATE_ID_NEW_SESSION }}
-      POSTMARK_TEMPLATE_ID_CANCELLED_SESSION: ${{ secrets.POSTMARK_TEMPLATE_ID_CANCELLED_SESSION }}
-      POSTMARK_TEMPLATE_ID_NEW_REPORT: ${{ secrets.POSTMARK_TEMPLATE_ID_NEW_REPORT }}
-      POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK: ${{ secrets.POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK }}
-      POSTMARK_TEMPLATE_ID_REJECT_PROFILE: ${{ secrets.POSTMARK_TEMPLATE_ID_REJECT_PROFILE }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-      SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
-      SANITY_API_KEY: ${{ secrets.SANITY_API_KEY }}
-      AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
-      AIRTABLE_REPORTS_ID: ${{ secrets.AIRTABLE_REPORTS_ID }}
 
     steps:
       - name: Cancel Previous Runs
@@ -80,14 +67,61 @@ jobs:
       - name: Generate
         run: yarn generate
 
-      - name: Migrate the CI database
-        run: yarn api:migrate
-
       - name: Lint
         run: yarn eslint
 
       - name: Typecheck
         run: yarn test:ts
 
+  api:
+    name: Test API
+    runs-on: ubuntu-18.04
+    needs: [generic]
+
+    # Start a Postgres instance, which is used during tests
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Cache node_modules for faster CI runs if the yarn.lock doesn't change change
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # Throw an error if the yarn.lock file doesn't match the installed dependencies (rather than updating it in-place, which it does by default locally)
+      - name: Install
+        run: yarn install --immutable --silent
+
+      - name: Migrate the CI database
+        run: yarn api:migrate
+
       - name: Tests (Jest)
-        run: yarn test:unit
+        run: yarn test:unit packages/api/*
