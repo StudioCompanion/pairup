@@ -5,6 +5,7 @@ import http from 'http'
 import * as Sentry from '@sentry/node'
 import { PrismaClient } from '@prisma/client'
 import * as admin from 'firebase-admin'
+import path from 'path'
 
 import { schema } from '../graphql/schema'
 
@@ -41,7 +42,10 @@ async function startApolloServer() {
    * have the keys in the ENV
    */
   try {
-    const serviceAccount = require('../../pairup-firebase.json')
+    const serviceAccount = require(path.join(
+      __dirname,
+      '../../pairup-firebase.json'
+    ))
 
     admin.initializeApp(
       {

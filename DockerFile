@@ -1,0 +1,58 @@
+FROM node:16.14.0 as base
+
+ENV NODE_ENV production
+
+# Install openssl for Prisma
+RUN apt-get update && apt-get install -y openssl
+
+# Install all node_modules, including dev dependencies
+FROM base as deps
+
+WORKDIR /api
+
+# Copy cache & packages required for app build
+ADD .yarnrc.yml yarn.lock package.json ./
+COPY .yarn/ ./.yarn/
+ADD packages/shared/ ./packages/shared/
+ADD packages/api/package.json ./packages/api/package.json
+RUN yarn install
+
+# # Production only deps
+FROM base as production-deps
+
+WORKDIR /api
+
+COPY --from=deps /api/node_modules /api/node_modules
+ADD .yarnrc.yml yarn.lock package.json ./
+COPY .yarn/ ./.yarn/
+ADD packages/shared/ ./packages/shared/
+ADD packages/api/package.json ./packages/api/package.json
+RUN yarn workspaces focus @pairup/api --production
+
+# Build the app
+FROM base as build
+
+WORKDIR /api
+
+COPY --from=deps /api/node_modules /api/node_modules
+ADD packages/shared/ ./packages/shared/
+ADD packages/api/ ./packages/api/
+ADD tsconfig.json babel.config.js package.json ./
+
+RUN yarn preconstruct:build && yarn generate:api && yarn api:build
+
+# Make the small build footprint
+FROM base
+
+WORKDIR /api
+
+COPY --from=production-deps /api/node_modules /api/node_modules
+COPY --from=build /api/node_modules/.prisma /api/node_modules/.prisma
+COPY --from=build /api/node_modules/nexus-prisma /api/node_modules/nexus-prisma
+COPY --from=build /api/packages/api/dist /api/dist
+COPY --from=build /api/packages/api/pairup-firebase.json /api/pairup-firebase.json
+COPY --from=build /api/packages/shared /api/node_modules/@pairup/shared
+
+ADD packages/api/src/db ./db
+
+CMD ["node", "/api/dist/server/index.js"]
