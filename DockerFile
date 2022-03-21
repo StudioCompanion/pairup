@@ -53,4 +53,6 @@ COPY --from=build /api/packages/api/dist /api/dist
 COPY --from=build /api/packages/api/pairup-firebase.json /api/pairup-firebase.json
 COPY --from=build /api/packages/shared /api/node_modules/@pairup/shared
 
+ADD packages/api/src/db ./db
+
 CMD ["node", "/api/dist/server/index.js"]
