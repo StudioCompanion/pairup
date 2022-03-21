@@ -1,14 +1,12 @@
 version: '3'
 services:
-  # Postgres
-  postgres:
-    image: postgres:latest
+  pairup-api:
+    container_name: pairup-prod
+    restart: always
+    env_file:
+      - packages/api/.env
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      # Accessible from the host at port :35432
-      - '35432:5432'
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: pairup
-    # Make sure log colors show up correctly
-    tty: true
+      - '3000:3000'
