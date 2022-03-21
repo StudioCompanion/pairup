@@ -1,15 +1,39 @@
-name: Deploy Api
+name: Deploy
 on:
   push:
     branches:
       - 'main'
-    paths:
-      - 'packages/api/**'
-      - 'packages/shared/**'
 jobs:
-  prod:
-    name: 'Deploy'
+  changes:
+    name: 'Detect changes'
     runs-on: ubuntu-18.04
+    # Set job outputs to values from filter step
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      cms: ${{ steps.filter.outputs.cms }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'packages/api/**'
+              - 'packages/shared/**'
+            cms:
+              - 'packages/cms/**'
+              - 'packages/shared/**'
+
+  api:
+    name: 'Deploy Api'
+    runs-on: ubuntu-18.04
+    needs: changes
+    if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -30,3 +54,15 @@ jobs:
           args: 'deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  # cms:
+  #   name: 'Deploy CMS'
+  #   runs-on: ubuntu-18.04
+  #   needs: changes
+  #   if: ${{ needs.changes.outputs.cms == 'true' }}
+  #   steps:
+  #     - name: Cancel Previous Runs
+  #       uses: styfle/cancel-workflow-action@0.9.1
+
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
