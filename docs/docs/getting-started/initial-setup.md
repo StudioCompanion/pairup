@@ -53,10 +53,6 @@ Now you're ready to start developing, here's a breakdown of the root commands of
 
 ```json
 "scripts": {
-    // Runs the DEV API server using PM2
-    "api:dev": "yarn generate:api && yarn workspace @pairup/api dev",
-    // Stops the DEV API server using PM2
-    "api:stop": "yarn workspace @pairup/api stop",
     // Runs the CMS
     "cms:start": "yarn workspace @pairup/cms start",
     // Runs this documentation!?
@@ -73,7 +69,7 @@ Now you're ready to start developing, here's a breakdown of the root commands of
 ```
 
 :::warning
-If you're running the API dev server you must run `docker-compose up` and then `yarn api:migrate` from the root of the project to initialize the postgres database we require.
+If you're developing the API server you must use `docker-compose up` as the dev command and then `yarn api:migrate` from the root of the project to initialize the postgres database we require.
 :::
 
 There are other scripts such as `lint` and `prettier:check` but the above are enough to get you developing the project.
