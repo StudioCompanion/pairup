@@ -15,7 +15,7 @@ export const sendProfileLockEmail = async (
   }
 
   if (!TEMPLATE_ID) {
-    Logger.warn('No TEMPLATE_ID set for sending a profile live email')
+    Logger.warn('No TEMPLATE_ID set for sending a profile lock email')
     return
   }
 

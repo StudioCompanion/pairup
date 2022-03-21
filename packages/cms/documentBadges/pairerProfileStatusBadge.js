@@ -23,7 +23,7 @@ export const PairerProfileBadge = (props) => {
   } else if (draft && draft.status === PAIRER_PROFILE_STATUS.LOCKED) {
     return {
       label: 'Locked',
-      color: 'warning',
+      color: 'danger',
       title: 'Profile is locked & has been unpublished!',
     }
   } else {

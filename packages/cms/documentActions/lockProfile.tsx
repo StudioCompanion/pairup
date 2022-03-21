@@ -67,11 +67,11 @@ export const LockProfile = (props) => {
 
       if (res.success) {
         toast.push({
-          title: 'Successfully rejected this profile!',
+          title: 'Successfully locked this profile!',
           status: 'success',
         })
 
-        patch.execute([{ set: { status: PAIRER_PROFILE_STATUS.REJECTED } }])
+        patch.execute([{ set: { status: PAIRER_PROFILE_STATUS.LOCKED } }])
 
         publish.execute()
 
