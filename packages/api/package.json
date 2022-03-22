@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev src/server/index.ts -p ./tsconfig.json",
-    "start": "node dist/server/index.js",
     "build": "npx tsc -p tsconfig.prod.json",
     "generate": "yarn generate:prisma && yarn generate:nexus",
     "generate:prisma": "prisma generate",

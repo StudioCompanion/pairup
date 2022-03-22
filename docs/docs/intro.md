@@ -10,10 +10,9 @@ slug: /
 
 The Pairup monorepo is split up into four sections:
 
-- [Airtable](airtable/overview)
 - [API](api/overview)
 - [CMS](cms/overview)
-- [Native](cms/overview)
+- [Native](native/overview)
 - [Shared]
 
 :::info

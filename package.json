@@ -18,7 +18,6 @@
   "scripts": {
     "api:dev": "yarn generate:api && yarn workspace @pairup/api dev",
     "api:build": "yarn workspace @pairup/api build",
-    "api:start": "yarn workspace @pairup/api start",
     "api:migrate": "yarn workspace @pairup/api prisma:migrate",
     "api:studio": "yarn workspace @pairup/api prisma:studio",
     "cms:start": "yarn workspace @pairup/cms start",
