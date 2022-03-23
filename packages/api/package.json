@@ -11,6 +11,7 @@
     "predev": "yarn run generate",
     "prebuild": "yarn run generate",
     "prisma:migrate": "yarn prisma migrate dev --preview-feature",
+    "prisma:migrate-local": "DATABASE_URL='postgres://postgres:postgres@localhost:5432/pairup' yarn prisma migrate dev --preview-feature",
     "prisma:studio": "prisma studio",
     "test:ts": "tsc --noEmit"
   },

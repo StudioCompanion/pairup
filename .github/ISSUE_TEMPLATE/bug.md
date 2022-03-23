@@ -16,7 +16,7 @@ title: '[bug]: '
 
 ## What device are you using?
 
-## A concise description of what you expected to happen
+## A concise description of the issue
 
 ## To Reproduce
 

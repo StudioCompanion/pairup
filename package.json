@@ -19,6 +19,7 @@
     "api:dev": "yarn generate:api && yarn workspace @pairup/api dev",
     "api:build": "yarn workspace @pairup/api build",
     "api:migrate": "yarn workspace @pairup/api prisma:migrate",
+    "api:migrate-local": "yarn workspace @pairup/api prisma:migrate-local",
     "api:studio": "yarn workspace @pairup/api prisma:studio",
     "cms:start": "yarn workspace @pairup/cms start",
     "cms:build": "yarn workspace @pairup/cms build",
