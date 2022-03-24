@@ -137,10 +137,7 @@ export const LockProfile = (props) => {
             rows={8}
           />
           <Button
-            onClick={async () => {
-              await handleClick()
-              unpublish.execute()
-            }}
+            onClick={handleClick}
             text={isSendingFeedback ? 'Submitting...' : 'Submit'}
             tone="caution"
             disabled={isSendingFeedback}
