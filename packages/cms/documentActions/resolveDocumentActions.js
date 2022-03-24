@@ -9,6 +9,7 @@ import { BlacklistEmailAction } from './BlacklistEmailAction'
 import { ApproveProfile } from './approveProfile'
 import { SendFeedbackOnProfile } from './sendFeedbackOnProfile'
 import { RejectProfile } from './rejectProfile'
+import { LockProfile } from './lockProfile'
 
 import { LOCKED_DOCUMENT_TYPES, LOCKED_DOCUMENT_IDS } from '../constants'
 
@@ -22,6 +23,7 @@ const getDefaults = (props) => {
       ApproveProfile,
       SendFeedbackOnProfile,
       RejectProfile,
+      LockProfile,
       ...defaultResolve(props).filter((action) => action === DeleteAction),
     ]
   }
