@@ -10,7 +10,7 @@ export const mutations = extendType({
       description: 'Submit a new message to be sent to a pairee',
       args: {
         message: nonNull(stringArg()),
-        pairerId: nonNull(idArg()),
+        sessionId: nonNull(idArg()),
       },
       resolve: submitMessage,
     })
