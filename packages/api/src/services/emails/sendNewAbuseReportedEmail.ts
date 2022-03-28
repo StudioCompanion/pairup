@@ -1,7 +1,7 @@
 import { Record } from 'airtable'
 
 import { Logger } from '../../helpers/console'
-import { sendEmail } from '../postmark/sendEmail'
+import { sendEmailWithTemplate } from '../postmark/sendEmailWithTemplate'
 
 import type { AbuseReportRow } from '../airtable/createReport'
 
@@ -26,7 +26,7 @@ export const sendNewAbuseReportedEmail = async (
     return
   }
 
-  await sendEmail(
+  await sendEmailWithTemplate(
     TEMPLATE_ID,
     {
       email: ADMIN_EMAIL_ADDRESS,

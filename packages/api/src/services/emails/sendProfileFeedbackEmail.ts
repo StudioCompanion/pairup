@@ -1,5 +1,5 @@
 import { Logger } from '../../helpers/console'
-import { sendEmail } from '../postmark/sendEmail'
+import { sendEmailWithTemplate } from '../postmark/sendEmailWithTemplate'
 
 const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_PROFILE_FEEDBACK
 
@@ -19,5 +19,5 @@ export const sendProfileFeedbackEmail = async (
     return
   }
 
-  await sendEmail(TEMPLATE_ID, { name, email, templateModel })
+  await sendEmailWithTemplate(TEMPLATE_ID, { name, email, templateModel })
 }

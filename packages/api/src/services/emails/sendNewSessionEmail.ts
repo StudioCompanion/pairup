@@ -1,5 +1,5 @@
 import { Logger } from '../../helpers/console'
-import { sendEmail } from '../postmark/sendEmail'
+import { sendEmailWithTemplate } from '../postmark/sendEmailWithTemplate'
 
 const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_NEW_SESSION
 
@@ -22,12 +22,12 @@ export const sendNewSessionEmail = async (
     return
   }
 
-  await sendEmail(TEMPLATE_ID, {
+  await sendEmailWithTemplate(TEMPLATE_ID, {
     email: pairerEmail,
     templateModel: pairerTemplateModel,
   })
 
-  await sendEmail(TEMPLATE_ID, {
+  await sendEmailWithTemplate(TEMPLATE_ID, {
     email: paireeEmail,
     templateModel: paireeTemplateModel,
   })

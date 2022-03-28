@@ -1,6 +1,6 @@
 import { Logger } from '../../helpers/console'
 
-import { sendEmail } from '../postmark/sendEmail'
+import { sendEmailWithTemplate } from '../postmark/sendEmailWithTemplate'
 
 const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_NEW_USER
 const ADMIN_EMAIL_ADDRESS = process.env.POSTMARK_ADMIN_EMAIL
@@ -19,7 +19,7 @@ export const sendUserNewOrUpdateEmail = async (id: string) => {
     return
   }
 
-  await sendEmail(
+  await sendEmailWithTemplate(
     TEMPLATE_ID,
     { name: 'Admin', email: ADMIN_EMAIL_ADDRESS, templateModel },
     () => {

@@ -1,6 +1,9 @@
 import { Logger } from '../../helpers/console'
 
-import { EmailData, sendEmail } from '../postmark/sendEmail'
+import {
+  EmailData,
+  sendEmailWithTemplate,
+} from '../postmark/sendEmailWithTemplate'
 
 const TEMPLATE_ID = process.env.POSTMARK_TEMPLATE_ID_VERIFY
 
@@ -39,8 +42,12 @@ export const sendVerificationEmail = async (
     return
   }
 
-  await sendEmail(TEMPLATE_ID, { name, email, templateModel }, () => {
-    // only printed in development
-    Logger.log(`sent verification email with code: ${verificationCode}`)
-  })
+  await sendEmailWithTemplate(
+    TEMPLATE_ID,
+    { name, email, templateModel },
+    () => {
+      // only printed in development
+      Logger.log(`sent verification email with code: ${verificationCode}`)
+    }
+  )
 }
