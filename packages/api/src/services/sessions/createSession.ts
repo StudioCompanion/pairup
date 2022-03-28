@@ -62,7 +62,8 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
   try {
     const { pairerId, paireeDetails } = args
 
-    const parsedDetails = paireeDetailsSchema.parse(paireeDetails)
+    const { message, ...parsedDetails } =
+      paireeDetailsSchema.parse(paireeDetails)
 
     /**
      * Test if pairerId is even a real ID
@@ -94,6 +95,11 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
       data: {
         ...parsedDetails,
         pairerId: pairer.userId,
+        messages: {
+          create: {
+            message,
+          },
+        },
       },
     })
 

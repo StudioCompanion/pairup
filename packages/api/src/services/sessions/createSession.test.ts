@@ -7,6 +7,7 @@ import { createSession } from './createSession'
 
 describe('service createSession', () => {
   it('should add the session to the database and connect it to a pairer', async () => {
+    const message = 'Hello I want to pair pls'
     const res = await createSession(
       {},
       {
@@ -16,7 +17,7 @@ describe('service createSession', () => {
           email: 'john@john.com',
           timezone: 'GMT +1',
           appointment: 'NOW-NOW',
-          message: 'Hello I want to pair pls',
+          message,
         },
       },
       {
@@ -48,6 +49,15 @@ describe('service createSession', () => {
     expect(
       user?.sessions.some((sesh) => sesh.id === res?.Session?.id)
     ).toBeTruthy()
+
+    const messages = await prisma.message.findMany({
+      where: {
+        sessionId: res?.Session?.id,
+      },
+    })
+
+    expect(messages).toHaveLength(1)
+    expect(messages[0].message).toEqual(message)
   })
 
   it('should send an email to the pairee and pairer about their new session', async () => {

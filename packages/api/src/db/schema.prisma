@@ -51,8 +51,18 @@ model Session {
   timezone    String
   appointment String
   subjects    String[]
-  message     String
   status      SessionStatus @default(ACTIVE)
+  // Messages
+  messages    Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  message   String
+  // Session
+  session   Session  @relation(fields: [sessionId], references: [id])
+  sessionId String
 }
 
 enum SessionStatus {
