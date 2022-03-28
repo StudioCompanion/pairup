@@ -8,6 +8,7 @@ import { ErrorCodesType } from './enums'
 import User from './User'
 import Sessions from './Sessions'
 import Reports from './Reports'
+import Messages from './Messages'
 
 // Only generate in development or when the yarn run generate:nexus command is run
 // This fixes deployment on Netlify, otherwise you'll run into an EROFS error during building
@@ -22,7 +23,14 @@ const CONTEXT_PATH =
     : path.join(process.cwd(), './packages/api/src/server/index.ts')
 
 export const schema = makeSchema({
-  types: [User, Reports, Sessions, DateTime, [InputErrorsType, ErrorCodesType]],
+  types: [
+    User,
+    Reports,
+    Sessions,
+    Messages,
+    DateTime,
+    [InputErrorsType, ErrorCodesType],
+  ],
   // Type the GraphQL context when used in Nexus resolvers
   contextType: {
     module: CONTEXT_PATH,
