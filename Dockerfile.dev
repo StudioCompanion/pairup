@@ -1,6 +1,6 @@
 FROM node:16 as base
 
-WORKDIR /home/node/api
+WORKDIR /api
 
 COPY .yarnrc.yml .
 COPY .yarn/ ./.yarn/
