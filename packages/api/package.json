@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node-dev src/server/index.ts -p ./tsconfig.json",
+    "dev": "cross-env TS_NODE_PROJECT=./tsconfig.json node-dev src/server/index.ts",
     "build": "npx tsc -p tsconfig.prod.json",
     "generate": "yarn generate:prisma && yarn generate:nexus",
     "generate:prisma": "prisma generate",
-    "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example ts-node-dev --require dotenv/config --transpile-only -P nexus.tsconfig.json ./src/graphql/schema.ts",
+    "generate:nexus": "cross-env GENERATE=true cross-env DOTENV_CONFIG_PATH=.env.example cross-env TS_NODE_PROJECT=nexus.tsconfig.json cross-env TS_NODE_TRANSPILE_ONLY=true node-dev --require dotenv/config ./src/graphql/schema.ts",
     "predev": "yarn run generate",
     "prebuild": "yarn run generate",
     "prisma:migrate": "yarn prisma migrate dev --preview-feature",
@@ -46,9 +46,10 @@
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "cross-env": "^7.0.3",
+    "node-dev": "^7.4.1",
     "prisma": "^3.8.1",
     "sanity-codegen": "^0.9.8",
-    "ts-node-dev": "^1.1.8"
+    "ts-node": "^10.7.0"
   },
   "prisma": {
     "schema": "src/db/schema.prisma"

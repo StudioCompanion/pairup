@@ -8,6 +8,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    volumes:
+      - ./packages/api/:/api/packages/api
+      - ./packages/shared/:/api/packages/shared
   # Postgres
   postgres:
     image: postgres:latest
