@@ -62,7 +62,7 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
   try {
     const { pairerId, paireeDetails } = args
 
-    const { message, ...parsedDetails } =
+    const { message, email, firstName, lastName, ...parsedDetails } =
       paireeDetailsSchema.parse(paireeDetails)
 
     /**
@@ -87,6 +87,29 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
       }
     }
 
+    let paireeAlias = await ctx.prisma.paireeAlias.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    /**
+     * This is a new pairee, so we need to create
+     * a new alias in the DB and then the new
+     * sender signature with postmark
+     */
+    if (!paireeAlias) {
+      paireeAlias = await ctx.prisma.paireeAlias.create({
+        data: {
+          email,
+          firstName,
+          lastName,
+        },
+      })
+
+      // createSenderSignature(paireeAlias)
+    }
+
     /**
      * Create the DB session and
      * add the pairer ID to make the relation
@@ -94,7 +117,16 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
     const createdSession = await ctx.prisma.session.create({
       data: {
         ...parsedDetails,
-        pairerId: pairer.userId,
+        pairee: {
+          connect: {
+            userId: paireeAlias.userId,
+          },
+        },
+        pairer: {
+          connect: {
+            userId: pairer.userId,
+          },
+        },
         messages: {
           create: {
             message,
@@ -107,7 +139,7 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
      * Send new emails to both
      * pairer and pairee
      */
-    await sendNewSessionEmail(pairer.email, parsedDetails.email)
+    await sendNewSessionEmail(pairer.email, email)
 
     return {
       Session: {

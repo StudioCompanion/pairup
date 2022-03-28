@@ -14,6 +14,9 @@ jest.mock('postmark', () => ({
     sendEmailWithTemplate: async () =>
       new Promise((res) => res({ data: null })),
   }),
+  AdminClient: () => ({
+    createSenderSignature: jest.fn(),
+  }),
 }))
 
 beforeAll(() => {

@@ -43,8 +43,9 @@ model Session {
   pairer      User          @relation(fields: [pairerId], references: [userId])
   pairerId    String
   // Pairee
+  pairee      PaireeAlias   @relation(fields: [firstName, lastName, email], references: [firstName, lastName, email])
   firstName   String
-  lastName    String        @default("")
+  lastName    String
   email       String
   jobTitle    String        @default("")
   portfolio   String        @default("")
@@ -59,10 +60,25 @@ model Session {
 model Message {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
+  //
   message   String
+  sentBy    Role     @default(PAIREE)
   // Session
   session   Session  @relation(fields: [sessionId], references: [id])
   sessionId String
+}
+
+model PaireeAlias {
+  createdAt DateTime  @default(now())
+  //
+  firstName String
+  lastName  String    @default("")
+  email     String    @unique
+  userId    String    @unique @default(uuid())
+  //
+  sessions  Session[]
+
+  @@id([firstName, lastName, email])
 }
 
 enum SessionStatus {

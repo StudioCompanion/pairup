@@ -1,4 +1,5 @@
 import { SeedData } from './index'
+import { Role } from '@prisma/client'
 
 export const testData: SeedData = {
   users: [
@@ -89,24 +90,58 @@ export const testData: SeedData = {
       createdAt: new Date(),
       message: 'hello I am 000 message',
       sessionId: '123',
+      sentBy: Role.PAIREE,
     },
     {
       id: 'm-001',
       createdAt: new Date(),
       message: 'hello I am 456 message',
       sessionId: '456',
+      sentBy: Role.PAIREE,
     },
     {
       id: 'm-002',
       createdAt: new Date(),
       message: 'hello I am 789 message',
       sessionId: '789',
+      sentBy: Role.PAIREE,
     },
     {
       id: 'm-003',
       createdAt: new Date(),
       message: 'hello I am 001 message',
       sessionId: '001',
+      sentBy: Role.PAIREE,
+    },
+  ],
+  paireeAliases: [
+    {
+      createdAt: new Date(),
+      userId: 'ebiu34biu3lj123',
+      firstName: 'josh',
+      lastName: 'ellis',
+      email: 'ellis@companion.studio',
+    },
+    {
+      createdAt: new Date(),
+      userId: 'ebiu34biu3lj153',
+      firstName: 'John',
+      lastName: 'smith',
+      email: 'smithy@companion.studio',
+    },
+    {
+      createdAt: new Date(),
+      userId: 'ebiu34biu3lj196',
+      firstName: 'Davey',
+      lastName: 'Slapps',
+      email: 'slapper@companion.studio',
+    },
+    {
+      createdAt: new Date(),
+      userId: 'ebiu34biu3lj693',
+      firstName: 'Scooby',
+      lastName: 'Doo',
+      email: 'dooby@companion.studio',
     },
   ],
 }

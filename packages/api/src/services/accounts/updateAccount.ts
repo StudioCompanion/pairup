@@ -92,250 +92,252 @@ type UpdatedAvailability = Record<
   Array<NexusGenInputs['AvailabilityTimeInput']>
 >
 
-export const updateAccount: FieldResolver<'Mutation', 'userUpdateAccount'> =
-  async (_, args, ctx) => {
-    const { email, password, profile } = args
-    const {
-      prisma,
-      user: { userId },
-    } = ctx
+export const updateAccount: FieldResolver<
+  'Mutation',
+  'userUpdateAccount'
+> = async (_, args, ctx) => {
+  const { email, password, profile } = args
+  const {
+    prisma,
+    user: { userId },
+  } = ctx
+  /**
+   * We don't want to catch this error,
+   * we just want to straight up reject it.
+   */
+  if (!userId) {
+    throw new Error('User must be logged in')
+  }
+  /**
+   * Also if someone calls the mutation with no parameter
+   * throw an error, they shouldn't do that.
+   */
+  if (!email && !password && !profile) {
+    throw new Error(
+      'Mutation userUpdateAccount requires at least one parameter'
+    )
+  }
+
+  try {
     /**
-     * We don't want to catch this error,
-     * we just want to straight up reject it.
+     * Parse the email & Password
+     * through the schema
      */
-    if (!userId) {
-      throw new Error('User must be logged in')
-    }
+    detailsSchema.parse({
+      email,
+      password,
+    })
+
     /**
-     * Also if someone calls the mutation with no parameter
-     * throw an error, they shouldn't do that.
+     * Parse the profile too
      */
-    if (!email && !password && !profile) {
-      throw new Error(
-        'Mutation userUpdateAccount requires at least one parameter'
-      )
-    }
+    const parsedProfile = profileSchema.parse(profile)
 
-    try {
-      /**
-       * Parse the email & Password
-       * through the schema
-       */
-      detailsSchema.parse({
-        email,
-        password,
-      })
+    const user = (await prisma.user.findUnique({
+      where: {
+        userId,
+      },
+    }))!
 
-      /**
-       * Parse the profile too
-       */
-      const parsedProfile = profileSchema.parse(profile)
+    /**
+     * Prisma entry handling
+     */
+    if (password || email) {
+      let dbUpdates = {}
 
-      const user = (await prisma.user.findUnique({
-        where: {
-          userId,
-        },
-      }))!
-
-      /**
-       * Prisma entry handling
-       */
-      if (password || email) {
-        let dbUpdates = {}
-
-        if (password) {
-          const arePasswordsTheSame = await bcrypt.compare(
-            password,
-            user.password
-          )
-
-          if (arePasswordsTheSame) {
-            return {
-              UserAccessToken: null,
-              UserInputError: [
-                {
-                  errorCode: 'Invalid',
-                  input: 'password',
-                  message: 'New password cannot be the same as old password',
-                },
-              ],
-            }
-          }
-
-          const newPassword = await bcrypt.hash(password, 10)
-
-          dbUpdates = {
-            ...dbUpdates,
-            password: newPassword,
-          }
-        }
-
-        if (email) {
-          if (email === user.email) {
-            return {
-              UserAccessToken: null,
-              UserInputError: [
-                {
-                  errorCode: 'Invalid',
-                  input: 'email',
-                  message: 'New email cannot be the same as old email',
-                },
-              ],
-            }
-          }
-
-          dbUpdates = {
-            ...dbUpdates,
-            email,
-          }
-        }
-
-        if (Object.keys(dbUpdates).length > 0) {
-          /**
-           * TODO: probably need to revalidate
-           * the email of the user?
-           */
-          await prisma.user.update({
-            where: {
-              userId,
-            },
-            data: {
-              ...dbUpdates,
-            },
-          })
-        }
-      }
-
-      /**
-       * Sanity Profile handling
-       */
-      const hasProfileBeenPublished = await getDocument(userId)
-      const now = Date.now()
-      const formattedTime = formatISO(now)
-
-      const { availability, ...restProfile } = parsedProfile ?? {}
-
-      let updatedAvailability: UpdatedAvailability = {}
-
-      if (availability) {
-        updatedAvailability = Object.entries(availability).reduce(
-          (acc, [day, hours]) => {
-            acc[day] = hours.map((hour) => ({
-              ...hour,
-              _type: 'availableTime',
-              _key: `${userId}_${nanoid()}`,
-            }))
-            return acc
-          },
-          {} as UpdatedAvailability
+      if (password) {
+        const arePasswordsTheSame = await bcrypt.compare(
+          password,
+          user.password
         )
 
-        if (hasProfileBeenPublished) {
-          /**
-           * If the profile has been updated we
-           * want to make sure it can be republished
-           * straight away to avoid schedule conflicts
-           */
-          await updateDocument({
-            _type: SanityDocumentTypes.PAIRER_PROFILE,
-            _id: userId,
-            lastModifiedAt: formattedTime,
-            ...updatedAvailability,
-          })
-        }
-      }
-
-      /**
-       * If we actually have the values,
-       * then update the sanity profile
-       */
-      if (restProfile || email) {
-        let draftProfileUpdates: IdentifiedSanityDocumentStub = {
-          _type: SanityDocumentTypes.PAIRER_PROFILE,
-          _id: `drafts.${userId}`,
-          status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
-          lastModifiedAt: formattedTime,
-          ...restProfile,
-          ...updatedAvailability,
-        }
-
-        if (restProfile.disciplines) {
-          draftProfileUpdates = {
-            ...draftProfileUpdates,
-            disciplines: restProfile.disciplines.join(','),
+        if (arePasswordsTheSame) {
+          return {
+            UserAccessToken: null,
+            UserInputError: [
+              {
+                errorCode: 'Invalid',
+                input: 'password',
+                message: 'New password cannot be the same as old password',
+              },
+            ],
           }
         }
 
-        if (email) {
-          draftProfileUpdates = {
-            ...draftProfileUpdates,
-            email,
+        const newPassword = await bcrypt.hash(password, 10)
+
+        dbUpdates = {
+          ...dbUpdates,
+          password: newPassword,
+        }
+      }
+
+      if (email) {
+        if (email === user.email) {
+          return {
+            UserAccessToken: null,
+            UserInputError: [
+              {
+                errorCode: 'Invalid',
+                input: 'email',
+                message: 'New email cannot be the same as old email',
+              },
+            ],
           }
         }
 
-        await updateDocument(draftProfileUpdates)
-
-        sendUserNewOrUpdateEmail(userId)
-      }
-
-      /**
-       * Create a new access token for the user
-       */
-      const newToken = createToken(
-        {
-          userId,
-        },
-        user.personalKey,
-        {
-          expiresIn: '7d',
+        dbUpdates = {
+          ...dbUpdates,
+          email,
         }
-      )
-
-      const expiresAt = add(now, {
-        days: 7,
-      })
-
-      return {
-        UserAccessToken: newToken
-          ? {
-              accessToken: newToken,
-              expiresAt,
-            }
-          : null,
-        UserInputError: [],
       }
-    } catch (err: unknown) {
-      const errMsg = 'Failed to update user account'
-      Logger.error(errMsg, err)
 
-      if (err instanceof ZodError) {
+      if (Object.keys(dbUpdates).length > 0) {
         /**
-         * One of our schemas failed validation check
-         * Send back the input name which is the last
-         * in the path array
+         * TODO: probably need to revalidate
+         * the email of the user?
          */
-        return {
-          UserAccessToken: null,
-          UserInputError: err.issues.map((issue) => ({
-            errorCode: 'Invalid',
-            input: issue.path.slice(-1)[0].toString(),
-            message: issue.message,
-          })),
-        }
-      }
-
-      /**
-       * Any other error, capture it & return a failed object
-       */
-      captureException(
-        errMsg,
-        new Scope().setExtras({
-          err,
+        await prisma.user.update({
+          where: {
+            userId,
+          },
+          data: {
+            ...dbUpdates,
+          },
         })
-      )
-      return {
-        UserAccessToken: null,
-        UserInputError: [],
       }
     }
+
+    /**
+     * Sanity Profile handling
+     */
+    const hasProfileBeenPublished = await getDocument(userId)
+    const now = Date.now()
+    const formattedTime = formatISO(now)
+
+    const { availability, ...restProfile } = parsedProfile ?? {}
+
+    let updatedAvailability: UpdatedAvailability = {}
+
+    if (availability) {
+      updatedAvailability = Object.entries(availability).reduce(
+        (acc, [day, hours]) => {
+          acc[day] = hours.map((hour) => ({
+            ...hour,
+            _type: 'availableTime',
+            _key: `${userId}_${nanoid()}`,
+          }))
+          return acc
+        },
+        {} as UpdatedAvailability
+      )
+
+      if (hasProfileBeenPublished) {
+        /**
+         * If the profile has been updated we
+         * want to make sure it can be republished
+         * straight away to avoid schedule conflicts
+         */
+        await updateDocument({
+          _type: SanityDocumentTypes.PAIRER_PROFILE,
+          _id: userId,
+          lastModifiedAt: formattedTime,
+          ...updatedAvailability,
+        })
+      }
+    }
+
+    /**
+     * If we actually have the values,
+     * then update the sanity profile
+     */
+    if (restProfile || email) {
+      let draftProfileUpdates: IdentifiedSanityDocumentStub = {
+        _type: SanityDocumentTypes.PAIRER_PROFILE,
+        _id: `drafts.${userId}`,
+        status: PAIRER_PROFILE_STATUS.AWAITING_APPROVAL,
+        lastModifiedAt: formattedTime,
+        ...restProfile,
+        ...updatedAvailability,
+      }
+
+      if (restProfile.disciplines) {
+        draftProfileUpdates = {
+          ...draftProfileUpdates,
+          disciplines: restProfile.disciplines.join(','),
+        }
+      }
+
+      if (email) {
+        draftProfileUpdates = {
+          ...draftProfileUpdates,
+          email,
+        }
+      }
+
+      await updateDocument(draftProfileUpdates)
+
+      sendUserNewOrUpdateEmail(userId)
+    }
+
+    /**
+     * Create a new access token for the user
+     */
+    const newToken = createToken(
+      {
+        userId,
+      },
+      user.personalKey,
+      {
+        expiresIn: '7d',
+      }
+    )
+
+    const expiresAt = add(now, {
+      days: 7,
+    })
+
+    return {
+      UserAccessToken: newToken
+        ? {
+            accessToken: newToken,
+            expiresAt,
+          }
+        : null,
+      UserInputError: [],
+    }
+  } catch (err: unknown) {
+    const errMsg = 'Failed to update user account'
+    Logger.error(errMsg, err)
+
+    if (err instanceof ZodError) {
+      /**
+       * One of our schemas failed validation check
+       * Send back the input name which is the last
+       * in the path array
+       */
+      return {
+        UserAccessToken: null,
+        UserInputError: err.issues.map((issue) => ({
+          errorCode: 'Invalid',
+          input: issue.path.slice(-1)[0].toString(),
+          message: issue.message,
+        })),
+      }
+    }
+
+    /**
+     * Any other error, capture it & return a failed object
+     */
+    captureException(
+      errMsg,
+      new Scope().setExtras({
+        err,
+      })
+    )
+    return {
+      UserAccessToken: null,
+      UserInputError: [],
+    }
   }
+}
