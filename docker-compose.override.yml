@@ -3,6 +3,8 @@ services:
   pairup-api:
     depends_on:
       - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@pairupdb:5432/pairup
     build:
       context: .
       dockerfile: Dockerfile.dev
