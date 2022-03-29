@@ -3,6 +3,7 @@ import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 
 import { Logger } from '../../helpers/console'
+import { sendMessage } from '../emails/sendMessage'
 
 const submitMessageSchema = z.object({
   message: z
@@ -18,14 +19,23 @@ export const submitMessage: FieldResolver<'Mutation', 'messageSubmit'> = async (
   args,
   ctx
 ) => {
+  if (!ctx.user.userId) {
+    throw new Error('User must be logged in')
+  }
+
   try {
     const { message, sessionId } = args
 
     const parsedMessage = submitMessageSchema.parse({ message })
 
-    const session = await ctx.prisma.session.findUnique({
+    const session = await ctx.prisma.session.findFirst({
       where: {
         id: sessionId,
+        pairerId: ctx.user.userId,
+      },
+      include: {
+        pairer: true,
+        pairee: true,
       },
     })
 
@@ -45,9 +55,21 @@ export const submitMessage: FieldResolver<'Mutation', 'messageSubmit'> = async (
     const createdMessage = await ctx.prisma.message.create({
       data: {
         ...parsedMessage,
+        sentBy: 'PAIRER',
         sessionId: session.id,
       },
     })
+
+    const allMessagesForSession = await ctx.prisma.message.findMany({
+      where: {
+        sessionId: session.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    await sendMessage(session, allMessagesForSession)
 
     return {
       Message: {
