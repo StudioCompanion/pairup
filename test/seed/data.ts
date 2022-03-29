@@ -13,6 +13,7 @@ export const testData: SeedData = {
       verified: false,
       personalKey: 'apples',
       createdAt: new Date(),
+      senderSignatureId: '1',
     },
     {
       email: 'myles@companion.studio',
@@ -24,6 +25,7 @@ export const testData: SeedData = {
       verified: false,
       personalKey: 'banana',
       createdAt: new Date(),
+      senderSignatureId: '2',
     },
   ],
   sessions: [
@@ -121,6 +123,7 @@ export const testData: SeedData = {
       firstName: 'josh',
       lastName: 'ellis',
       email: 'ellis@companion.studio',
+      senderSignatureId: null,
     },
     {
       createdAt: new Date(),
@@ -128,6 +131,7 @@ export const testData: SeedData = {
       firstName: 'John',
       lastName: 'smith',
       email: 'smithy@companion.studio',
+      senderSignatureId: null,
     },
     {
       createdAt: new Date(),
@@ -135,6 +139,7 @@ export const testData: SeedData = {
       firstName: 'Davey',
       lastName: 'Slapps',
       email: 'slapper@companion.studio',
+      senderSignatureId: null,
     },
     {
       createdAt: new Date(),
@@ -142,6 +147,7 @@ export const testData: SeedData = {
       firstName: 'Scooby',
       lastName: 'Doo',
       email: 'dooby@companion.studio',
+      senderSignatureId: null,
     },
   ],
 }

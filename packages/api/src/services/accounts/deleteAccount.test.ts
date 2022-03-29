@@ -40,6 +40,7 @@ describe('service deleteAccount', () => {
         ServerClient: () => ({
           sendEmailWithTemplate: sendEmailWithTemplateMock,
         }),
+        AdminClient: () => jest.fn(),
       }))
 
       const { deleteAccount: mockedDeleteAccount } = require('./deleteAccount')
@@ -62,6 +63,37 @@ describe('service deleteAccount', () => {
 
       expect(sendEmailWithTemplateMock).toHaveBeenCalledTimes(
         activeSessions.length
+      )
+    })
+
+    it('should remove the sender signature from postmark', async () => {
+      const removeSenderSignatureMock = jest.fn()
+      jest.resetModules()
+      jest.unmock('postmark')
+
+      jest.doMock('postmark', () => ({
+        ServerClient: () => jest.fn(),
+        AdminClient: () => ({
+          deleteSenderSignature: removeSenderSignatureMock,
+        }),
+      }))
+
+      const { deleteAccount: mockedDeleteAccount } = require('./deleteAccount')
+
+      await mockedDeleteAccount(
+        {},
+        {},
+        {
+          prisma,
+          user: {
+            userId: testData.users[1].userId,
+          },
+        },
+        null as unknown as GraphQLResolveInfo
+      )
+
+      expect(removeSenderSignatureMock).toHaveBeenCalledWith(
+        parseInt(testData.users[1].senderSignatureId ?? '0')
       )
     })
 

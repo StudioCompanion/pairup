@@ -23,6 +23,7 @@ model User {
   role                Role      @default(PAIRER)
   // Unique user ID
   userId              String    @unique @default(uuid())
+  senderSignatureId   String?
   // Verification
   verified            Boolean   @default(false)
   verificationCode    String
@@ -69,14 +70,15 @@ model Message {
 }
 
 model PaireeAlias {
-  createdAt DateTime  @default(now())
+  createdAt         DateTime  @default(now())
   //
-  firstName String
-  lastName  String    @default("")
-  email     String    @unique
-  userId    String    @unique @default(uuid())
+  firstName         String
+  lastName          String    @default("")
+  email             String    @unique
+  userId            String    @unique @default(uuid())
+  senderSignatureId String?
   //
-  sessions  Session[]
+  sessions          Session[]
 
   @@id([firstName, lastName, email])
 }

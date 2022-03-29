@@ -208,11 +208,15 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       true
     )
 
-    await createSenderSignature({
-      userId: user.userId,
-      firstName: restProfile.firstName,
-      lastName: restProfile.lastName,
-    })
+    await createSenderSignature(
+      {
+        userId: user.userId,
+        firstName: restProfile.firstName,
+        lastName: restProfile.lastName,
+        type: 'user',
+      },
+      ctx.prisma
+    )
 
     /**
      * Send a verification email to the new pairer

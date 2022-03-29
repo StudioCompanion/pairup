@@ -122,7 +122,10 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
         },
       })
 
-      await createSenderSignature(paireeAlias)
+      await createSenderSignature(
+        { ...paireeAlias, type: 'paireeAlias' },
+        ctx.prisma
+      )
     }
 
     /**

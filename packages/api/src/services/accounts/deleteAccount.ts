@@ -3,6 +3,7 @@ import { FieldResolver } from 'nexus'
 
 import { Logger } from '../../helpers/console'
 import { sendCancelledSessionEmail } from '../emails/sendCancelledSessionEmail'
+import { admin } from '../postmark/client'
 import { deleteDocument } from '../sanity/deleteDocument'
 
 export const deleteAccount: FieldResolver<
@@ -36,6 +37,19 @@ export const deleteAccount: FieldResolver<
 
   try {
     /**
+     * Delete all the messages
+     */
+    await Promise.all(
+      user.sessions.map(async (sesh) => {
+        await prisma.message.deleteMany({
+          where: {
+            sessionId: sesh.id,
+          },
+        })
+      })
+    )
+
+    /**
      * Delete sessions for user
      */
     await prisma.session.deleteMany({
@@ -55,6 +69,13 @@ export const deleteAccount: FieldResolver<
     )
 
     await deleteDocument(userId)
+
+    if (user.senderSignatureId) {
+      /**
+       * Remove the sender signature from our Postmark Server
+       */
+      await admin.deleteSenderSignature(parseInt(user.senderSignatureId))
+    }
 
     await prisma.user.delete({
       where: {
