@@ -1,9 +1,12 @@
+import { PaireeAlias, User } from '@prisma/client'
 import { captureException, Scope } from '@sentry/node'
 import { FieldResolver } from 'nexus'
 import { z, ZodError } from 'zod'
 
 import { Logger } from '../../helpers/console'
+
 import { sendNewSessionEmail } from '../emails/sendNewSessionEmail'
+import { createSenderSignature } from '../postmark/createSenderSignature'
 
 const paireeDetailsSchema = z.object({
   firstName: z
@@ -87,11 +90,23 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
       }
     }
 
-    let paireeAlias = await ctx.prisma.paireeAlias.findUnique({
-      where: {
-        email,
-      },
-    })
+    let paireeAlias: PaireeAlias | User | null =
+      await ctx.prisma.paireeAlias.findUnique({
+        where: {
+          email,
+        },
+      })
+
+    /**
+     * Check if the pairee is a pairer
+     */
+    if (!paireeAlias) {
+      paireeAlias = await ctx.prisma.user.findUnique({
+        where: {
+          email,
+        },
+      })
+    }
 
     /**
      * This is a new pairee, so we need to create
@@ -107,7 +122,7 @@ export const createSession: FieldResolver<'Mutation', 'sessionCreate'> = async (
         },
       })
 
-      // createSenderSignature(paireeAlias)
+      await createSenderSignature(paireeAlias)
     }
 
     /**
