@@ -2,7 +2,7 @@ version: '3.8'
 services:
   pairup-api:
     depends_on:
-      - postgres
+      - pairupdb
     environment:
       DATABASE_URL: postgres://postgres:postgres@pairupdb:5432/pairup
     build:
@@ -12,7 +12,7 @@ services:
       - ./packages/api/:/api/packages/api
       - ./packages/shared/:/api/packages/shared
   # Postgres
-  postgres:
+  pairupdb:
     image: postgres:latest
     container_name: pairupdb
     restart: always

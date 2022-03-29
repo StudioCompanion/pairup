@@ -1,0 +1,8 @@
+mutation ReportsSubmitAbuse($report: ReportAbuseInput!) {
+  reportsSubmitAbuse(report: $report) {
+    success
+    ReportInputError {
+      message
+    }
+  }
+}
