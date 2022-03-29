@@ -17,6 +17,7 @@ import { sendVerificationEmail } from '../emails/sendVerificationEmail'
 import { sendUserNewOrUpdateEmail } from '../emails/sendUserNewOrUpdateEmail'
 import { nanoid } from 'nanoid'
 import { SanityDocumentTypes } from '../../constants'
+import { createSenderSignature } from '../postmark/createSenderSignature'
 
 /**
  * Schema validation for signing up
@@ -206,6 +207,12 @@ export const signup: FieldResolver<'Mutation', 'userCreateAccount'> = async (
       },
       true
     )
+
+    await createSenderSignature({
+      userId: user.userId,
+      firstName: restProfile.firstName,
+      lastName: restProfile.lastName,
+    })
 
     /**
      * Send a verification email to the new pairer

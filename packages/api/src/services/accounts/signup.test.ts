@@ -194,6 +194,7 @@ describe('service signup', () => {
       ServerClient: () => ({
         sendEmailWithTemplate: sendEmailWithTemplateMock,
       }),
+      AdminClient: () => jest.fn(),
     }))
 
     const { signup: mockedSignup } = require('./signup')
@@ -246,6 +247,59 @@ describe('service signup', () => {
         From: process.env.POSTMARK_FROM_EMAIL,
         TemplateId: Number(process.env.POSTMARK_TEMPLATE_NEW_USER),
         TemplateModel: expect.any(Object),
+      })
+    )
+  })
+
+  it('should use the postmark admin client to create a new sender signature', async () => {
+    const createSenderSignatureMock = jest.fn()
+    jest.resetModules()
+    jest.unmock('postmark')
+
+    jest.doMock('postmark', () => ({
+      ServerClient: () => jest.fn(),
+      AdminClient: () => ({
+        createSenderSignature: createSenderSignatureMock,
+      }),
+    }))
+
+    const { signup: mockedSignup } = require('./signup')
+
+    ;(await mockedSignup(
+      {},
+      {
+        email: 'josh@gmail.com',
+        password: 'DVUE8j=uQ;?>,6w%EOh8',
+        profile: {
+          firstName: 'Josh',
+          lastName: 'Ellis',
+          bio: 'Josh is a developer',
+          disciplines: ['UX', 'VR'],
+          timezone: 'GMT +1',
+          availability: {
+            monday: [
+              {
+                startTime: '08:00',
+                endTime: '12:00',
+              },
+            ],
+          },
+          jobTitle: 'Developer',
+        },
+      },
+      {
+        prisma,
+        user: {
+          userId: null,
+        },
+      },
+      null as unknown as GraphQLResolveInfo
+    )) as Awaited<ReturnType<typeof signup>>
+
+    expect(createSenderSignatureMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        Name: `Josh Ellis`,
+        FromEmail: expect.any(String),
       })
     )
   })

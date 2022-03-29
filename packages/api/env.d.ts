@@ -14,6 +14,7 @@ declare namespace NodeJS {
     SENTRY_DNS?: string
     // POSTMARK
     POSTMARK_API_TOKEN?: string
+    POSTMARK_ADMIN_API_TOKEN?: string
     POSTMARK_FROM_EMAIL?: string
     POSTMARK_ADMIN_EMAIL?: string
     POSTMARK_TEMPLATE_ID_VERIFY?: string
