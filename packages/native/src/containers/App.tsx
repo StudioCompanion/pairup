@@ -17,6 +17,7 @@ import { Provider } from 'urql'
 import { client } from '../graphql/client'
 
 import { Home } from './Home'
+import { ReportsForm } from '../features/Reports/ReportsForm'
 
 const Stack = createNativeStackNavigator()
 
@@ -25,8 +26,9 @@ const App = () => {
     <Provider value={client}>
       <NativeBaseProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator initialRouteName="home">
             <Stack.Screen name="home" component={Home} />
+            <Stack.Screen name="reports" component={ReportsForm} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>
