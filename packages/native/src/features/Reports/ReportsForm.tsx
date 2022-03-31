@@ -121,7 +121,7 @@ export const ReportsForm = ({ navigation }: any) => {
   }
 
   return (
-    <VStack bg={'muted.50'} space="1">
+    <VStack bg={'muted.50'} space="8">
       {/* [x] ------------------------- NAME */}
       <FormControl isRequired isInvalid={'name' in errors}>
         <FormControl.Label
@@ -214,7 +214,7 @@ export const ReportsForm = ({ navigation }: any) => {
       </FormControl>
 
       {/* [x] ------------------------- ABUSE TYPE DROPDOWN */}
-      <FormControl>
+      <FormControl isRequired>
         <FormControl.Label
           _text={{
             bold: true,
@@ -224,39 +224,32 @@ export const ReportsForm = ({ navigation }: any) => {
         </FormControl.Label>
 
         <Select
-          shadow={2}
           selectedValue={formData.abuseType}
           minWidth="200"
           accessibilityLabel="Choose Service"
-          placeholder="Choose Service"
+          placeholder="Type of abuse"
           _selectedItem={{
             bg: 'teal.600',
             endIcon: <CheckIcon size="5" />,
-          }}
-          _light={{
-            bg: 'coolGray.100',
-          }}
-          _dark={{
-            bg: 'coolGray.800',
           }}
           onValueChange={(itemValue) =>
             setFormData({ ...formData, abuseType: itemValue })
           }
         >
           <Select.Item
-            label={PairUp.Abuse.HarassmentOrBullying}
+            label="Harassment or Bullying"
             value={PairUp.Abuse.HarassmentOrBullying}
           />
           <Select.Item
-            label={PairUp.Abuse.PretendingToBeSomeone}
+            label="Pretending to be someone"
             value={PairUp.Abuse.PretendingToBeSomeone}
           />
           <Select.Item
-            label={PairUp.Abuse.SpamOrHarmful}
+            label="Spam or harmful"
             value={PairUp.Abuse.SpamOrHarmful}
           />
           <Select.Item
-            label={PairUp.Abuse.SomethingElse}
+            label="Something else"
             value={PairUp.Abuse.SomethingElse}
           />
         </Select>
