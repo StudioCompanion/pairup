@@ -23,7 +23,12 @@ export const ReportsForm = ({ navigation }: any) => {
     isAbuserPairer: false,
     abuseType: '',
   })
-  const [errors, setErrors] = useState({ name: '', email: '', description: '' })
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    description: '',
+    abuseType: '',
+  })
 
   const [{ data, fetching, error }, submitReport] =
     useReportsSubmitAbuseMutation()
@@ -90,28 +95,57 @@ export const ReportsForm = ({ navigation }: any) => {
   const validateDescription = () => {
     if (formData.description.length === 0) {
       setErrors({ ...errors, description: 'Description is required' })
+      return false
     } else if (formData.description.length >= 500) {
       setErrors({ ...errors, description: '500 words max' })
+      return false
     } else {
       setErrors({ ...errors, description: '' })
     }
     return true
   }
+
+  const validateAbuseType = () => {
+    for (const value of Object.values(PairUp.Abuse)) {
+      // log
+      console.log('✨✨✨ value in ENUM is: ', value)
+
+      if (formData.abuseType === value) {
+        setErrors({ ...errors, abuseType: '' })
+        return true
+      } else {
+        setErrors({ ...errors, abuseType: 'Please select an option' })
+      }
+    }
+    return false
+  }
+
   const validate = () => {
-    if (validateName() && validateEmail() && validateDescription()) return true
+    if (
+      validateName() &&
+      validateEmail() &&
+      validateDescription() &&
+      validateAbuseType()
+    )
+      return true
   }
 
   // [x]------------------------------------ SUBMIT FUNCTION
   const handleSubmit = async () => {
     try {
+      // log
+      console.log('✅ FORM STATE is: ', formData)
+      console.log('❌ ERROR STATE : ', errors)
+      console.log('----------------------------------------------------------')
+
       if (validate()) {
         await submitReport({
           report: {
             name: formData.name,
             email: formData.email,
-            description: 'Annoying emails',
-            isAbuserPairer: false,
-            abuseType: PairUp.Abuse.SomethingElse,
+            description: formData.description,
+            isAbuserPairer: formData.isAbuserPairer,
+            abuseType: formData.abuseType,
           },
         })
       }
@@ -208,12 +242,22 @@ export const ReportsForm = ({ navigation }: any) => {
           Is the abuser a Pairer?
         </FormControl.Label>
 
-        <Checkbox value="pairer" accessibilityLabel="Is the abuser a Pairer?">
+        <Checkbox
+          onChange={() => {
+            setFormData({
+              ...formData,
+              isAbuserPairer: !formData.isAbuserPairer,
+            })
+          }}
+          value="pairer"
+          accessibilityLabel="Is the abuser a Pairer?"
+        >
           Is the abuser a Pairer?
         </Checkbox>
       </FormControl>
 
       {/* [x] ------------------------- ABUSE TYPE DROPDOWN */}
+      {/* ::----------------------------------------------- */}
       <FormControl isRequired>
         <FormControl.Label
           _text={{
@@ -253,6 +297,13 @@ export const ReportsForm = ({ navigation }: any) => {
             value={PairUp.Abuse.SomethingElse}
           />
         </Select>
+        {'abuseType' in errors ? (
+          <FormControl.ErrorMessage>
+            {errors.abuseType}
+          </FormControl.ErrorMessage>
+        ) : (
+          <FormControl.HelperText>Field required!</FormControl.HelperText>
+        )}
       </FormControl>
 
       {/* [x] ------------------------- SUBMIT BUTTON */}
