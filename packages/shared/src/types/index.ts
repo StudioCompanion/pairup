@@ -1,3 +1,5 @@
-export * as Sanity from './sanity.generated'
+import * as Sanity from './sanity.generated'
 
-export * as PairUp from './types.generated'
+import * as PairUp from './types.generated'
+
+export { Sanity, PairUp }

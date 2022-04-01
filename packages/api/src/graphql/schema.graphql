@@ -60,6 +60,19 @@ type Mutation {
   reportsSubmitAbuse(report: ReportAbuseInput!): ReportSubmitAbusePayload
 
   """
+  delete a session with a pairer
+  """
+  sessionCancel(sessionId: ID!): SessionCancelPayload
+
+  """
+  create a session with a pairer
+  """
+  sessionCreate(
+    paireeDetails: SessionCreatePaireeInput!
+    pairerId: ID!
+  ): SessionCreatePayload
+
+  """
   Create an access token for the current user
   """
   userCreateAccessToken(
@@ -135,6 +148,86 @@ Possible roles a user can have within the database
 enum Role {
   PAIREE
   PAIRER
+}
+
+"""
+A session created between a pairer and a pairee
+"""
+type Session {
+  """
+  Timestamp of when the appointment starts and finishes
+  """
+  appointment: String!
+
+  """
+  First name of the pairee
+  """
+  firstName: String!
+
+  """
+  Id for the session
+  """
+  id: ID!
+
+  """
+  Job title of the pairee
+  """
+  jobTitle: String!
+
+  """
+  Last name of the pairee
+  """
+  lastName: String!
+
+  """
+  Portfolio of the pairee
+  """
+  portfolio: String!
+
+  """
+  Subjects the pairee want to talk to the pairer about
+  """
+  subjects: [String!]!
+}
+
+"""
+Payload from the sessionCancel mutation
+"""
+type SessionCancelPayload {
+  SessionInputError: [InputErrors]
+  sessionId: ID
+}
+
+"""
+Pairee details and information for creating a session
+"""
+input SessionCreatePaireeInput {
+  appointment: String!
+  email: String!
+  firstName: String!
+  jobTitle: String
+  lastName: String
+  message: String!
+  portfolio: String
+  subjects: [UserDisciplines]
+  timezone: String!
+}
+
+"""
+Payload from the sessionCreate mutation
+"""
+type SessionCreatePayload {
+  Session: Session
+  SessionInputError: [InputErrors]
+}
+
+"""
+Possible status a session can have within the database
+"""
+enum SessionStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETE
 }
 
 """
