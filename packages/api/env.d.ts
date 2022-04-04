@@ -29,6 +29,6 @@ declare namespace NodeJS {
     JWT_SECRET?: string
     // AIRTABLE
     AIRTABLE_API_KEY?: string
-    AIRTABLE_REPORTS_ID?: string
+    AIRTABLE_BASE_ID?: string
   }
 }

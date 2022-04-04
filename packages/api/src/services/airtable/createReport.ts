@@ -67,7 +67,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
       const { name, email, description, isAbuserPairer, abuseType } =
         args.report
 
-      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_REPORTS_ID) {
+      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
         throw new Error('Unable to submit report, no API key or Base ID')
       }
 
@@ -81,7 +81,7 @@ export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
 
       const base = new Airtable({
         apiKey: process.env.AIRTABLE_API_KEY,
-      }).base(process.env.AIRTABLE_REPORTS_ID)
+      }).base(process.env.AIRTABLE_BASE_ID)
 
       const reportRecord = await base<AbuseReportRow>('Reports').create({
         Name: name,
