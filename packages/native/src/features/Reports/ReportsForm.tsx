@@ -36,28 +36,16 @@ export const ReportsForm = ({ navigation }: any) => {
   const emailRegex =
     /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 
-  // if (fetching) {
-  //   return <Alert status="info">Loading...</Alert>
-  // }
+  // :: DATA coming back from GraphQL - - - - - - - - - - - - - - - - -  - - - - -  -
+  if (fetching) {
+    return <Alert status="info">Loading...</Alert>
+  }
 
   if (error) {
     return <Alert status="error">Oh no! There was an error!</Alert>
   }
 
-  // if (data) {
-  //   return (
-  //     <>
-  //       <Alert status="success">
-  //         Your form has been successfully submitted!
-  //       </Alert>
-  //       <Button onPress={() => navigation.navigate('home')}>Go Back</Button>
-  //     </>
-  //   )
-  // }
-
-  // [x]---------------------------TEMP FUNCTION
-  // remove: -----------------------------------
-  const successRes = () => {
+  if (data) {
     return (
       <>
         <Alert status="success">
@@ -67,6 +55,19 @@ export const ReportsForm = ({ navigation }: any) => {
       </>
     )
   }
+
+  // [x]---------------------------TEMP FUNCTION
+  // remove: -----------------------------------
+  // const successRes = () => {
+  //   return (
+  //     <>
+  //       <Alert status="success">
+  //         Your form has been successfully submitted!
+  //       </Alert>
+  //       <Button onPress={() => navigation.navigate('home')}>Go Back</Button>
+  //     </>
+  //   )
+  // }
 
   // [x]------------------------------- VALIDATE FUNCTIONS
   const validateName = () => {
@@ -108,7 +109,7 @@ export const ReportsForm = ({ navigation }: any) => {
   const validateAbuseType = () => {
     for (const value of Object.values(PairUp.Abuse)) {
       // log
-      console.log('✨✨✨ value in ENUM is: ', value)
+      // console.log('✨✨✨ value in ENUM is: ', value)
 
       if (formData.abuseType === value) {
         setErrors({ ...errors, abuseType: '' })
@@ -135,20 +136,30 @@ export const ReportsForm = ({ navigation }: any) => {
     try {
       // log
       console.log('✅ FORM STATE is: ', formData)
-      console.log('❌ ERROR STATE : ', errors)
+      // console.log('❌ ERROR STATE : ', errors)
       console.log('----------------------------------------------------------')
 
-      if (validate()) {
-        await submitReport({
-          report: {
-            name: formData.name,
-            email: formData.email,
-            description: formData.description,
-            isAbuserPairer: formData.isAbuserPairer,
-            abuseType: formData.abuseType,
-          },
-        })
-      }
+      // if (validate()) {
+      //   await submitReport({
+      //     report: {
+      //       name: formData.name,
+      //       email: formData.email,
+      //       description: formData.description,
+      //       isAbuserPairer: formData.isAbuserPairer,
+      //       abuseType: formData.abuseType,
+      //     },
+      //   })
+      // }
+
+      await submitReport({
+        report: {
+          name: formData.name,
+          email: formData.email,
+          description: formData.description,
+          isAbuserPairer: formData.isAbuserPairer,
+          abuseType: formData.abuseType,
+        },
+      })
     } catch (err) {
       console.error(err)
     }
@@ -308,13 +319,7 @@ export const ReportsForm = ({ navigation }: any) => {
 
       {/* [x] ------------------------- SUBMIT BUTTON */}
 
-      <Button
-        mt="4"
-        onPress={async () => {
-          await handleSubmit()
-          successRes()
-        }}
-      >
+      <Button mt="4" onPress={handleSubmit}>
         Submit
       </Button>
     </VStack>
