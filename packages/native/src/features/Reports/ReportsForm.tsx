@@ -10,7 +10,6 @@ import {
   Select,
   CheckIcon,
 } from 'native-base'
-// import { TextInput } from '../../components/Inputs/TextInput'
 
 import { useReportsSubmitAbuseMutation } from '../../graphql/Reports/Reports.generated'
 import { PairUp } from '@pairup/shared/types'
@@ -55,19 +54,6 @@ export const ReportsForm = ({ navigation }: any) => {
       </>
     )
   }
-
-  // [x]---------------------------TEMP FUNCTION
-  // remove: -----------------------------------
-  // const successRes = () => {
-  //   return (
-  //     <>
-  //       <Alert status="success">
-  //         Your form has been successfully submitted!
-  //       </Alert>
-  //       <Button onPress={() => navigation.navigate('home')}>Go Back</Button>
-  //     </>
-  //   )
-  // }
 
   // [x]------------------------------- VALIDATE FUNCTIONS
   const validateName = () => {
@@ -131,33 +117,28 @@ export const ReportsForm = ({ navigation }: any) => {
       return true
   }
 
+  // note: trying to return an enum type so ts is happy
+  const returnAbuseType = (formDataAbuseType: string) => {
+    for (const value of Object.values(PairUp.Abuse)) {
+      if (formDataAbuseType === value) {
+        const key = Object.keys(PairUp.Abuse).find(
+          (key) => PairUp.Abuse[key] === value
+        )
+        return PairUp.Abuse[key]
+      }
+    }
+  }
+
   // [x]------------------------------------ SUBMIT FUNCTION
   const handleSubmit = async () => {
     try {
-      // log
-      console.log('✅ FORM STATE is: ', formData)
-      // console.log('❌ ERROR STATE : ', errors)
-      console.log('----------------------------------------------------------')
-
-      // if (validate()) {
-      //   await submitReport({
-      //     report: {
-      //       name: formData.name,
-      //       email: formData.email,
-      //       description: formData.description,
-      //       isAbuserPairer: formData.isAbuserPairer,
-      //       abuseType: formData.abuseType,
-      //     },
-      //   })
-      // }
-
       await submitReport({
         report: {
           name: formData.name,
           email: formData.email,
           description: formData.description,
           isAbuserPairer: formData.isAbuserPairer,
-          abuseType: formData.abuseType,
+          abuseType: returnAbuseType(formData.abuseType),
         },
       })
     } catch (err) {
