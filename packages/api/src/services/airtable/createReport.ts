@@ -8,6 +8,11 @@ import { Logger } from '../../helpers/console'
 import { NexusGenEnums } from '../../graphql/nexus-types.generated'
 import { sendNewAbuseReportedEmail } from '../emails/sendNewAbuseReportedEmail'
 
+import {
+  ABUSE_TYPE_OPTIONS,
+  abuseReportSchema,
+} from '@pairup/shared/src/references/zodSchemas'
+
 export type AbuseReportRow = {
   Name?: string
   Email?: string
@@ -18,12 +23,12 @@ export type AbuseReportRow = {
   Severity?: string
 }
 
-const ABUSE_TYPE_OPTIONS = [
-  'Spam or harmful',
-  'Harassment or bullying',
-  'Pretending to be someone',
-  'Something else',
-] as const
+// const ABUSE_TYPE_OPTIONS = [
+//   'Spam or harmful',
+//   'Harassment or bullying',
+//   'Pretending to be someone',
+//   'Something else',
+// ] as const
 
 enum ReportSeverity {
   HIGH = 'HIGH',
@@ -38,28 +43,28 @@ const SEVERITY_MAP: Record<NexusGenEnums['Abuse'], ReportSeverity> = {
   [ABUSE_TYPE_OPTIONS[3]]: ReportSeverity.LOW,
 }
 
-const abuseReportSchema = z.object({
-  name: z.string().nonempty({
-    message: 'Name is required',
-  }),
-  email: z
-    .string({
-      required_error: 'Email is required',
-      invalid_type_error: 'Email must be a string',
-    })
-    .email({
-      message: 'Invalid email address provided',
-    })
-    .nonempty(),
-  description: z.string().nonempty({
-    message: 'Description is required',
-  }),
-  isAbuserPairer: z.boolean({
-    required_error: 'isAbuserPairer is required',
-    invalid_type_error: 'isActive must be a boolean',
-  }),
-  abuseType: z.enum(ABUSE_TYPE_OPTIONS),
-})
+// export const abuseReportSchema = z.object({
+//   name: z.string().nonempty({
+//     message: 'Name is required',
+//   }),
+//   email: z
+//     .string({
+//       required_error: 'Email is required',
+//       invalid_type_error: 'Email must be a string',
+//     })
+//     .email({
+//       message: 'Invalid email address provided',
+//     })
+//     .nonempty(),
+//   description: z.string().nonempty({
+//     message: 'Description is required',
+//   }),
+//   isAbuserPairer: z.boolean({
+//     required_error: 'isAbuserPairer is required',
+//     invalid_type_error: 'isActive must be a boolean',
+//   }),
+//   abuseType: z.enum(ABUSE_TYPE_OPTIONS),
+// })
 
 export const createReport: FieldResolver<'Mutation', 'reportsSubmitAbuse'> =
   async (_, args) => {

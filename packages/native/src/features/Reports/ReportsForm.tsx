@@ -14,13 +14,24 @@ import {
 import { useReportsSubmitAbuseMutation } from '../../graphql/Reports/Reports.generated'
 import { PairUp } from '@pairup/shared/types'
 
+import {
+  abuseReportSchema,
+  ABUSE_TYPE_OPTIONS,
+} from '@pairup/shared/src/references/zodSchemas'
+
 export const ReportsForm = ({ navigation }: any) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string
+    email: string
+    description: string
+    isAbuserPairer: boolean
+    abuseType: PairUp.Abuse | null
+  }>({
     name: '',
     email: '',
     description: '',
     isAbuserPairer: false,
-    abuseType: '',
+    abuseType: null,
   })
   const [errors, setErrors] = useState({
     name: '',
@@ -32,16 +43,27 @@ export const ReportsForm = ({ navigation }: any) => {
   const [{ data, fetching, error }, submitReport] =
     useReportsSubmitAbuseMutation()
 
-  const emailRegex =
-    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-
   // :: DATA coming back from GraphQL - - - - - - - - - - - - - - - - -  - - - - -  -
   if (fetching) {
     return <Alert status="info">Loading...</Alert>
   }
 
   if (error) {
-    return <Alert status="error">Oh no! There was an error!</Alert>
+    return (
+      <>
+        <Alert status="error">Oh no :( There was an error in your form!</Alert>
+        <Button
+          onPress={() =>
+            navigation.reset({
+              index: 1,
+              routes: [{ name: 'reports' }],
+            })
+          }
+        >
+          Refill form
+        </Button>
+      </>
+    )
   }
 
   if (data) {
@@ -55,92 +77,44 @@ export const ReportsForm = ({ navigation }: any) => {
     )
   }
 
-  // [x]------------------------------- VALIDATE FUNCTIONS
-  const validateName = () => {
-    if (formData.name.length === 0) {
-      setErrors({ ...errors, name: 'Name is required' })
-      return false
-    } else if (formData.name.length < 3) {
-      setErrors({ ...errors, name: 'Name is too short' })
-      return false
-    } else {
-      setErrors({ ...errors, name: '' })
-    }
-    return true
-  }
-
-  const validateEmail = () => {
-    if (!emailRegex.test(formData.email)) {
-      setErrors({ ...errors, email: 'Invalid email' })
-      return false
-    } else {
-      setErrors({ ...errors, email: '' })
-    }
-    return true
-  }
-
-  const validateDescription = () => {
-    if (formData.description.length === 0) {
-      setErrors({ ...errors, description: 'Description is required' })
-      return false
-    } else if (formData.description.length >= 500) {
-      setErrors({ ...errors, description: '500 words max' })
-      return false
-    } else {
-      setErrors({ ...errors, description: '' })
-    }
-    return true
-  }
-
-  const validateAbuseType = () => {
-    for (const value of Object.values(PairUp.Abuse)) {
-      // log
-      // console.log('✨✨✨ value in ENUM is: ', value)
-
-      if (formData.abuseType === value) {
-        setErrors({ ...errors, abuseType: '' })
-        return true
-      } else {
-        setErrors({ ...errors, abuseType: 'Please select an option' })
-      }
-    }
-    return false
-  }
-
-  const validate = () => {
-    if (
-      validateName() &&
-      validateEmail() &&
-      validateDescription() &&
-      validateAbuseType()
-    )
-      return true
-  }
-
-  // note: trying to return an enum type so ts is happy
-  const returnAbuseType = (formDataAbuseType: string) => {
-    for (const value of Object.values(PairUp.Abuse)) {
-      if (formDataAbuseType === value) {
-        const key = Object.keys(PairUp.Abuse).find(
-          (key) => PairUp.Abuse[key] === value
-        )
-        return PairUp.Abuse[key]
-      }
-    }
+  const enumToZod = (abuseTypeValue: PairUp.Abuse | null) => {
+    if (abuseTypeValue === 'HARASSMENT_OR_BULLYING') {
+      return ABUSE_TYPE_OPTIONS[1]
+    } else if (abuseTypeValue === 'PRETENDING_TO_BE_SOMEONE') {
+      return ABUSE_TYPE_OPTIONS[2]
+    } else if (abuseTypeValue === 'SOMETHING_ELSE') {
+      return ABUSE_TYPE_OPTIONS[3]
+    } else return ABUSE_TYPE_OPTIONS[0]
   }
 
   // [x]------------------------------------ SUBMIT FUNCTION
   const handleSubmit = async () => {
     try {
+      const parsedData = abuseReportSchema.parse({
+        name: formData.name,
+        email: formData.email,
+        description: formData.description,
+        isAbuserPairer: formData.isAbuserPairer,
+        abuseType: enumToZod(formData.abuseType),
+      })
       await submitReport({
         report: {
-          name: formData.name,
-          email: formData.email,
-          description: formData.description,
-          isAbuserPairer: formData.isAbuserPairer,
-          abuseType: returnAbuseType(formData.abuseType),
+          name: parsedData.name,
+          email: parsedData.email,
+          description: parsedData.description,
+          isAbuserPairer: parsedData.isAbuserPairer,
+          abuseType: formData.abuseType as PairUp.Abuse,
         },
       })
+      // await submitReport({
+      //   report: {
+      //     name: formData.name,
+      //     email: formData.email,
+      //     description: formData.description,
+      //     isAbuserPairer: formData.isAbuserPairer,
+      //     abuseType: formData.abuseType as PairUp.Abuse,
+      //   },
+      // })
     } catch (err) {
       console.error(err)
     }
@@ -160,7 +134,6 @@ export const ReportsForm = ({ navigation }: any) => {
         <Input
           placeholder="Name"
           onChangeText={(value) => setFormData({ ...formData, name: value })}
-          onBlur={validateName}
         />
         {'name' in errors ? (
           <FormControl.ErrorMessage>{errors.name}</FormControl.ErrorMessage>
@@ -185,7 +158,6 @@ export const ReportsForm = ({ navigation }: any) => {
         <Input
           placeholder="Email"
           onChangeText={(value) => setFormData({ ...formData, email: value })}
-          onBlur={validateEmail}
         />
         {'email' in errors ? (
           <FormControl.ErrorMessage>{errors.email}</FormControl.ErrorMessage>
@@ -212,7 +184,6 @@ export const ReportsForm = ({ navigation }: any) => {
           onChangeText={(value) =>
             setFormData({ ...formData, description: value })
           }
-          onBlur={validateDescription}
         />
         {'description' in errors ? (
           <FormControl.ErrorMessage>
@@ -224,6 +195,7 @@ export const ReportsForm = ({ navigation }: any) => {
       </FormControl>
 
       {/* [x] ------------------------- CHECKBOX */}
+      {/* note: ------------------ OPEN BUG 🐞 */}
 
       <FormControl>
         <FormControl.Label
@@ -236,16 +208,15 @@ export const ReportsForm = ({ navigation }: any) => {
 
         <Checkbox
           onChange={() => {
-            setFormData({
-              ...formData,
+            setFormData((state) => ({
+              ...state,
               isAbuserPairer: !formData.isAbuserPairer,
-            })
+            }))
           }}
+          isChecked={formData.isAbuserPairer}
           value="pairer"
           accessibilityLabel="Is the abuser a Pairer?"
-        >
-          Is the abuser a Pairer?
-        </Checkbox>
+        />
       </FormControl>
 
       {/* [x] ------------------------- ABUSE TYPE DROPDOWN */}
@@ -260,7 +231,7 @@ export const ReportsForm = ({ navigation }: any) => {
         </FormControl.Label>
 
         <Select
-          selectedValue={formData.abuseType}
+          selectedValue={formData.abuseType as string}
           minWidth="200"
           accessibilityLabel="Choose Service"
           placeholder="Type of abuse"
@@ -269,7 +240,7 @@ export const ReportsForm = ({ navigation }: any) => {
             endIcon: <CheckIcon size="5" />,
           }}
           onValueChange={(itemValue) =>
-            setFormData({ ...formData, abuseType: itemValue })
+            setFormData({ ...formData, abuseType: itemValue as PairUp.Abuse })
           }
         >
           <Select.Item

@@ -20,7 +20,7 @@
     "@prisma/client": "^3.8.1",
     "@sanity/client": "^3.2.0",
     "@sanity/webhook": "^1.0.2",
-    "@sentry/node": "^6.17.1",
+    "@sentry/node": "^6.19.4",
     "airtable": "^0.11.1",
     "apollo-server-core": "^3.6.2",
     "apollo-server-express": "^3.6.2",
